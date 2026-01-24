@@ -8,11 +8,6 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css">
     <script src="./css/bootstrap/js/bootstrap.bundle.js"></script>
-    <!-- <style>
-        #b1 {
-            background-color: red;
-        }
-    </style> -->
 </head>
 
 <body id="b1">
