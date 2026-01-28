@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div class="footer-wave__bottom">
-                <p class="footer-wave__copyright">&copy; 2025 Your Brand. All Rights Reserved.</p>
+                <p class="footer-wave__copyright">&copy; 2026 CliniQ. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
