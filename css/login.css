@@ -1,0 +1,116 @@
+/* ===== Reset & Base ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #635bff, #8f88ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== Main Login Wrapper ===== */
+.login {
+    width: 900px;
+    max-width: 95%;
+    background: #f1e8f4;
+    display: flex;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== Left Image Section ===== */
+.login .image {
+    width: 45%;
+    background: url("../img/MediQ-fav.png") center / cover no-repeat;
+}
+
+/* ===== Form Section ===== */
+.login form {
+    width: 55%;
+    padding: 40px;
+}
+
+.form {
+    width: 100%;
+}
+
+/* ===== Form Design ===== */
+.formdesign {
+    margin-bottom: 18px;
+}
+
+.formdesign label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+}
+
+.formdesign input,
+.formdesign select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.formdesign input:focus,
+.formdesign select:focus {
+    outline: none;
+    border-color: #635bff;
+    box-shadow: 0 0 0 2px rgba(99, 91, 255, 0.2);
+}
+
+/* ===== Dropdown ===== */
+#dropdown-menu {
+    cursor: pointer;
+}
+
+/* ===== Button Section ===== */
+.button {
+    margin-top: 20px;
+}
+
+.button button {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 6px;
+}
+
+/* ===== Links ===== */
+.button a {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #635bff;
+    text-decoration: none;
+}
+
+.button a:hover {
+    text-decoration: underline;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+    .login {
+        flex-direction: column;
+    }
+
+    .login .image {
+        width: 100%;
+        height: 180px;
+    }
+
+    .login form {
+        width: 100%;
+    }
+}
