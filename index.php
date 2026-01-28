@@ -5,40 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | MediQueue</title>
-    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css">
     <script src="./css/bootstrap/js/bootstrap.bundle.js"></script>
-</head>
-
-<body id="b1">
     <link rel="stylesheet" href="./css/style.css">
 
+</head>
+
+<body>
     <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">
-                    <img src="./img/MediQ-32.png" alt="MediQ-Logo" style="height: 40px; width: auto; padding: 0; margin: 0; ">
-                </a>
-                <a class="navbar-brand" href="#">MediQueue </a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left: 35%;">
+                        <li class="nav-item" id="home_nav">
+                            <a class="nav-link active" href="#">Home</a>
+                        </li>
+                        <li class="nav-item" id="home_nav">
                             <a class="nav-link active" href="#">Doctor/Hospital</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" id="home_nav">
+                            <a class="navbar-brand" href="index.php">
+                                <img src="./img/MediQ-logop.png" alt="MediQ-Logo" style="height: 70px; width: auto;">
+                            </a>
+                        </li>
+                        <li class="nav-item" id="home_nav">
                             <a class="nav-link active" href="#">About Us</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" id="home_nav">
                             <a class="nav-link active" href="#">Contact Us</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" id="home_nav">
                             <a class="nav-link active" href="#">FAQs</a>
                         </li>
                     </ul>
-                    <button type="button" class="btn btn-primary" onclick="location.href='register.php'" style="margin: 5px;">Login</button>
+                    <button type="button" class="btn btn-primary" onclick="location.href='./login.php'" style="margin: 5px;">Login</button>
                     <button type="button" class="btn btn-outline-secondary" onclick="location.href='register.php'">Register</button>
                 </div>
             </div>
@@ -46,13 +50,13 @@
     </header>
 
     <main>
-            <div class="home_content" style="text-align: center; margin: 30px; font-size: 25px; ">
-                <h1 style="font-size:60px;">Optimize Patient Flow. <br> Reduce Waiting Time. <br> Improve Care.</h1>
-                <p>MediQueue by CliniQ is a smart clinic management platform that combines appointment <br> scheduling with real-time queue monitoring and workload analysis, <br> helping clinics run smoothly and efficiently every day.</p>
-            </div>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <button type="button" class="btn btn-danger">Explore MediQueue</button>
-            </div>
+        <div class="home_content" style="text-align: center; margin: 30px; font-size: 25px; ">
+            <h1 style="font-size:60px;">Optimize Patient Flow. <br> Reduce Waiting Time. <br> Improve Care.</h1>
+            <p>MediQueue by CliniQ is a smart clinic management platform that combines appointment <br> scheduling with real-time queue monitoring and workload analysis, <br> helping clinics run smoothly and efficiently every day.</p>
+        </div>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <button type="button" class="btn btn-danger">Explore MediQueue</button>
+        </div>
 
 
         <div id="carouselExampleCaptions" class="carousel slide">
@@ -164,6 +168,11 @@
             </div>
         </div>
     </main>
+
+    <?php
+    include "./footer.php";
+    ?>
+
 </body>
 
 </html>
