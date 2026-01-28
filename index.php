@@ -8,58 +8,85 @@
     <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css">
     <script src="./css/bootstrap/js/bootstrap.bundle.js"></script>
     <link rel="stylesheet" href="./css/style.css">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-<body>
+<body style="background-color: #fef9f9;">
     <header>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
+        <nav class="navbar fixed-top navbar-expand-lg" id="nav-home">
+            <div class="container-fluid px-4">
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <!-- Logo (LEFT) -->
+                <a class="navbar-brand" href="index.php">
+                    <img src="./img/mediq.png" alt="MediQ-Logo" style="height:60px;">
+                </a>
+
+                <!-- Toggle button (Mobile) -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
+                <!-- Navbar content -->
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left: 35%;">
-                        <li class="nav-item" id="home_nav">
-                            <a class="nav-link active" href="#">Home</a>
+
+                    <!-- CENTER MENU -->
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Home</a>
                         </li>
-                        <li class="nav-item" id="home_nav">
-                            <a class="nav-link active" href="#">Doctor/Hospital</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Doctor/Hospital</a>
                         </li>
-                        <li class="nav-item" id="home_nav">
-                            <a class="navbar-brand" href="index.php">
-                                <img src="./img/MediQ-logop.png" alt="MediQ-Logo" style="height: 70px; width: auto;">
-                            </a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About</a>
                         </li>
-                        <li class="nav-item" id="home_nav">
-                            <a class="nav-link active" href="#">About Us</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact</a>
                         </li>
-                        <li class="nav-item" id="home_nav">
-                            <a class="nav-link active" href="#">Contact Us</a>
-                        </li>
-                        <li class="nav-item" id="home_nav">
-                            <a class="nav-link active" href="#">FAQs</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">FAQs</a>
                         </li>
                     </ul>
-                    <button type="button" class="btn btn-primary" onclick="location.href='./login.php'" style="margin: 5px;">Login</button>
-                    <button type="button" class="btn btn-outline-secondary" onclick="location.href='register.php'">Register</button>
+
+                    <!-- RIGHT BUTTONS -->
+                    <div class="d-flex">
+                        <button class="btn btn-outline-danger me-2"
+                            onclick="location.href='./login.php'"
+                            style="border-radius:38px; border:2px solid #FF5A5F;">
+                            Login
+                        </button>
+
+                        <button class="btn btn-outline-secondary"
+                            onclick="location.href='register.php'"
+                            style="border-radius:38px; border-width:2px;">
+                            Register
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </nav>
+        <div style="background-color: #FF5A5F; color: #FFF; text-align: center; padding: 10px; margin-top: 88px;">
+            <h2>BOOK APPOINTMENT</h2>
+        </div>
     </header>
 
     <main>
-        <div class="home_content" style="text-align: center; margin: 30px; font-size: 25px; ">
-            <h1 style="font-size:60px;">Optimize Patient Flow. <br> Reduce Waiting Time. <br> Improve Care.</h1>
-            <p>MediQueue by CliniQ is a smart clinic management platform that combines appointment <br> scheduling with real-time queue monitoring and workload analysis, <br> helping clinics run smoothly and efficiently every day.</p>
-        </div>
-        <div style="text-align: center; margin-bottom: 20px;">
-            <button type="button" class="btn btn-danger">Explore MediQueue</button>
+        <div class="home_bg" style="background-image: url(./img/home-bg1.png);">
+            <div class="home_content" style="text-align: center; margin-right: 50%; font-size: 20px;">
+                <h1 style="font-size:50px;">Optimize Patient Flow. <br> Reduce Waiting Time. <br> Improve Care.</h1><br>
+                <p>MediQueue by CliniQ is a smart clinic management platform <br>that combines appointment scheduling with real-time <br>queue monitoring and workload analysis, helping clinics <br>run smoothly and efficiently every day.</p>
+                <div style="text-align: left; margin-bottom: 20px; margin-left: 35%;"><br>
+                    <button type="button" class="btn" id="home-btn" style="background-color: #FF5A5F; color: #FFF; padding: 10px; border-radius: 35px;">Explore MediQueue</button>
+                </div>
+            </div>
         </div>
 
-
-        <div id="carouselExampleCaptions" class="carousel slide">
+        <!-- <div id="carouselExampleCaptions" class="carousel slide">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                 <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -96,71 +123,72 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
-        </div>
+        </div> -->
+        <div class="home_bg" style="background-image: url(./img/home_bg.png);">
+            <div class="home_content" style="text-align: center; margin: 30px; ">
+                <h2> Smart Patient Flow & Clinic Analytics.</h2>
+                <p>A comprehensive clinic management system designed to monitor appointments, analyze patient flow, <br>and optimize daily clinic workload for better efficiency and reduced waiting time.</p>
+            </div>
 
-        <div class="home_content" style="text-align: center; margin: 30px; ">
-            <h2> Smart Patient Flow & Clinic Analytics.</h2>
-            <p>A comprehensive clinic management system designed to monitor appointments, analyze patient flow, <br>and optimize daily clinic workload for better efficiency and reduced waiting time.</p>
-        </div>
-
-        <div class="container text-center">
-            <div class="row row-cols-3">
-                <div class="col">
-                    <div class="card" id="hover-underline" style="width: 18rem; text-align: center; align-items: center;">
-                        <img src="./img/appointment.png" class="card-img-top" alt="..." style="margin-top:5%; height: 50px; width: 50px;">
-                        <div class="card-body">
-                            <h5 class="card-title">Smart Appointment Management</h5>
-                            <p class="card-text">Patients and reception staff can register appointments digitally, enabling structured scheduling and accurate data collection for clinic flow analysis.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card" id="hover-underline" style="width: 18rem; text-align: center; align-items: center;">
-                        <img src="./img/bar-graph.png" class="card-img-top" alt="..." style="margin-top:5%; height: 50px; width: 50px;">
-                        <div class="card-body">
-                            <h5 class="card-title">Clinic Load Monitoring</h5>
-                            <p class="card-text">Track daily clinic workload, patient volume, and consultation patterns to understand how busy the clinic is and plan operations better.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card" id="hover-underline" style="width: 18rem; text-align: center; align-items: center;">
-                        <img src="./img/time-tracking.png" class="card-img-top" alt="..." style="margin-top:5%; height: 50px; width: 50px;">
-                        <div class="card-body">
-                            <h5 class="card-title">Consultation Time Tracking</h5>
-                            <p class="card-text">Monitor actual consultation start and end times to analyze delays, time usage, and overall clinic efficiency.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card" id="hover-underline" style="width: 18rem; text-align: center; align-items: center;">
-                        <img src="./img/analytic.png" class="card-img-top" alt="..." style="margin-top:5%; height: 50px; width: 50px;">
-                        <div class="card-body">
-                            <h5 class="card-title">Doctor Analytics Dashboard</h5>
-                            <p class="card-text">Doctors can view daily performance insights including patient flow, workload distribution, and time utilization through a centralized dashboard.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card" id="hover-underline" style="width: 18rem; text-align: center; align-items: center;">
-                        <img src="./img/receptionist.png" class="card-img-top" alt="..." style="margin-top:5%; height: 50px; width: 50px;">
-                        <div class="card-body">
-                            <h5 class="card-title">Reception Desk Management</h5>
-                            <p class="card-text">Reception staff can manage walk-in patients, offline bookings, and real-time queue updates through a dedicated reception interface.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hover">
+            <div class="container text-center">
+                <div class="row row-cols-3">
                     <div class="col">
                         <div class="card" id="hover-underline" style="width: 18rem; text-align: center; align-items: center;">
-                            <img src="./img/patient-flow.png" class="card-img-top" alt="..." style="margin-top:5%; height: 50px; width: 50px;">
+                            <img src="./img/appointment.png" class="card-img-top" alt="..." style="margin-top:5%; height: 50px; width: 50px;">
                             <div class="card-body">
-                                <h5 class="card-title">Patient Flow Analytics</h5>
-                                <p class="card-text">Analyze patient movement, queue behavior and delay patterns to improve clinic planning and reduce overcrowding.</p>
+                                <h5 class="card-title">Smart Appointment Management</h5>
+                                <p class="card-text">Patients and reception staff can register appointments digitally, enabling structured scheduling and accurate data collection for clinic flow analysis.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card" id="hover-underline" style="width: 18rem; text-align: center; align-items: center;">
+                            <img src="./img/bar-graph.png" class="card-img-top" alt="..." style="margin-top:5%; height: 50px; width: 50px;">
+                            <div class="card-body">
+                                <h5 class="card-title">Clinic Load Monitoring</h5>
+                                <p class="card-text">Track daily clinic workload, patient volume, and consultation patterns to understand how busy the clinic is and plan operations better.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card" id="hover-underline" style="width: 18rem; text-align: center; align-items: center;">
+                            <img src="./img/time-tracking.png" class="card-img-top" alt="..." style="margin-top:5%; height: 50px; width: 50px;">
+                            <div class="card-body">
+                                <h5 class="card-title">Consultation Time Tracking</h5>
+                                <p class="card-text">Monitor actual consultation start and end times to analyze delays, time usage, and overall clinic efficiency.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card" id="hover-underline" style="width: 18rem; text-align: center; align-items: center;">
+                            <img src="./img/analytic.png" class="card-img-top" alt="..." style="margin-top:5%; height: 50px; width: 50px;">
+                            <div class="card-body">
+                                <h5 class="card-title">Doctor Analytics Dashboard</h5>
+                                <p class="card-text">Doctors can view daily performance insights including patient flow, workload distribution, and time utilization through a centralized dashboard.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card" id="hover-underline" style="width: 18rem; text-align: center; align-items: center;">
+                            <img src="./img/receptionist.png" class="card-img-top" alt="..." style="margin-top:5%; height: 50px; width: 50px;">
+                            <div class="card-body">
+                                <h5 class="card-title">Reception Desk Management</h5>
+                                <p class="card-text">Reception staff can manage walk-in patients, offline bookings, and real-time queue updates through a dedicated reception interface.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hover">
+                        <div class="col">
+                            <div class="card" id="hover-underline" style="width: 18rem; text-align: center; align-items: center;">
+                                <img src="./img/patient-flow.png" class="card-img-top" alt="..." style="margin-top:5%; height: 50px; width: 50px;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Patient Flow Analytics</h5>
+                                    <p class="card-text">Analyze patient movement, queue behavior and delay patterns to improve clinic planning and reduce overcrowding.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
