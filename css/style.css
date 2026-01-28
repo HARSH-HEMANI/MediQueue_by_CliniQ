@@ -1,15 +1,10 @@
-/* =====================
-   BASE
-===================== */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #fef9f9;
     color: #2F2F3A;
 }
 
-/* =====================
-   NAVBAR + ANIMATION
-===================== */
+/* NAVBAR */
 #nav-home {
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(10px);
@@ -46,9 +41,7 @@ body {
     width: 100%;
 }
 
-/* =====================
-   HERO SECTION
-===================== */
+/* HERO SECTION */
 .hero {
     min-height: 90vh;
     background: url("../img/home-bg1.png") center/cover no-repeat;
@@ -96,9 +89,7 @@ body {
     box-shadow: 0 10px 25px rgba(255, 90, 95, 0.35);
 }
 
-/* =====================
-   FEATURES SECTION
-===================== */
+/* FEATURES */
 .features {
     padding: 80px 0;
     background-image: url(../img/home_bg.png);
@@ -116,9 +107,7 @@ body {
     color: #555;
 }
 
-/* =====================
-   FEATURE CARDS + ANIMATIONS
-===================== */
+
 .feature-card {
     position: relative;
     background: #fef9f9;
@@ -182,9 +171,7 @@ body {
     line-height: 1.6;
 }
 
-/* =====================
-   RESPONSIVE
-===================== */
+
 @media (max-width: 768px) {
     .hero {
         text-align: center;
@@ -199,7 +186,7 @@ body {
     }
 }
 
-/* ===== Enhanced Section Heading ===== */
+
 .features-header {
     margin-bottom: 60px;
 }
