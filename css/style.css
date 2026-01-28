@@ -1,17 +1,21 @@
-/* body {
-    
+/* =====================
+   BASE
+===================== */
+body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-} */
-
-#nav-home{
-    background-color: rgba(255, 255, 255, 0.7); 
-    -webkit-backdrop-filter: blur(10px); 
-    backdrop-filter: blur(10px); 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fef9f9;
+    color: #2F2F3A;
 }
-/* Navbar links base style */
+
+/* =====================
+   NAVBAR + ANIMATION
+===================== */
+#nav-home {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
 .navbar-nav .nav-link {
     position: relative;
     color: #2F2F3A;
@@ -20,12 +24,12 @@
     transition: color 0.3s ease;
 }
 
-/* Text color change on hover */
-.navbar-nav .nav-link:hover {
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
     color: #FF5A5F;
 }
 
-/* Underline animation */
+/* underline animation */
 .navbar-nav .nav-link::after {
     content: "";
     position: absolute;
@@ -34,94 +38,207 @@
     width: 0;
     height: 2px;
     background-color: #FF5A5F;
-    transition: all 0.3s ease;
     transform: translateX(-50%);
+    transition: width 0.3s ease;
 }
 
-/* Expand underline on hover */
 .navbar-nav .nav-link:hover::after {
     width: 100%;
 }
 
-/* Active link styling */
-.navbar-nav .nav-link.active {
+/* =====================
+   HERO SECTION
+===================== */
+.hero {
+    min-height: 90vh;
+    background: url("../img/home-bg1.png") center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    padding-top: 120px;
+}
+
+.hero-content {
+    max-width: 600px;
+    margin-left: 8%;
+}
+
+.hero-content h1 {
+    font-size: 3.2rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.hero-content h1 span {
     color: #FF5A5F;
 }
-.navbar-nav .nav-item {
-    margin: 0 10px;
+
+.hero-content p {
+    margin: 25px 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #555;
 }
 
-.home_content{
-    padding: 20px;
-}
-#home_nav {
-    font-size: 22px;
-    margin-left: 4%;
-}
-
-.home_bg {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
-    background-size: cover;
-    background-position: center;
-    max-width: 100%;
-    padding: 60px 0;
-    z-index: 1;
+/* Hero button animation */
+.hero-btn {
+    display: inline-block;
+    background: #FF5A5F;
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 40px;
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
-#home-btn:hover {
-    transform: translateY(-2px);
-    transition: transform 0.4s ease-out;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+.hero-btn:hover {
+    background: #e64b50;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 90, 95, 0.35);
+}
 
+/* =====================
+   FEATURES SECTION
+===================== */
+.features {
+    padding: 80px 0;
+    background-image: url(../img/home_bg.png);
 
 }
 
-#carousel_img {
-    height: 500px;
-    object-fit: cover;
+.features-header h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
 }
 
-#hover-underline {
+.features-header p {
+    max-width: 850px;
+    margin: 15px auto 50px;
+    color: #555;
+}
+
+/* =====================
+   FEATURE CARDS + ANIMATIONS
+===================== */
+.feature-card {
     position: relative;
-    display: flex;
-    height: 283px;
-    margin-left: 20%;
-    margin-top: 10%;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    transition: transform 0.4s;
-    background-color: #fef9f9;
+    background: #fef9f9;
+    padding: 30px 25px;
+    border-radius: 18px;
+    text-align: center;
+    height: 100%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    overflow: hidden;
 }
 
-#hover-underline:hover {
-    transform: translateY(-10px);
+/* lift animation */
+.feature-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 50px rgba(255, 90, 95, 0.2);
 }
 
-#hover-underline::after,
-#hover-underline::before {
-    content: '';
-    position: relative;
-    width: 100%;
-    height: 5px;
-    border-radius: 5px;
-    background: linear-gradient(to right, #e9a3a5, #FF5A5F);
-    bottom: 0px;
+/* gradient underline animation (TOP & BOTTOM) */
+.animated-card::before,
+.animated-card::after {
+    content: "";
+    position: absolute;
     left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, #e9a3a5, #FF5A5F);
     transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.4s ease-out;
-
+    transition: transform 0.4s ease;
 }
 
-#hover-underline::before {
-    top: 0px;
+.animated-card::before {
+    top: 0;
     transform-origin: left;
-    border-radius: 5px;
 }
 
-#hover-underline:hover::after,
-#hover-underline:hover::before {
-    border-radius: 5px;
+.animated-card::after {
+    bottom: 0;
+    transform-origin: right;
+}
+
+.animated-card:hover::before,
+.animated-card:hover::after {
     transform: scaleX(1);
+}
+
+/* card content */
+.feature-card img {
+    height: 50px;
+    margin-bottom: 15px;
+}
+
+.feature-card h5 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.feature-card p {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media (max-width: 768px) {
+    .hero {
+        text-align: center;
+    }
+
+    .hero-content {
+        margin: 0 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.3rem;
+    }
+}
+
+/* ===== Enhanced Section Heading ===== */
+.features-header {
+    margin-bottom: 60px;
+}
+
+.features-header h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #1f2937;
+    margin-bottom: 15px;
+}
+
+.features-header h2 span {
+    color: #FF5A5F;
+    font-weight: 900;
+}
+
+.section-divider {
+    width: 200px;
+    height: 4px;
+    background: linear-gradient(to right, #FF5A5F, #ff8a8f);
+    margin: 0 auto 25px;
+    border-radius: 4px;
+}
+
+.features-header p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #555;
+    max-width: 820px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .features-header h2 {
+        font-size: 2.1rem;
+    }
+
+    .features-header p {
+        font-size: 1rem;
+    }
 }

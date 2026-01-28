@@ -11,7 +11,7 @@
             <div class="footer-wave__main-grid">
                 <div class="footer-wave__about">
                     <h3 class="footer-wave__heading">About Us</h3>
-                    <p>We create beautiful, modern web templates to help your projects stand out. This wave is just the beginning.</p>
+                    <p>MediQueue by CliniQ is a data-driven clinic management platform built to optimize patient flow and reduce waiting time. With smart scheduling, queue tracking, and analytics, MediQueue empowers healthcare providers to make informed decisions and deliver timely, efficient care.</p>
                 </div>
                 <div class="footer-wave__links">
                     <h3 class="footer-wave__heading">Navigate</h3>
