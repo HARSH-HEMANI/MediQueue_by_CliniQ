@@ -4,10 +4,77 @@
     margin: 0;
     padding: 0;
 } */
+
+#nav-home{
+    background-color: rgba(255, 255, 255, 0.7); 
+    -webkit-backdrop-filter: blur(10px); 
+    backdrop-filter: blur(10px); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+/* Navbar links base style */
+.navbar-nav .nav-link {
+    position: relative;
+    color: #2F2F3A;
+    font-weight: 500;
+    padding: 8px 14px;
+    transition: color 0.3s ease;
+}
+
+/* Text color change on hover */
+.navbar-nav .nav-link:hover {
+    color: #FF5A5F;
+}
+
+/* Underline animation */
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #FF5A5F;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+/* Expand underline on hover */
+.navbar-nav .nav-link:hover::after {
+    width: 100%;
+}
+
+/* Active link styling */
+.navbar-nav .nav-link.active {
+    color: #FF5A5F;
+}
+.navbar-nav .nav-item {
+    margin: 0 10px;
+}
+
+.home_content{
+    padding: 20px;
+}
 #home_nav {
-    font-weight: bold;
-    font-size: 18px;
-    margin-left: 10%;
+    font-size: 22px;
+    margin-left: 4%;
+}
+
+.home_bg {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    background-size: cover;
+    background-position: center;
+    max-width: 100%;
+    padding: 60px 0;
+    z-index: 1;
+}
+
+#home-btn:hover {
+    transform: translateY(-2px);
+    transition: transform 0.4s ease-out;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+
 }
 
 #carousel_img {
@@ -24,6 +91,7 @@
     border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     transition: transform 0.4s;
+    background-color: #fef9f9;
 }
 
 #hover-underline:hover {
@@ -37,7 +105,7 @@
     width: 100%;
     height: 5px;
     border-radius: 5px;
-    background: linear-gradient(to right, #ff0000, #00ffff);
+    background: linear-gradient(to right, #e9a3a5, #FF5A5F);
     bottom: 0px;
     left: 0;
     transform: scaleX(0);
