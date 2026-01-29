@@ -1,116 +1,227 @@
-/* ===== Reset & Base ===== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #635bff, #8f88ff);
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  body {
+    height: 100vh;
+    background: linear-gradient(135deg, #da6c6d , #fef7f7);
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-/* ===== Main Login Wrapper ===== */
-.login {
+  }
+  
+  .container {
     width: 900px;
-    max-width: 95%;
-    background: #f1e8f4;
-    display: flex;
-    border-radius: 12px;
+    height: 520px;
+    background: white;
+    border-radius: 25px;
+    position: relative;
     overflow: hidden;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-}
-
-/* ===== Left Image Section ===== */
-.login .image {
-    width: 45%;
-    background: url("../img/MediQ-fav.png") center / cover no-repeat;
-}
-
-/* ===== Form Section ===== */
-.login form {
-    width: 55%;
-    padding: 40px;
-}
-
-.form {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+  
+  /* FORMS */
+  .form {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    padding: 60px;
+    transition: 0.6s;
+  }
+  
+  .login {
+    left: 0;
+  }
+  
+  .register {
+    left: 100%;
+    opacity: 0;
+  }
+  
+  .container.active .login {
+    left: -100%;
+    opacity: 0;
+  }
+  
+  .container.active .register {
+    left: 50%;
+    opacity: 1;
+  }
+  
+  h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  
+  input {
     width: 100%;
-}
-
-/* ===== Form Design ===== */
-.formdesign {
-    margin-bottom: 18px;
-}
-
-.formdesign label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #333;
-}
-
-.formdesign input,
-.formdesign select {
+    padding: 14px;
+    margin: 12px 0;
+    border-radius: 12px;
+    border: none;
+    background: #f1f1f1;
+  }
+  
+  button {
     width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-.formdesign input:focus,
-.formdesign select:focus {
-    outline: none;
-    border-color: #635bff;
-    box-shadow: 0 0 0 2px rgba(99, 91, 255, 0.2);
-}
-
-/* ===== Dropdown ===== */
-#dropdown-menu {
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: #FF5A5F;
+    color: white;
+    font-size: 16px;
     cursor: pointer;
-}
-
-/* ===== Button Section ===== */
-.button {
-    margin-top: 20px;
-}
-
-.button button {
-    width: 100%;
-    padding: 10px;
-    font-size: 15px;
-    border-radius: 6px;
-}
-
-/* ===== Links ===== */
-.button a {
-    display: inline-block;
     margin-top: 10px;
-    font-size: 13px;
-    color: #635bff;
+  }
+  
+  button:hover {
+    background: #e9a3a5;
+  }
+  
+  .forgot {
+    display: block;
+    margin: 10px 0;
+    font-size: 14px;
+    color: #555;
     text-decoration: none;
+  }
+  
+  .or {
+    text-align: center;
+    margin: 25px 0 15px;
+    color: #666;
+  }
+  
+  /* SOCIAL */
+  .social {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .social i {
+    width: 45px;
+    height: 45px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .social i:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+  }
+  
+  /* OVERLAY */
+  .overlay {
+    position: absolute;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(135deg, #e9a3a5, #FF5A5F);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.6s;
+  }
+  
+  .container.active .overlay {
+    transform: translateX(-100%);
+  }
+  
+  .overlay-content {
+    text-align: center;
+    padding: 40px;
+  }
+  
+  .overlay h1 {
+    font-size: 36px;
+  }
+  
+  .overlay p {
+    margin: 20px 0;
+    font-size: 18px;
+  }
+  
+  .overlay button {
+    background: transparent;
+    border: 2px solid white;
+    width: auto;
+    padding: 12px 40px;
+  }
+  
+  .form.register {
+    overflow-y: auto;
+    padding-right: 15px;
+  }
+  
+  /* smooth scrollbar */
+  .form.register::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .form.register::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+  }
+  
+  /* REGISTER FORM EXTRA FIELDS STYLING */
+
+select,
+textarea {
+  width: 100%;
+  padding: 14px;
+  margin: 12px 0;
+  border-radius: 12px;
+  border: none;
+  background: #f1f1f1;
+  font-family: 'Poppins', sans-serif;
+  resize: none;
 }
 
-.button a:hover {
-    text-decoration: underline;
+/* Address height */
+textarea {
+  height: 80px;
 }
 
-/* ===== Responsive Design ===== */
+/* Remove default select arrow styling (modern look) */
+select {
+  appearance: none;
+  cursor: pointer;
+}
+
+/* Focus effects for ALL fields */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  background: #e8ebff;
+  box-shadow: 0 0 0 2px #667eea55;
+}
+
+/* Placeholder color */
+input::placeholder,
+textarea::placeholder {
+  color: #888;
+}
+
+/* Mobile friendly */
 @media (max-width: 768px) {
-    .login {
-        flex-direction: column;
-    }
+  .container {
+    width: 95%;
+    height: auto;
+  }
 
-    .login .image {
-        width: 100%;
-        height: 180px;
-    }
-
-    .login form {
-        width: 100%;
-    }
+  .form {
+    padding: 40px 30px;
+  }
 }
