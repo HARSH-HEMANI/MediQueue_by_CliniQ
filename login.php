@@ -1,59 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | MediQueue</title>
-    <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css">
-    <script src="./css/bootstrap/js/bootstrap.bundle.js"></script>
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/login.css">
-</head>
+  <meta charset="UTF-8">
+  <title>Animated Login & Register</title>
 
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link rel="stylesheet" href="login.css">
+</head>
 <body>
 
-    <main>
-        <div class="login">
-            <div class="image">
-                <img src="" alt="">
-            </div>
+<div class="container" id="container">
 
-            <!------------------ Form starts ------------------------>
-            <form action="patient.php" name="loginForm" id="loginForm" method="post">
-                <div class="form">
-                    <div class="formdesign" id="select">
-                        <label for="dropdown-menu">
-                            <!------- user selection ------>
-                            <select name="user" id="dropdown-menu">
-                                <option value="#">Select</option>
-                                <option name="user" value="patient,html">User</option>
-                                <option name="user" value="doctor.html">Doctor</option>
-                                <option name="user" value="admin.html">Admin</option>
-                            </select>
-                        </label>
+  <!-- LOGIN -->
+  <div class="form login"  >
+    <h2>Login</h2>
 
-                        <div class="formdesign" id="uusername">
-                            <label for="username">User ID</label>
-                            <input type="text" name="username" id="username">
-                        </div>
-                        <div class="formdesign" id="upassword">
-                            <label for="password">Password</label>
-                            <input type="password" name="password" id="password">
-                        </div>
+    <input type="email" placeholder="Email">
+    <input type="password" placeholder="Password">
 
-                        <div class="button">
-                            <button type="submit" class="btn btn-sm btn-primary">Login</button>
-                            <a href="forgot_password.php">Forgot password?</a>
-                            <a href="registration.php">New Member?</a>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <!------- form ends ------>
-        </div>
-    </main>
+    <a href="#" class="forgot">Forgot Password?</a>
+    <button>Login</button>
+
+    <p class="or">or login with</p>
+    <div class="social">
+      <i class="fab fa-google"></i>
+      <i class="fab fa-facebook-f"></i>
+      <i class="fab fa-github"></i>
+      <i class="fab fa-linkedin-in"></i>
+    </div>
+  </div>
+
+  <!-- REGISTER (UPDATED) -->
+  <div class="form register">
+    <h2>Register</h2>
+
+    <input type="text" placeholder="Full Name">
+    <input type="email" placeholder="Email">
+    <input type="date" placeholder="DOB">
+    <input type="tel" placeholder="Phone Number">
+
+    <select>
+      <option value="">Select Gender</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select><br><br>
+
+    <textarea placeholder="Address"></textarea>
+
+    <input type="password" placeholder="Password">
+
+    <button>Register</button>
+  </div>
+
+  <!-- OVERLAY -->
+  <div class="overlay">
+    <div class="overlay-content">
+      <h1 id="title">Hello, Friend!</h1>
+      <p id="text">Don't have an account?</p>
+      <button id="toggle">Register</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const container = document.getElementById("container");
+  const toggle = document.getElementById("toggle");
+  const title = document.getElementById("title");
+  const text = document.getElementById("text");
+
+  let login = true;
+
+  toggle.onclick = () => {
+    container.classList.toggle("active");
+
+    if (login) {
+      title.innerText = "Welcome Back!";
+      text.innerText = "Already have an account?";
+      toggle.innerText = "Login";
+    } else {
+      title.innerText = "Hello, Friend!";
+      text.innerText = "Don't have an account?";
+      toggle.innerText = "Register";
+    }
+    login = !login;
+  };
+</script>
 
 </body>
-
 </html>
