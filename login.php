@@ -3,15 +3,16 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Animated Login & Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | MediQueue</title>
 
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="./css/login.css">
+
 </head>
 
 <body>
-
   <div class="container" id="container">
 
     <!-- LOGIN -->
@@ -21,43 +22,45 @@
       <input type="email" placeholder="Email">
       <input type="password" placeholder="Password">
 
-      <a href="#" class="forgot">Forgot Password?</a>
+      <a href="./forgot_password.php" class="forgot">Forgot Password?</a>
       <button>Login</button>
 
     </div>
 
     <!-- REGISTER (UPDATED) -->
-    <div class="form register">
-      <h2>Register</h2>
+    <section id="register">
+      <div class="form register">
+        <h2>Register</h2>
 
-      <input type="text" placeholder="Full Name">
-      <input type="email" placeholder="Email">
-      <input type="date" placeholder="DOB">
-      <input type="tel" placeholder="Phone Number">
+        <input type="text" placeholder="Full Name">
+        <input type="email" placeholder="Email">
+        <input type="date" placeholder="DOB">
+        <input type="tel" placeholder="Phone Number">
 
-      <select>
-        <option value="">Select Gender</option>
-        <option>Male</option>
-        <option>Female</option>
-        <option>Other</option>
-      </select><br><br>
+        <select>
+          <option value="">Select Gender</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select><br><br>
 
-      <textarea placeholder="Address"></textarea>
+        <textarea placeholder="Address"></textarea>
 
-      <input type="password" placeholder="Password">
+        <input type="password" placeholder="Password">
 
-      <button>Register</button>
-    </div>
-
-    <!-- OVERLAY -->
-    <div class="overlay">
-      <div class="overlay-content">
-        <h1 id="title">Hello, Friend!</h1>
-        <p id="text">Don't have an account?</p>
-        <button id="toggle">Register</button>
+        <button>Register</button>
       </div>
-    </div>
 
+      <!-- OVERLAY -->
+      <div class="overlay">
+        <div class="overlay-content">
+          <h1 id="title">Hello, Friend!</h1>
+          <p id="text">Don't have an account?</p>
+          <button id="toggle">Register</button>
+        </div>
+      </div>
+
+    </section>
   </div>
 
   <script>
