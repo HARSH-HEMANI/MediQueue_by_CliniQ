@@ -141,6 +141,10 @@
 
     </main>
 
+<section class="py-5 bg-white features">
+    <?php include './testimonial.php';?>
+</section>
+
     <!-- ------------- FOOTER --------------- -->
     <?php include "./footer.php"; ?>
 

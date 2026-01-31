@@ -221,6 +221,28 @@ body {
     margin: 0 auto;
 }
 
+.card-bg {
+    background-color: #fef9f9;
+}
+
+.text-brand {
+    color: #FF5A5F;
+}
+
+.brand-divider {
+    width: 70px;
+    height: 4px;
+    background: linear-gradient(to right, #FF5A5F, #ff8a8f);
+    border-radius: 4px;
+}
+
+
+.card:hover {
+    transform: translateY(-12px);
+    transition: 0.3s ease;
+    box-shadow: 0 20px 40px rgba(255, 90, 95, 0.5);
+}
+
 @media (max-width: 768px) {
     .features-header h2 {
         font-size: 2.1rem;
