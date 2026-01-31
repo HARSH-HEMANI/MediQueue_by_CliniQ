@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Doctor Dashboard | MediQueue</title>
     <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css">
     <script src="./css/bootstrap/js/bootstrap.bundle.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
