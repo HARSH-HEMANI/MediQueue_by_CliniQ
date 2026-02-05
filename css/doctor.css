@@ -366,9 +366,7 @@ canvas {
     max-height: 260px;
 }
 
-/* ================================
-   PROFILE SETTINGS
-================================ */
+/* --------------------------PROFILE SETTINGS------------------------------ */
 
 .form-label {
     font-weight: 600;
@@ -392,9 +390,7 @@ input[readonly] {
 }
 
 
-/* ================================
-   PRINT / PDF EXPORT
-================================ */
+/* ------------------PRINT / PDF EXPORT------------------- */
 @media print {
 
     body {
@@ -426,4 +422,43 @@ input[readonly] {
         max-height: 200px;
     }
 
+}
+
+/* ---------------------------------DASHBOARD FOOTER------------------------------------ */
+
+.dashboard-footer {
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 0;
+    margin-top: 30px;
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+.dashboard-footer small {
+    display: inline-block;
+}
+
+.dashboard-footer strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+.dashboard-footer a {
+    color: #6b7280;
+    text-decoration: none;
+    margin: 0 4px;
+}
+
+.dashboard-footer a:hover {
+    text-decoration: underline;
+    color: #374151;
+}
+
+
+@media (min-height: 600px) {
+    .dashboard-footer {
+        bottom: 0;
+        z-index: 5;
+    }
 }

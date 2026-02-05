@@ -341,6 +341,7 @@
         }
     </script>
 
+    <?php include './doctor-footer.php'; ?>
 
 </body>
 
