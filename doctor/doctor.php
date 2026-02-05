@@ -1,113 +1,208 @@
+<?php
+// session_start();
+
+// if (!isset($_SESSION['doctor_id'])) {
+//     header("Location: ../login.php");
+//     exit();
+// }
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediQueue | Doctor Dashboard</title>
     <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css">
-    <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/doctor.css">
 </head>
 
-<body class="dashboard-body">
-<?php include '../sidebar/doctor-sidebar.php';?>
+<body>
+    <?php include '../sidebar/doctor-sidebar.php'; ?>
 
-<main class="container-fluid" style="padding-top: 110px;">
 
-    <!--------- Page Header ------------>
-    <div class="d-flex justify-content-between align-items-center mb-4 px-4">
-        <h4 class="fw-semibold mb-0">Doctor Dashboard</h4>
-        <div class="d-flex align-items-center gap-3">
-            <i class="bi bi-bell fs-5"></i>
-            <span class="fw-semibold">Dr. Sharma</span>
-        </div>
-    </div>
+    <main class="doctor-dashboard container-fluid pt-5 mt-5">
 
-    <!----------- Stats ----------->
-    <div class="row g-3 px-4">
-        <div class="col-md-3">
-            <div class="stat-card">
-                <small>Today's Patients</small>
-                <h3>24</h3>
+        <!--  TODAY OVERVIEW  -->
+        <section class="mb-4">
+            <div class="row g-3">
+
+                <div class="col-md-3">
+                    <div class="dstat-card">
+                        <h6>Total Patients</h6>
+                        <h2>48</h2>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="dstat-card highlight">
+                        <h6>Current Token</h6>
+                        <h2>#21</h2>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="dstat-card">
+                        <h6>Avg Consultation</h6>
+                        <h2>12 min</h2>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="dstat-card danger">
+                        <h6>Emergency Cases</h6>
+                        <h2>2</h2>
+                    </div>
+                </div>
+
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <small>Current Token</small>
-                <h3>T-07</h3>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <small>Avg Consultation</small>
-                <h3>8 min</h3>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card danger">
-                <small>Emergency Requests</small>
-                <h3>1</h3>
-            </div>
-        </div>
-    </div>
+        </section>
 
-    <!--------- Live Queue ------------->
-    <div class="row g-4 px-4 mt-4">
-        <div class="col-md-7">
-            <div class="live-card text-center">
-                <h6 class="text-muted">NOW SERVING</h6>
-                <h1 class="token">T-07</h1>
-                <p>Patient: <strong>Ramesh Patel</strong></p>
+        <!--  LIVE QUEUE & EMERGENCY  -->
+        <section class="row g-4">
 
-                <div class="d-flex justify-content-center gap-3 mt-3">
-                    <button class="btn btn-brand">Call Next</button>
-                    <button class="btn btn-success">Complete</button>
-                    <button class="btn btn-outline-secondary">Hold</button>
+            <!-- Live Queue Control -->
+            <div class="col-lg-7">
+                <div class="dcard">
+
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Live Queue Control</span>
+                        <span class="badge bg-success">Live</span>
+                    </div>
+
+                    <div class="card-body text-center">
+                        <div class="live-token">Token #21</div>
+                        <div class="patient-name">Patient: Rahul Patel</div>
+
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+                            <button class="btn btn-brand">
+                                <i class="bi bi-arrow-right-circle"></i> Call Next
+                            </button>
+                            <button class="btn btn-outline-success">
+                                <i class="bi bi-check-circle"></i> Complete
+                            </button>
+                            <button class="btn btn-outline-warning">
+                                <i class="bi bi-pause-circle"></i> Hold
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
 
-        <!------ Upcoming Patients --------->
-        <div class="col-md-5">
-            <div class="card rounded-4 border-0 shadow-sm">
-                <div class="card-header bg-white fw-semibold">
-                    Upcoming Patients
-                </div>
-                <div class="card-body p-0">
-                    <table class="table mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Token</th>
-                                <th>Patient</th>
-                                <th>Type</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>T-08</td>
-                                <td>Anita Shah</td>
-                                <td>Follow-up</td>
-                            </tr>
-                            <tr>
-                                <td>T-09</td>
-                                <td>Rahul Mehta</td>
-                                <td>New</td>
-                            </tr>
-                            <tr>
-                                <td>T-10</td>
-                                <td>Sneha Joshi</td>
-                                <td>New</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- Emergency Alerts -->
+            <div class="col-lg-5">
+                <div class="dcard emergency-card">
+
+                    <div class="card-header emergency-header">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Emergency Alerts
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="emergency-item">
+                            <span>Token #35 – Chest Pain</span>
+                            <button class="btn btn-sm btn-light">View</button>
+                        </div>
+
+                        <div class="emergency-item">
+                            <span>Token #41 – Accident Case</span>
+                            <button class="btn btn-sm btn-light">View</button>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-</main>
+        </section>
 
+        <!--  UPCOMING PATIENTS & RIGHT PANEL  -->
+        <section class="row g-4 mt-1">
+
+            <!-- Upcoming Patients -->
+            <div class="col-lg-7">
+                <div class="dcard">
+
+                    <div class="card-header">
+                        Upcoming Patients
+                    </div>
+
+                    <div class="card-body p-0">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Token</th>
+                                    <th>Patient</th>
+                                    <th>Visit</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#22</td>
+                                    <td>Anita Shah</td>
+                                    <td>Follow-up</td>
+                                    <td><span class="badge bg-warning">Waiting</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#23</td>
+                                    <td>Mohit Kumar</td>
+                                    <td>New</td>
+                                    <td><span class="badge bg-warning">Waiting</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#24</td>
+                                    <td>Neha Joshi</td>
+                                    <td>New</td>
+                                    <td><span class="badge bg-warning">Waiting</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="col-lg-5">
+
+                <!-- Clinic Status -->
+                <div class="dcard mb-3">
+                    <div class="card-body clinic-status">
+                        <div>
+                            <h6 class="mb-1">Clinic Status</h6>
+                            <span class="badge bg-success">Open</span>
+                        </div>
+                        <button class="btn btn-sm btn-outline-secondary">
+                            Disable Booking
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="dcard quick-actions">
+                    <div class="card-header">
+                        Quick Actions
+                    </div>
+                    <div class="card-body d-grid gap-2">
+                        <a href="#" class="btn btn-outline-primary">View All Appointments</a>
+                        <a href="#" class="btn btn-outline-primary">Patient Records</a>
+                        <a href="#" class="btn btn-outline-primary">Schedule Settings</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+    <?php include './doctor-footer.php'; ?>
 </body>
+
 </html>
