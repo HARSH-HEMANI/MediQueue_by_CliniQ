@@ -12,6 +12,24 @@ body {
 
 }
 
+/* Dashboard offcanvas nav links */
+.offcanvas .nav-link {
+    font-weight: 500;
+    color: #2F2F3A;
+    padding: 8px 0;
+}
+
+.offcanvas .nav-link:hover,
+.offcanvas .nav-link.active {
+    color: #FF5A5F;
+}
+
+/* Better touch targets */
+.list-group-item {
+    padding: 10px 0;
+}
+
+
 /* NAVBAR */
 #nav-home {
     background: rgba(255, 255, 255, 0.75);
