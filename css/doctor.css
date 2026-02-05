@@ -1,193 +1,429 @@
-
-.dashboard-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fef9f9;
-    color: #2F2F3A;
-    font-size: 0.95rem;
+/* DOCTOR DASHBOARD */
+.doctor-dashboard {
+    background: #f9fafb;
+    min-height: 100vh;
+    padding: 24px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
-/* -------- TOP NAVBAR OVERRIDES -------- */
-.dashboard-body #nav-home {
-    background: rgba(255, 255, 255, 0.85);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.dashboard-body #nav-home .navbar-brand img {
-    height: 60px;
-}
-
-/* Hamburger icon */
-.dashboard-body #nav-home .bi-list {
-    color: #2F2F3A;
-    transition: color 0.3s ease;
-}
-
-.dashboard-body #nav-home .bi-list:hover {
-    color: #FF5A5F;
-}
-
-/* -------- OFFCANVAS SIDEBAR -------- */
-.dashboard-body .offcanvas {
-    width: 280px;
-    background-color: #fef9f9;
-}
-
-/* Sidebar header */
-.dashboard-body .offcanvas-header {
-    border-bottom: 1px solid #eee;
-}
-
-/* Sidebar menu container */
-.dashboard-body .offcanvas-body {
-    padding: 0;
-}
-
-/* -------- SIDEBAR LINKS -------- */
-.dashboard-body .offcanvas .nav-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    margin-bottom: 4px;
+/* GLOBAL CARD SYSTEM */
+.doctor-dashboard .dcard {
+    background: #ffffff;
+    border: none;
     border-radius: 14px;
-    color: #2F2F3A;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
-/* Hover state */
-.dashboard-body .offcanvas .nav-link:hover {
-    background-color: rgba(255, 90, 95, 0.08);
+.doctor-dashboard .card-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    font-weight: 700;
+    padding: 14px 18px;
+}
+
+.doctor-dashboard .card-body {
+    padding: 18px;
+}
+
+/* TODAY OVERVIEW – STAT CARDS */
+.doctor-dashboard .dstat-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 18px 20px;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 6px 16px rgba(0, 0, 0, 0.06);
+    border-left: 4px solid transparent;
+}
+
+.doctor-dashboard .dstat-card h6 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-bottom: 6px;
+}
+
+.doctor-dashboard .dstat-card h2 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0;
+}
+
+/* Accent states */
+.doctor-dashboard .dstat-card.highlight {
+    border-left-color: #FF5A5F;
+}
+
+.doctor-dashboard .dstat-card.danger {
+    border-left-color: #dc3545;
+    background: #fff5f5;
+}
+
+/* LIVE QUEUE CONTROL */
+.doctor-dashboard .live-token {
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: -1px;
     color: #FF5A5F;
 }
 
-/* Active state */
-.dashboard-body .offcanvas .nav-link.active {
-    background-color: rgba(255, 90, 95, 0.18);
-    color: #FF5A5F;
+.doctor-dashboard .patient-name {
+    font-size: 1.05rem;
+    color: #374151;
+    margin-top: 6px;
+}
+
+/* BUTTON SYSTEM (PROFESSIONAL) */
+.doctor-dashboard .btn {
+    border-radius: 10px;
     font-weight: 600;
+    padding: 8px 18px;
 }
 
-/* Active icon */
-.dashboard-body .offcanvas .nav-link.active i {
-    color: #FF5A5F;
+.doctor-dashboard .btn-brand {
+    background: #FF5A5F;
+    color: #ffffff;
+    border: none;
 }
 
-/* Logout */
-.dashboard-body .offcanvas .nav-link.text-danger {
-    color: #dc3545;
+.doctor-dashboard .btn-brand:focus {
+    box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.3);
 }
 
-.dashboard-body .offcanvas .nav-link.text-danger:hover {
-    background-color: rgba(220, 53, 69, 0.1);
+.doctor-dashboard .btn-outline-success,
+.doctor-dashboard .btn-outline-warning {
+    background: #ffffff;
 }
 
-/* -------- MAIN CONTENT AREA -------- */
-.dashboard-body main {
-    padding-top: 110px;
+.doctor-dashboard .btn:hover {
+    background: inherit;
+    color: inherit;
 }
 
-/* Top info bar */
-.dashboard-body .dashboard-header {
+/* EMERGENCY ALERTS (ONLY ATTENTION ZONE) */
+.doctor-dashboard .emergency-card {
+    border: 1px solid #fecaca;
+}
+
+.doctor-dashboard .emergency-header {
+    background: #dc3545;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.doctor-dashboard .emergency-item {
+    background: #fff5f5;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    color: #7f1d1d;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
 }
 
-/* -------- STAT CARDS -------- */
-.dashboard-body .stat-card {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 18px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* UPCOMING PATIENTS TABLE */
+.doctor-dashboard table {
+    margin: 0;
 }
 
-.dashboard-body .stat-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 45px rgba(255, 90, 95, 0.18);
+.doctor-dashboard thead th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
 }
 
-.dashboard-body .stat-card small {
-    color: #777;
-    font-size: 0.85rem;
+.doctor-dashboard tbody td {
+    font-size: 0.95rem;
+    color: #111827;
+    border-bottom: 1px solid #f1f5f9;
 }
 
-.dashboard-body .stat-card h3 {
-    margin-top: 6px;
+.doctor-dashboard .badge.bg-warning {
+    background: #fbbf24 !important;
+    color: #111827;
+    font-weight: 600;
+}
+
+/* CLINIC STATUS */
+.doctor-dashboard .clinic-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.doctor-dashboard .badge.bg-success {
+    background: #16a34a !important;
+    font-weight: 600;
+}
+
+/* QUICK ACTIONS */
+.doctor-dashboard .quick-actions .btn {
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+/* REMOVE ALL CHILDISH MOTION */
+.doctor-dashboard * {
+    transition: none !important;
+}
+
+
+/* ----------------------------------------------- APPOINTMENTS PAGE ------------------------------------------------------*/
+
+/* Table */
+.doctor-dashboard .appointment-table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+    background: #f9fafb;
+}
+
+.doctor-dashboard .appointment-table td {
+    font-size: 0.95rem;
+    vertical-align: middle;
+}
+
+/* Appointment Type Badges */
+.type-new {
+    background: #dbeafe;
+    color: #1e40af;
+    font-weight: 600;
+}
+
+.type-follow {
+    background: #dcfce7;
+    color: #166534;
+    font-weight: 600;
+}
+
+.type-emergency {
+    background: #fee2e2;
+    color: #991b1b;
     font-weight: 700;
+}
+
+/* Status Badges */
+.status-waiting {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-completed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-cancelled {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+/* Emergency Row Highlight */
+.emergency-row {
+    background: #fff5f5;
+    border-left: 4px solid #dc3545;
+}
+
+/* Actions */
+.action-cell .btn {
+    padding: 4px 8px;
+    margin-right: 4px;
+}
+
+/* ------------------------------------------------- LIVE QUEUE PAGE ------------------------------------------------------ */
+
+/* Current Token */
+.current-token-card {
+    border-left: 6px solid #FF5A5F;
+}
+
+.current-token-number {
+    font-size: 3.8rem;
+    font-weight: 900;
     color: #FF5A5F;
+    letter-spacing: -1px;
 }
 
-/* Emergency highlight */
-.dashboard-body .stat-card.danger h3 {
-    color: #dc3545;
+/* Queue Table */
+.queue-table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+    background: #f9fafb;
 }
 
-/* -------- LIVE QUEUE CARD -------- */
-.dashboard-body .live-card {
-    background: #ffffff;
-    padding: 35px;
-    border-radius: 22px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+.queue-table td {
+    font-size: 0.95rem;
+    vertical-align: middle;
 }
 
-.dashboard-body .live-card h6 {
-    letter-spacing: 1px;
+/* Priority Row */
+.priority-row {
+    background: #fff5f5;
+    border-left: 4px solid #dc3545;
 }
 
-.dashboard-body .live-card .token {
-    font-size: 3.5rem;
-    font-weight: 800;
-    color: #FF5A5F;
-    margin: 12px 0;
+/* Status Badges */
+.status-waiting {
+    background: #fef3c7;
+    color: #92400e;
+    font-weight: 600;
 }
 
-/* -------- BRAND BUTTON -------- */
-.dashboard-body .btn-brand {
-    background-color: #FF5A5F;
-    color: #ffffff;
-    border-radius: 30px;
-    padding: 10px 24px;
-    border: none;
-    transition: all 0.3s ease;
+/* ------------------------- PATIENT RECORDS ----------------------------- */
+
+/* Patient Table */
+.patient-table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+    background: #f9fafb;
 }
 
-.dashboard-body .btn-brand:hover {
-    background-color: #e64b50;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(255, 90, 95, 0.35);
+.patient-table td {
+    font-size: 0.95rem;
+    vertical-align: middle;
 }
 
-/* -------- TABLE (UPCOMING PATIENTS) -------- */
-.dashboard-body table {
-    font-size: 0.9rem;
+/* Emergency Patient Row */
+.emergency-row {
+    background: #fff5f5;
+    border-left: 4px solid #dc3545;
 }
 
-.dashboard-body table thead th {
-    background-color: #f8f9fa;
-    color: #555;
+/* Visit Timeline */
+.visit-timeline {
+    list-style: none;
+    padding-left: 0;
 }
 
-.dashboard-body table tbody tr:hover {
-    background-color: rgba(255, 90, 95, 0.05);
+.visit-timeline li {
+    padding: 14px 0;
+    border-bottom: 1px solid #f1f5f9;
 }
 
-/* -------- ICONS -------- */
-.dashboard-body .bi {
-    font-size: 1.05rem;
+.visit-date {
+    font-weight: 700;
+    margin-right: 8px;
 }
 
-/* -------- RESPONSIVE -------- */
-@media (max-width: 768px) {
-    .dashboard-body main {
-        padding-top: 100px;
+/* Emergency Visit */
+.emergency-visit {
+    background: #fff5f5;
+    padding: 12px;
+    border-left: 4px solid #dc3545;
+    border-radius: 8px;
+}
+
+/* -----------------------CONSULTATION ANALYTICS--------------------------- */
+
+.analytics-row,
+.speed-indicator {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-weight: 600;
+}
+
+/* Speed Indicators */
+.speed-indicator.fast {
+    color: #166534;
+}
+
+.speed-indicator.average {
+    color: #92400e;
+}
+
+.speed-indicator.slow {
+    color: #7f1d1d;
+}
+
+/* Emergency emphasis reused */
+.analytics-row.emergency-visit {
+    background: #fff5f5;
+    padding: 10px;
+    border-left: 4px solid #dc3545;
+    border-radius: 8px;
+}
+
+canvas {
+    max-height: 260px;
+}
+
+/* ================================
+   PROFILE SETTINGS
+================================ */
+
+.form-label {
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-control,
+.form-select {
+    border-radius: 10px;
+}
+
+/* Toggle */
+.form-switch .form-check-input {
+    cursor: pointer;
+}
+
+/* Read-only feel */
+input[readonly] {
+    background: #f9fafb;
+    color: #6b7280;
+}
+
+
+/* ================================
+   PRINT / PDF EXPORT
+================================ */
+@media print {
+
+    body {
+        background: #ffffff !important;
     }
 
-    .dashboard-body .stat-card {
-        text-align: center;
+    .doctor-dashboard {
+        padding: 0 !important;
+        margin: 0 !important;
     }
+
+    /* Hide sidebar, buttons, filters */
+    .sidebar,
+    button,
+    select,
+    input,
+    .btn {
+        display: none !important;
+    }
+
+    /* Cards print clean */
+    .dcard {
+        box-shadow: none !important;
+        border: 1px solid #e5e7eb;
+        page-break-inside: avoid;
+    }
+
+    canvas {
+        max-height: 200px;
+    }
+
 }
