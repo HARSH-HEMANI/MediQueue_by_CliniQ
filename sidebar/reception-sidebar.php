@@ -34,13 +34,13 @@
             </div>
         </div>
     </nav>
-    
+
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-        <div class="offcanvas-header">
+        <div class="offcanvas-header" style="background-color: #fef9f9;">
             <img src="./img/mediq.png" style="height: 70px;" class="mx-5" alt="">
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body">
+        <div class="offcanvas-body" style="background-color: #fef9f9;">
             <div class="navbar-nav mb-2 px-5 text-lg-center">
                 <a href="./doctor.php" type="none" class="nav-link">Dashboard</a>
             </div>
