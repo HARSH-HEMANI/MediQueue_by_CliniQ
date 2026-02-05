@@ -1,0 +1,193 @@
+
+.dashboard-body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fef9f9;
+    color: #2F2F3A;
+    font-size: 0.95rem;
+}
+
+/* -------- TOP NAVBAR OVERRIDES -------- */
+.dashboard-body #nav-home {
+    background: rgba(255, 255, 255, 0.85);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-body #nav-home .navbar-brand img {
+    height: 60px;
+}
+
+/* Hamburger icon */
+.dashboard-body #nav-home .bi-list {
+    color: #2F2F3A;
+    transition: color 0.3s ease;
+}
+
+.dashboard-body #nav-home .bi-list:hover {
+    color: #FF5A5F;
+}
+
+/* -------- OFFCANVAS SIDEBAR -------- */
+.dashboard-body .offcanvas {
+    width: 280px;
+    background-color: #fef9f9;
+}
+
+/* Sidebar header */
+.dashboard-body .offcanvas-header {
+    border-bottom: 1px solid #eee;
+}
+
+/* Sidebar menu container */
+.dashboard-body .offcanvas-body {
+    padding: 0;
+}
+
+/* -------- SIDEBAR LINKS -------- */
+.dashboard-body .offcanvas .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin-bottom: 4px;
+    border-radius: 14px;
+    color: #2F2F3A;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* Hover state */
+.dashboard-body .offcanvas .nav-link:hover {
+    background-color: rgba(255, 90, 95, 0.08);
+    color: #FF5A5F;
+}
+
+/* Active state */
+.dashboard-body .offcanvas .nav-link.active {
+    background-color: rgba(255, 90, 95, 0.18);
+    color: #FF5A5F;
+    font-weight: 600;
+}
+
+/* Active icon */
+.dashboard-body .offcanvas .nav-link.active i {
+    color: #FF5A5F;
+}
+
+/* Logout */
+.dashboard-body .offcanvas .nav-link.text-danger {
+    color: #dc3545;
+}
+
+.dashboard-body .offcanvas .nav-link.text-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+/* -------- MAIN CONTENT AREA -------- */
+.dashboard-body main {
+    padding-top: 110px;
+}
+
+/* Top info bar */
+.dashboard-body .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+/* -------- STAT CARDS -------- */
+.dashboard-body .stat-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-body .stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 45px rgba(255, 90, 95, 0.18);
+}
+
+.dashboard-body .stat-card small {
+    color: #777;
+    font-size: 0.85rem;
+}
+
+.dashboard-body .stat-card h3 {
+    margin-top: 6px;
+    font-weight: 700;
+    color: #FF5A5F;
+}
+
+/* Emergency highlight */
+.dashboard-body .stat-card.danger h3 {
+    color: #dc3545;
+}
+
+/* -------- LIVE QUEUE CARD -------- */
+.dashboard-body .live-card {
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 22px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-body .live-card h6 {
+    letter-spacing: 1px;
+}
+
+.dashboard-body .live-card .token {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #FF5A5F;
+    margin: 12px 0;
+}
+
+/* -------- BRAND BUTTON -------- */
+.dashboard-body .btn-brand {
+    background-color: #FF5A5F;
+    color: #ffffff;
+    border-radius: 30px;
+    padding: 10px 24px;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.dashboard-body .btn-brand:hover {
+    background-color: #e64b50;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 90, 95, 0.35);
+}
+
+/* -------- TABLE (UPCOMING PATIENTS) -------- */
+.dashboard-body table {
+    font-size: 0.9rem;
+}
+
+.dashboard-body table thead th {
+    background-color: #f8f9fa;
+    color: #555;
+}
+
+.dashboard-body table tbody tr:hover {
+    background-color: rgba(255, 90, 95, 0.05);
+}
+
+/* -------- ICONS -------- */
+.dashboard-body .bi {
+    font-size: 1.05rem;
+}
+
+/* -------- RESPONSIVE -------- */
+@media (max-width: 768px) {
+    .dashboard-body main {
+        padding-top: 100px;
+    }
+
+    .dashboard-body .stat-card {
+        text-align: center;
+    }
+}
