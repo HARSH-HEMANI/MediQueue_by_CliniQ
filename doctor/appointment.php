@@ -285,6 +285,7 @@
             </div>
         </div>
     </div>
+    <?php include './doctor-footer.php'; ?>
 
 </body>
 
