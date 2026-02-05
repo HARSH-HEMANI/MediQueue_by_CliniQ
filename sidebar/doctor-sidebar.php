@@ -9,7 +9,7 @@
         </button>
 
         <a class="navbar-brand" href="./index.php">
-            <img src="./img/mediq.png" alt="MediQueue Logo" style="height:60px;">
+            <img src="../img/mediq.png" alt="MediQueue Logo" style="height:60px;">
         </a>
 
         <button class="navbar-toggler" type="button"
@@ -32,7 +32,7 @@
 <!-- sidebar -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="doctorSidebar">
     <div class="offcanvas-header border-bottom" style="background:#fef9f9;">
-        <img src="./img/mediq.png" style="height:65px;" alt="MediQueue">
+        <img src="../img/mediq.png" style="height:65px;" alt="MediQueue">
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
 

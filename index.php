@@ -19,7 +19,6 @@
     <header>
         <?php include "./header.php"; ?>
 
-        <!-- Booking Banner -->
         <div style="background:#FF5A5F;color:#fff;text-align:center;padding:10px;margin-top:88px;">
             <h2>SMART APPOINTMENT BOOKING SYSTEM</h2>
         </div>
@@ -28,7 +27,6 @@
     <!-- ------------------ MAIN ----------------- -->
     <main>
 
-        <!-- HERO SECTION -->
         <section class="hero">
             <div class="hero-content">
                 <h1>
@@ -145,7 +143,6 @@
     <?php include './testimonial.php';?>
 </section>
 
-    <!-- ------------- FOOTER --------------- -->
     <?php include "./footer.php"; ?>
 
 </body>
