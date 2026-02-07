@@ -6,7 +6,7 @@
 //     exit();
 // }
 ?>
-
+<?php include "doctor-auth.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,7 +26,9 @@
 
 
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
-
+        <section class="features-header my-1">
+            <h2>Welcome, <span>Dr. <?php echo $_SESSION['doctor_name']; ?></span></h2>
+        </section>
         <!-- ================= HEADER ================= -->
         <section class="mb-4 d-flex justify-content-between align-items-center">
             <div>
