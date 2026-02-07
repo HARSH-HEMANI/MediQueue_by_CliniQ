@@ -93,6 +93,11 @@
                 </p>
 
                 <a href="#" class="hero-btn">Explore MediQueue</a>
+                <!-- <form action="book_appointment.php">
+                <button>Book Appointment</button>
+                </form> -->
+                <a href="book_appointment.php" class="hero-btn">Book Appointment</a>
+
             </div>
         </section>
 
