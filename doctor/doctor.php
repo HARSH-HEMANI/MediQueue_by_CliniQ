@@ -6,6 +6,7 @@
 //     exit();
 // }
 ?>
+<?php include "doctor-auth.php"; ?>
 
 
 <!DOCTYPE html>
@@ -25,9 +26,10 @@
 <body>
     <?php include '../sidebar/doctor-sidebar.php'; ?>
 
-
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
-
+        <section class="features-header my-1">
+            <h2>Welcome, <span>Dr. <?php echo $_SESSION['doctor_name']; ?></span></h2>
+        </section>
         <!--  TODAY OVERVIEW  -->
         <section class="mb-4">
             <div class="row g-3">
