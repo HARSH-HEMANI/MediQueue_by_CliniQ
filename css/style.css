@@ -250,6 +250,78 @@ body {
     box-shadow: 0 20px 40px rgba(255, 90, 95, 0.5);
 }
 
+/* ------------- About us -------------------- */
+.about-section .section-divider {
+    margin: 15px 0 25px;
+}
+
+/* About page container styling */
+.about-section {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+    margin-bottom: 50px;
+}
+
+/* Improve heading spacing */
+.about-section h2 {
+    font-size: 2rem;
+}
+
+.about-card {
+    border-left: 5px solid #FF5A5F;
+}
+
+/* -------------------- Contact us form --------------------------- */
+.form-control {
+    border-radius: 10px;
+    padding: 12px 14px;
+}
+
+.form-control:focus {
+    border-color: #FF5A5F;
+    box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
+}
+
+label.form-label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.contact-page {
+    padding-bottom: 30px;
+}
+
+/* FAQs */
+.faq-page {
+    padding-bottom: 40px;
+}
+
+/* Accordion polish */
+.accordion-button {
+    font-weight: 600;
+    background-color: #fef9f9;
+}
+
+.accordion-button:not(.collapsed) {
+    color: #FF5A5F;
+}
+
+/* Auth pages spacing fix */
+.auth-page {
+    padding-bottom: 40px;
+}
+
+/* Auth links */
+.auth-page a {
+    text-decoration: none;
+}
+
+.auth-page a:hover {
+    text-decoration: underline;
+}
+
 @media (max-width: 768px) {
     .features-header h2 {
         font-size: 2.1rem;
