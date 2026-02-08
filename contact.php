@@ -89,7 +89,7 @@
 
                             <li class="mb-3">
                                 <strong>Phone:</strong><br>
-                                +91 9XXXXXXXXX
+                                +91 123456789
                             </li>
 
                             <li class="mb-3">

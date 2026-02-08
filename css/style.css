@@ -179,22 +179,6 @@ body {
     line-height: 1.6;
 }
 
-
-@media (max-width: 768px) {
-    .hero {
-        text-align: center;
-    }
-
-    .hero-content {
-        margin: 0 20px;
-    }
-
-    .hero-content h1 {
-        font-size: 2.3rem;
-    }
-}
-
-
 .features-header {
     margin-bottom: 60px;
 }
@@ -232,6 +216,36 @@ body {
     background-color: #fef9f9;
 }
 
+.tcard {
+    position: relative;
+    background: #fff4f4;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    overflow: visible;
+    border-top: 5px solid #FF5A5F;
+    opacity: 0.7;
+}
+
+.tcard:hover{
+    opacity: 1;
+}
+
+.tcard .quote-icon {
+    position: absolute;
+    top: -50px;
+    right: -25px;
+    width: 100px;
+    z-index: 0;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.tcard>*:not(.quote-icon) {
+    position: relative;
+    z-index: 1;
+}
+
 .text-brand {
     color: #FF5A5F;
 }
@@ -246,7 +260,7 @@ body {
 
 .card:hover {
     transform: translateY(-12px);
-    transition: 0.3s ease;
+    transition: transform 0.3s ease;
     box-shadow: 0 20px 40px rgba(255, 90, 95, 0.5);
 }
 
@@ -329,5 +343,20 @@ label.form-label {
 
     .features-header p {
         font-size: 1rem;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .hero {
+        text-align: center;
+    }
+
+    .hero-content {
+        margin: 0 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.3rem;
     }
 }

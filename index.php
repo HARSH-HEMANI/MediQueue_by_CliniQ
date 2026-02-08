@@ -20,7 +20,7 @@
         <?php include "./header.php"; ?>
 
         <div style="background:#FF5A5F;color:#fff;text-align:center;padding:10px;margin-top:88px;">
-            <h2>SMART APPOINTMENT BOOKING SYSTEM</h2>
+            <h2>SMART CLINIC MANAGEMENT SYSTEM</h2>
         </div>
     </header>
 

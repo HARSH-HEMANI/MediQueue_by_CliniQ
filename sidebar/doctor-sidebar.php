@@ -72,7 +72,6 @@
                     onclick="return confirm('Are you sure you want to logout?');">
                     <i class="bi bi-box-arrow-right me-2"></i> Logout
                 </a>
-
             </div>
         </div>
     </div>
