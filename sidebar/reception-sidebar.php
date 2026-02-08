@@ -19,9 +19,9 @@
 
                 <!-- Center Menu -->
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="./index.php">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./doctor.php">Doctor</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="./doctor.php">Hospital</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="./index.php">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./doctor/doctor.php">Doctor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./reception.php">Hospital</a></li>
                     <li class="nav-item"><a class="nav-link" href="./about.php">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="./contact.php">Contact</a></li>
                     <li class="nav-item"><a class="nav-link" href="./faq.php">FAQs</a></li>
@@ -67,7 +67,11 @@
             </div>
 
             <div class="navbar-nav mb-2 px-5 text-lg-center">
-                <a href="./doctor.php" type="none" class="nav-link">Logout</a>
+                <a href="#"
+                    class="nav-link text-danger"
+                    onclick="return confirm('Are you sure you want to logout?');">
+                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                </a>
             </div>
         </div>
     </div>
