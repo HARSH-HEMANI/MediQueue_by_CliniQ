@@ -6,7 +6,7 @@
             <i class="bi bi-list fs-2"></i>
         </button>
 
-        <a class="navbar-brand" id="logo" href="dashboard.php">
+        <a class="navbar-brand" id="logo" href="#">
             <img src="../img/mediq.png" style="height:55px;">
         </a>
 
