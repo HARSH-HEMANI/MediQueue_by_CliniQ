@@ -13,10 +13,9 @@
 </head>
 
 <body>
-    <?php include '../sidebar/doctor-sidebar.php'; ?>
 
     <main class="features auth-page">
-        <section class="features-header text-center mt-5">
+        <section class="features-header text-center">
             <h2>Doctor <span>Login</span></h2>
             <div class="section-divider"></div>
             <p>
@@ -63,8 +62,6 @@
         </div>
 
     </main>
-
-    <?php include "./doctor-footer.php"; ?>
 
 </body>
 
