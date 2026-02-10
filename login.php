@@ -85,6 +85,14 @@
       }
       login = !login;
     };
+    if (window.location.hash === "#register") {
+      container.classList.add("active");
+
+      title.innerText = "Welcome Back!";
+      text.innerText = "Already have an account?";
+      toggle.innerText = "Login";
+      login = false;
+    }
   </script>
 
 </body>
