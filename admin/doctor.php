@@ -1,183 +1,169 @@
-<!-- <?php include "admin-auth.php"; ?> -->
-<!DOCTYPE html>
-<html>
+<?php
+$content_page = 'doctor-management';
+ob_start();
+?>
+<main class="admin-dashboard" style="margin-top:20px;">
+    <div class="container">
 
-<head>
-    <title>Doctor Management</title>
-    <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/admin.css">
-</head>
-
-<body>
-
-    <?php include "admin-header.php"; ?>
-    <?php include "admin-sidebar.php"; ?>
-
-    <main class="admin-dashboard" style="margin-top:20px;">
-        <div class="container">
-
-            <!-- Page Heading + Add Doctor -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div class="features-header text-start mb-0">
-                    <h2>Doctor <span>Management</span></h2>
-                    <div class="section-divider" style="margin-left:0;"></div>
-                </div>
-
-                <button class="hero-btn" data-bs-toggle="modal" data-bs-target="#addDoctorModal">
-                    + Add Doctor
-                </button>
+        <!-- Page Heading + Add Doctor -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="features-header text-start mb-0">
+                <h2>Doctor <span>Management</span></h2>
+                <div class="section-divider" style="margin-left:0;"></div>
             </div>
 
-            <!-- Doctor Table -->
-            <div class="feature-acard">
-                <table class="table align-middle">
-                    <thead>
-                        <tr>
-                            <th>Doctor</th>
-                            <th>Specialization</th>
-                            <th>Clinic</th>
-                            <th>Status</th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr>
-                            <td>Dr. Raj Patel</td>
-                            <td>Cardiology</td>
-                            <td>Main Clinic</td>
-                            <td>
-                                <span class="badge bg-success">Active</span>
-                            </td>
-                            <td class="text-center">
-
-                                <button class="btn btn-sm btn-outline-primary"
-                                    data-bs-toggle="modal" data-bs-target="#editDoctorModal">
-                                    Edit
-                                </button>
-
-                                <button class="btn btn-sm btn-outline-warning">
-                                    Deactivate
-                                </button>
-
-                                <button class="btn btn-sm btn-outline-danger">
-                                    Delete
-                                </button>
-
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
+            <button class="hero-btn" data-bs-toggle="modal" data-bs-target="#addDoctorModal">
+                + Add Doctor
+            </button>
         </div>
-    </main>
 
-    <!-- ADD DOCTOR MODAL -->
-    <div class="modal fade" id="addDoctorModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+        <!-- Doctor Table -->
+        <div class="feature-acard">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Specialization</th>
+                        <th>Clinic</th>
+                        <th>Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
 
-                <div class="modal-header">
-                    <h5>Add New Doctor</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
+                <tbody>
+                    <tr>
+                        <td>Dr. Raj Patel</td>
+                        <td>Cardiology</td>
+                        <td>Main Clinic</td>
+                        <td>
+                            <span class="badge bg-success">Active</span>
+                        </td>
+                        <td class="text-center">
 
-                <div class="modal-body">
-                    <form>
+                            <button class="btn btn-sm btn-outline-primary"
+                                data-bs-toggle="modal" data-bs-target="#editDoctorModal">
+                                Edit
+                            </button>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label>Doctor Name</label>
-                                <input type="text" class="form-control" placeholder="Dr. John Doe">
-                            </div>
+                            <button class="btn btn-sm btn-outline-warning">
+                                Deactivate
+                            </button>
 
-                            <div class="col-md-6 mb-3">
-                                <label>Specialization</label>
-                                <input type="text" class="form-control" placeholder="Cardiology">
-                            </div>
-                        </div>
+                            <button class="btn btn-sm btn-outline-danger">
+                                Delete
+                            </button>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label>Email</label>
-                                <input type="email" class="form-control">
-                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label>Phone</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
+    </div>
+</main>
 
-                        <div class="mb-3">
-                            <label>Assign Clinic</label>
-                            <select class="form-select">
-                                <option>Main Clinic</option>
-                                <option>Branch Clinic</option>
-                            </select>
-                        </div>
+<!-- ADD DOCTOR MODAL -->
+<div class="modal fade" id="addDoctorModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
 
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="hero-btn">Add Doctor</button>
-                </div>
-
+            <div class="modal-header">
+                <h5>Add New Doctor</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+
+            <div class="modal-body">
+                <form>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Doctor Name</label>
+                            <input type="text" class="form-control" placeholder="Dr. John Doe">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Specialization</label>
+                            <input type="text" class="form-control" placeholder="Cardiology">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Email</label>
+                            <input type="email" class="form-control">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Phone</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Assign Clinic</label>
+                        <select class="form-select">
+                            <option>Main Clinic</option>
+                            <option>Branch Clinic</option>
+                        </select>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="hero-btn">Add Doctor</button>
+            </div>
+
         </div>
     </div>
+</div>
 
-    <!-- EDIT DOCTOR MODAL -->
-    <div class="modal fade" id="editDoctorModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+<!-- EDIT DOCTOR MODAL -->
+<div class="modal fade" id="editDoctorModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
 
-                <div class="modal-header">
-                    <h5>Edit Doctor Information</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <form>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label>Doctor Name</label>
-                                <input type="text" class="form-control" value="Dr. Raj Patel">
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label>Specialization</label>
-                                <input type="text" class="form-control" value="Cardiology">
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Clinic</label>
-                            <select class="form-select">
-                                <option selected>Main Clinic</option>
-                                <option>Branch Clinic</option>
-                            </select>
-                        </div>
-
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="hero-btn">Save Changes</button>
-                </div>
-
+            <div class="modal-header">
+                <h5>Edit Doctor Information</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+
+            <div class="modal-body">
+                <form>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Doctor Name</label>
+                            <input type="text" class="form-control" value="Dr. Raj Patel">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Specialization</label>
+                            <input type="text" class="form-control" value="Cardiology">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Clinic</label>
+                        <select class="form-select">
+                            <option selected>Main Clinic</option>
+                            <option>Branch Clinic</option>
+                        </select>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="hero-btn">Save Changes</button>
+            </div>
+
         </div>
     </div>
-
-</body>
-
-</html>
+</div>
+<?php
+$content = ob_get_clean();
+include './admin-layout.php';
+?>
