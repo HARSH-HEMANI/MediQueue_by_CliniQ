@@ -61,7 +61,7 @@
             <div class="row justify-content-center">
 
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="feature-card animated-card">
+                    <div class="feature-card about-card">
                         <h5>Reduced Waiting Time</h5>
                         <p>
                             Smart queue handling keeps patients informed
@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="feature-card animated-card">
+                    <div class="feature-card about-card">
                         <h5>Actionable Analytics</h5>
                         <p>
                             Understand patient flow, peak hours,
@@ -81,7 +81,7 @@
                 </div>
 
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="feature-card animated-card">
+                    <div class="feature-card about-card ">
                         <h5>Doctor-First Design</h5>
                         <p>
                             Built around real clinic workflows
