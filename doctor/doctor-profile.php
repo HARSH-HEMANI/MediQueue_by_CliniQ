@@ -60,27 +60,31 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Full Name</label>
-                                <input type="text" id="doctorName" name="doctor_name"
-                                    data-save class="form-control" required>
+                                <input type="text" id="doctorName" name="name"
+                                    data-save class="form-control" data-validation="required|min|max" data-min="3" data-max="50">
+                                <small id="name_error"></small>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Specialization</label>
                                 <input type="text" id="specialization" name="specialization"
-                                    data-save class="form-control" required>
+                                    data-save class="form-control" data-validation="required">
+                                <small id="specialization_error"></small>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Qualification</label>
                                     <input type="text" id="qualification" name="qualification"
-                                        data-save class="form-control">
+                                        data-save class="form-control" data-validation="required">
+                                    <small id="qualification"></small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Years of Experience</label>
                                     <input type="number" id="experience" name="experience"
-                                        data-save class="form-control" min="0">
+                                        data-save class="form-control" data-validation="required">
+                                    <small id="cname_error"></small>
                                 </div>
                             </div>
 
@@ -96,27 +100,31 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Clinic Name</label>
-                                <input type="text" id="clinicName" name="clinic_name"
-                                    data-save class="form-control">
+                                <input type="text" id="cName" name="came" data-validation="required|min|max"
+                                    data-min="3" data-max="50" data-save class="form-control">
+                                <small id="cname_error"></small>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Clinic Address</label>
-                                <textarea id="clinicAddress" name="clinic_address"
-                                    data-save class="form-control" rows="2"></textarea>
+                                <textarea id="cAddress" name="caddress"
+                                    data-save class="form-control" rows="2" data-validation="required"></textarea>
+                                <small id="caddress_error"></small>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Contact Number</label>
-                                    <input type="text" id="clinicContact" name="clinic_contact"
-                                        data-save class="form-control">
+                                    <input type="text" id="contact" name="contact"
+                                        data-save class="form-control" data-validation="required|number">
+                                    <small id="contact_error"></small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Consultation Fee (₹)</label>
-                                    <input type="number" id="consultationFee" name="consultation_fee"
-                                        data-save class="form-control" min="0">
+                                    <input type="number" id="cFee" name="cfee"
+                                        data-save class="form-control" min="0" data-validation="required">
+                                    <small id="cfee_error"></small>
                                 </div>
                             </div>
 
@@ -143,25 +151,28 @@
                             <div class="mb-3">
                                 <label class="form-label">Email / Phone</label>
                                 <input type="text" id="emailPhone" name="email_phone"
-                                    data-save class="form-control">
+                                    data-save class="form-control" data-validation="required|email">
+                                <small id="email_phone_error"></small>
                             </div>
 
                             <hr>
 
                             <h6>Change Password</h6>
 
-                            <input type="password" id="oldPassword"
-                                class="form-control mb-2"
-                                placeholder="Old Password">
+                            <input type="password" id="oldPassword" 
+                                class="form-control mb-2" name="oldPassword"
+                                placeholder="Old Password" data-validation="required|confirmPassword">
+                            <small id="oldPassword_error"></small>
 
                             <input type="password" id="newPassword"
-                                class="form-control mb-2"
-                                placeholder="New Password">
+                                class="form-control mb-2" name="newPassword"
+                                placeholder="New Password" data-validation="required|strongPassword">
+                            <small id="newPassword_error"></small>
 
                             <input type="password" id="confirmPassword"
-                                class="form-control mb-3"
-                                placeholder="Confirm New Password">
-
+                                class="form-control mb-3" name="confirmPassword"
+                                placeholder="Confirm New Password" data-validation="required|confirmPassword">
+                            <small id="confirmPassword_error"></small>
                             <button type="button"
                                 class="btn btn-outline-secondary"
                                 onclick="changePassword()">
@@ -323,9 +334,9 @@
 
     </main>
 
-
-
     <?php include './doctor-footer.php'; ?>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../js/validation.js"></script>
 </body>
 
 </html>

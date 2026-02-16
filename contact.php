@@ -39,27 +39,31 @@
                     <div class="feature-card">
                         <h5 class="mb-4 text-center">Send Us a Message</h5>
 
-                        <form>
+                        <form action="" method="post" id="contactForm">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" placeholder="Your Name">
+                                    <input type="text" class="form-control" name="name" id="name" placeholder="Your Name" data-validation="required|min|max" data-min="3" data-max="20">
+                                    <small id="name_error"></small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Email Address</label>
-                                    <input type="email" class="form-control" placeholder="your@email.com">
+                                    <input type="text" name="email" id="email" class="form-control" placeholder="your@email.com" data-validation="required|email">
+                                    <small id="email_error"></small>
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Subject</label>
-                                <input type="text" class="form-control" placeholder="Subject">
+                                <input type="text" name="sub" id="sub"  data-validation="required" class="form-control" placeholder="Subject">
+                                <small id="sub_error"></small>
                             </div>
 
                             <div class="mb-4">
                                 <label class="form-label">Message</label>
-                                <textarea class="form-control" rows="5" placeholder="Write your message..."></textarea>
+                                <textarea class="form-control" name="message" id="message" data-validation="required" rows="5" placeholder="Write your message..."></textarea>
+                                <small id="message_error"></small>
                             </div>
 
                             <div class="text-center">
@@ -107,7 +111,8 @@
     </main>
 
     <?php include "./footer.php"; ?>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./js/validation.js"></script>
 </body>
 
 </html>

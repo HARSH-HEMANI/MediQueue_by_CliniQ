@@ -1,20 +1,83 @@
 <?php
-// session_start();
+include "doctor-auth.php";
 
-// if (!isset($_SESSION['doctor_id'])) {
-//     header("Location: ../login.php");
-//     exit();
-// }
+/* ================= SELECTED PATIENT ================= */
+$patientId = $_GET['patient'] ?? "P1021";
+
+/* ================= STATIC DATA (SIMULATION) ================= */
+$patients = [
+
+    "P1021" => [
+        "name" => "Rahul Patel",
+        "age" => 32,
+        "gender" => "Male",
+        "phone" => "98XXXXXX21",
+        "registered" => "15 Aug 2025",
+        "total_visits" => 5,
+        "last_visit" => "12 Jan 2026",
+        "frequency" => "Once in 2 months",
+        "notes" => "Recurrent fever complaints. Blood test advised.",
+        "history" => [
+            [
+                "date" => "12 Jan 2026",
+                "type" => "Follow-up",
+                "token" => "21",
+                "note" => "Fever reduced, advised rest."
+            ]
+        ]
+    ],
+
+    "P1044" => [
+        "name" => "Anita Shah",
+        "age" => 45,
+        "gender" => "Female",
+        "phone" => "97XXXXXX44",
+        "registered" => "02 Mar 2024",
+        "total_visits" => 8,
+        "last_visit" => "05 Jan 2026",
+        "frequency" => "Once a month",
+        "notes" => "Hypertension monitoring.",
+        "history" => [
+            [
+                "date" => "05 Jan 2026",
+                "type" => "Follow-up",
+                "token" => "19",
+                "note" => "BP stable. Continue medication."
+            ]
+        ]
+    ],
+
+    "P1102" => [
+        "name" => "Mohit Kumar",
+        "age" => 29,
+        "gender" => "Male",
+        "phone" => "96XXXXXX02",
+        "registered" => "10 Oct 2025",
+        "total_visits" => 3,
+        "last_visit" => "10 Jan 2026",
+        "frequency" => "Occasional",
+        "notes" => "Emergency visit for chest pain.",
+        "history" => [
+            [
+                "date" => "10 Jan 2026",
+                "type" => "Emergency",
+                "token" => "E3",
+                "note" => "Acute chest pain. Referred to hospital."
+            ]
+        ]
+    ]
+];
+
+$current = $patients[$patientId];
 ?>
-<?php include "doctor-auth.php"; ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediQueue | Doctor Dashboard</title>
+    <title>MediQueue | Patient Records</title>
+
     <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
@@ -23,57 +86,26 @@
 </head>
 
 <body>
+
     <?php include '../sidebar/doctor-sidebar.php'; ?>
 
-
-
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
-        <section class="features-header my-1">
-            <h2>Welcome, <span>Dr. <?php echo $_SESSION['doctor_name']; ?></span></h2>
-        </section>
-        <!--  HEADER  -->
+
+        <!-- HEADER -->
         <section class="mb-4">
             <h4 class="mb-1">Patient Records</h4>
             <p class="text-muted mb-0">Search and review registered patients</p>
         </section>
 
-        <!--  SEARCH & FILTER  -->
-        <section class="mb-3">
-            <div class="dcard p-3">
-                <div class="row g-2">
-                    <div class="col-md-4">
-                        <input type="text" class="form-control form-control-sm"
-                            placeholder="Search by name, phone or Patient ID">
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-select form-select-sm">
-                            <option selected>All Patients</option>
-                            <option>Emergency History</option>
-                            <option>Frequent Visitors</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button class="btn btn-outline-secondary btn-sm w-100">
-                            <i class="bi bi-search"></i> Search
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!--  PATIENT LIST  -->
+        <!-- PATIENT TABLE -->
         <section class="row g-4">
 
-            <!-- Patient Table -->
             <div class="col-lg-7">
                 <div class="dcard">
-
-                    <div class="card-header">
-                        Patient List
-                    </div>
+                    <div class="card-header">Patient List</div>
 
                     <div class="card-body p-0">
-                        <table class="table mb-0 patient-table">
+                        <table class="table mb-0">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -84,79 +116,59 @@
                             </thead>
                             <tbody>
 
-                                <tr>
-                                    <td>P1021</td>
-                                    <td>
-                                        Rahul Patel <br>
-                                        <small class="text-muted">32 / Male</small>
-                                    </td>
-                                    <td>12 Jan 2026</td>
-                                    <td>5</td>
-                                </tr>
-
-                                <tr>
-                                    <td>P1044</td>
-                                    <td>
-                                        Anita Shah <br>
-                                        <small class="text-muted">45 / Female</small>
-                                    </td>
-                                    <td>05 Jan 2026</td>
-                                    <td>8</td>
-                                </tr>
-
-                                <tr class="emergency-row">
-                                    <td>P1102</td>
-                                    <td>
-                                        Mohit Kumar <br>
-                                        <small class="text-muted">29 / Male</small>
-                                    </td>
-                                    <td>10 Jan 2026</td>
-                                    <td>3</td>
-                                </tr>
+                                <?php foreach ($patients as $id => $data): ?>
+                                    <tr class="<?php echo ($id == $patientId) ? 'table-active' : ''; ?>">
+                                        <td>
+                                            <a href="?patient=<?php echo $id; ?>" >
+                                                <?php echo $id; ?>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <?php echo $data['name']; ?><br>
+                                            <small class="text-muted">
+                                                <?php echo $data['age']; ?> / <?php echo $data['gender']; ?>
+                                            </small>
+                                        </td>
+                                        <td><?php echo $data['last_visit']; ?></td>
+                                        <td><?php echo $data['total_visits']; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
 
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
 
-            <!--  PATIENT PROFILE  -->
+            <!-- PROFILE PANEL -->
             <div class="col-lg-5">
 
-                <!-- Profile -->
                 <div class="dcard mb-3">
-                    <div class="card-header">
-                        Patient Profile
-                    </div>
+                    <div class="card-header">Patient Profile</div>
                     <div class="card-body">
-                        <p><strong>Name:</strong> Rahul Patel</p>
-                        <p><strong>Age / Gender:</strong> 32 / Male</p>
-                        <p><strong>Phone:</strong> 98XXXXXX21</p>
-                        <p><strong>Registered On:</strong> 15 Aug 2025</p>
+                        <p><strong>Name:</strong> <?php echo $current['name']; ?></p>
+                        <p><strong>Age / Gender:</strong> <?php echo $current['age']; ?> / <?php echo $current['gender']; ?></p>
+                        <p><strong>Phone:</strong> <?php echo $current['phone']; ?></p>
+                        <p><strong>Registered On:</strong> <?php echo $current['registered']; ?></p>
 
                         <hr>
 
-                        <p class="mb-1"><strong>Medical Notes (Summary)</strong></p>
+                        <p class="mb-1"><strong>Medical Notes</strong></p>
                         <p class="text-muted mb-0">
-                            Recurrent fever complaints, advised blood test and follow-up.
+                            <?php echo $current['notes']; ?>
                         </p>
                     </div>
                 </div>
 
-                <!-- Visit Summary -->
                 <div class="dcard mb-3">
-                    <div class="card-header">
-                        Visit Summary
-                    </div>
+                    <div class="card-header">Visit Summary</div>
                     <div class="card-body">
-                        <p><strong>Total Visits:</strong> 5</p>
-                        <p><strong>Last Visit:</strong> 12 Jan 2026</p>
-                        <p class="mb-0"><strong>Avg Visit Frequency:</strong> Once in 2 months</p>
+                        <p><strong>Total Visits:</strong> <?php echo $current['total_visits']; ?></p>
+                        <p><strong>Last Visit:</strong> <?php echo $current['last_visit']; ?></p>
+                        <p class="mb-0"><strong>Avg Visit Frequency:</strong> <?php echo $current['frequency']; ?></p>
                     </div>
                 </div>
 
-                <!-- Export -->
                 <div class="dcard">
                     <div class="card-body">
                         <button class="btn btn-outline-secondary w-100">
@@ -169,51 +181,49 @@
 
         </section>
 
-        <!--  VISIT HISTORY  -->
+        <!-- VISIT HISTORY -->
         <section class="mt-4">
             <div class="dcard">
-
-                <div class="card-header">
-                    Visit History
-                </div>
+                <div class="card-header">Visit History</div>
 
                 <div class="card-body">
-
                     <ul class="visit-timeline">
 
-                        <li>
-                            <span class="visit-date">12 Jan 2026</span>
-                            <span class="badge type-follow">Follow-up</span>
-                            <span class="badge status-completed">Completed</span>
-                            <p class="mt-1 mb-0">
-                                Token #21 · Appointment ID A2031
-                            </p>
-                            <small class="text-muted">
-                                Notes: Fever reduced, advised rest
-                            </small>
-                        </li>
+                        <?php foreach ($current['history'] as $visit): ?>
 
-                        <li class="emergency-visit">
-                            <span class="visit-date">03 Dec 2025</span>
-                            <span class="badge type-emergency">
-                                <i class="bi bi-exclamation-triangle-fill"></i> Emergency
-                            </span>
-                            <span class="badge status-completed">Completed</span>
-                            <p class="mt-1 mb-0">
-                                Token #E3 · Emergency Visit
-                            </p>
-                            <small class="text-muted">
-                                Notes: Acute chest pain, referred to hospital
-                            </small>
-                        </li>
+                            <li class="<?php echo ($visit['type'] == 'Emergency') ? 'emergency-visit' : ''; ?>">
+
+                                <span class="visit-date"><?php echo $visit['date']; ?></span>
+
+                                <?php if ($visit['type'] == 'Emergency'): ?>
+                                    <span class="badge type-emergency">
+                                        <i class="bi bi-exclamation-triangle-fill"></i> Emergency
+                                    </span>
+                                <?php else: ?>
+                                    <span class="badge type-follow">Follow-up</span>
+                                <?php endif; ?>
+
+                                <span class="badge status-completed">Completed</span>
+
+                                <p class="mt-1 mb-0">
+                                    Token #<?php echo $visit['token']; ?>
+                                </p>
+
+                                <small class="text-muted">
+                                    Notes: <?php echo $visit['note']; ?>
+                                </small>
+
+                            </li>
+
+                        <?php endforeach; ?>
 
                     </ul>
-
                 </div>
             </div>
         </section>
 
     </main>
+
     <?php include './doctor-footer.php'; ?>
 
 </body>

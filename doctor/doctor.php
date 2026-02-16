@@ -1,21 +1,55 @@
 <?php
-// session_start();
+include "doctor-auth.php";
 
-// if (!isset($_SESSION['doctor_id'])) {
-//     header("Location: ../login.php");
-//     exit();
-// }
+$state = $_GET['state'] ?? 'idle';
+
+$currentToken = null;
+$currentPatient = null;
+$statusText = "Waiting to start";
+$badgeClass = "bg-secondary";
+$badgeText = "Idle";
+
+$totalPatients = 4;
+$emergencyCount = 1;
+
+if ($state == "next") {
+    $currentToken = 21;
+    $currentPatient = "Rahul Patel";
+    $statusText = "In Consultation";
+    $badgeClass = "bg-success";
+    $badgeText = "Live";
+}
+
+if ($state == "hold") {
+    $statusText = "Patient on Hold";
+    $badgeClass = "bg-warning";
+    $badgeText = "On Hold";
+}
+
+if ($state == "complete") {
+    $statusText = "Patient Completed";
+    $badgeClass = "bg-secondary";
+    $badgeText = "Idle";
+    $totalPatients = 3;
+}
+
+if($state == "emergency"){
+    $currentToken = 23;
+    $currentPatient = "Mohit Kumar";
+    $statusText = "Emergency Case - Chest Pain";
+    $badgeClass = "bg-danger";
+    $badgeText = "Emergency Active";
+}
+
 ?>
-<?php include "doctor-auth.php"; ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediQueue | Doctor Dashboard</title>
+
     <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
@@ -24,27 +58,39 @@
 </head>
 
 <body>
+
     <?php include '../sidebar/doctor-sidebar.php'; ?>
 
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
-        <section class="features-header my-1">
+
+        <!-- Header -->
+        <section class="mb-4">
             <h2>Welcome, <span>Dr. <?php echo $_SESSION['doctor_name']; ?></span></h2>
         </section>
-        <!--  TODAY OVERVIEW  -->
+
+        <!-- Overview Cards -->
         <section class="mb-4">
             <div class="row g-3">
 
                 <div class="col-md-3">
                     <div class="dstat-card">
                         <h6>Total Patients</h6>
-                        <h2>48</h2>
+                        <h2><?php echo $totalPatients; ?></h2>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <div class="dstat-card highlight">
                         <h6>Current Token</h6>
-                        <h2>#21</h2>
+                        <h2>
+                            <?php
+                            if ($currentToken) {
+                                echo "#" . $currentToken;
+                            } else {
+                                echo "--";
+                            }
+                            ?>
+                        </h2>
                     </div>
                 </div>
 
@@ -58,46 +104,67 @@
                 <div class="col-md-3">
                     <div class="dstat-card danger">
                         <h6>Emergency Cases</h6>
-                        <h2>2</h2>
+                        <h2><?php echo $emergencyCount; ?></h2>
                     </div>
                 </div>
 
             </div>
         </section>
 
-        <!--  LIVE QUEUE & EMERGENCY  -->
+        <!-- Live Queue -->
         <section class="row g-4">
 
-            <!-- Live Queue Control -->
             <div class="col-lg-7">
                 <div class="dcard">
 
-                    <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="card-header d-flex justify-content-between">
                         <span>Live Queue Control</span>
-                        <span class="badge bg-success">Live</span>
+                        <span class="badge <?php echo $badgeClass; ?>">
+                            <?php echo $badgeText; ?>
+                        </span>
                     </div>
 
                     <div class="card-body text-center">
-                        <div class="live-token">Token #21</div>
-                        <div class="patient-name">Patient: Rahul Patel</div>
 
-                        <div class="d-flex justify-content-center gap-3 mt-4">
-                            <button class="btn btn-brand">
-                                <i class="bi bi-arrow-right-circle"></i> Call Next
-                            </button>
-                            <button class="btn btn-outline-success">
-                                <i class="bi bi-check-circle"></i> Complete
-                            </button>
-                            <button class="btn btn-outline-warning">
-                                <i class="bi bi-pause-circle"></i> Hold
-                            </button>
+                        <div class="live-token mb-2">
+                            <?php
+                            if ($currentToken) {
+                                echo "Token #" . $currentToken;
+                            } else {
+                                echo "No Active Token";
+                            }
+                            ?>
                         </div>
-                    </div>
 
+                        <div class="patient-name mb-3">
+                            <?php
+                            if ($currentPatient) {
+                                echo "Patient: " . $currentPatient;
+                            } else {
+                                echo $statusText;
+                            }
+                            ?>
+                        </div>
+
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="?state=next" class="btn btn-brand">
+                                <i class="bi bi-arrow-right-circle"></i> Call Next
+                            </a>
+
+                            <a href="?state=complete" class="btn btn-outline-success">
+                                <i class="bi bi-check-circle"></i> Complete
+                            </a>
+
+                            <a href="?state=hold" class="btn btn-outline-warning">
+                                <i class="bi bi-pause-circle"></i> Hold
+                            </a>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
-            <!-- Emergency Alerts -->
+            <!-- Emergency Panel -->
             <div class="col-lg-5">
                 <div class="dcard emergency-card">
 
@@ -108,27 +175,29 @@
 
                     <div class="card-body">
 
-                        <div class="emergency-item">
-                            <span>Token #35 – Chest Pain</span>
-                            <button class="btn btn-sm btn-light">View</button>
-                        </div>
+                        <?php if ($emergencyCount > 0): ?>
+                            <div class="emergency-item">
+                                <span>Token #23 - Chest Pain</span>
+                                <a href="?state=emergency" class="btn btn-sm btn-light">
+                                    View
+                                </a>
 
-                        <div class="emergency-item">
-                            <span>Token #41 – Accident Case</span>
-                            <button class="btn btn-sm btn-light">View</button>
-                        </div>
+                            </div>
+                        <?php else: ?>
+                            <p class="text-muted">No emergency cases.</p>
+                        <?php endif; ?>
 
                     </div>
+
                 </div>
             </div>
 
         </section>
 
-        <!--  UPCOMING PATIENTS & RIGHT PANEL  -->
-        <section class="row g-4 mt-1">
+        <!-- Upcoming Patients -->
+        <section class="row g-4 mt-4">
 
-            <!-- Upcoming Patients -->
-            <div class="col-lg-7">
+            <div class="col-lg-12">
                 <div class="dcard">
 
                     <div class="card-header">
@@ -146,24 +215,28 @@
                                 </tr>
                             </thead>
                             <tbody>
+
                                 <tr>
                                     <td>#22</td>
                                     <td>Anita Shah</td>
                                     <td>Follow-up</td>
                                     <td><span class="badge bg-warning">Waiting</span></td>
                                 </tr>
+
                                 <tr>
                                     <td>#23</td>
                                     <td>Mohit Kumar</td>
                                     <td>New</td>
-                                    <td><span class="badge bg-warning">Waiting</span></td>
+                                    <td><span class="badge bg-danger">Emergency</span></td>
                                 </tr>
+
                                 <tr>
                                     <td>#24</td>
                                     <td>Neha Joshi</td>
                                     <td>New</td>
                                     <td><span class="badge bg-warning">Waiting</span></td>
                                 </tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -171,40 +244,12 @@
                 </div>
             </div>
 
-            <!-- Right Panel -->
-            <div class="col-lg-5">
-
-                <!-- Clinic Status -->
-                <div class="dcard mb-3">
-                    <div class="card-body clinic-status">
-                        <div>
-                            <h6 class="mb-1">Clinic Status</h6>
-                            <span class="badge bg-success">Open</span>
-                        </div>
-                        <button class="btn btn-sm btn-outline-secondary">
-                            Disable Booking
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="dcard quick-actions">
-                    <div class="card-header">
-                        Quick Actions
-                    </div>
-                    <div class="card-body d-grid gap-2">
-                        <a href="#" class="btn btn-outline-primary">View All Appointments</a>
-                        <a href="#" class="btn btn-outline-primary">Patient Records</a>
-                        <a href="#" class="btn btn-outline-primary">Schedule Settings</a>
-                    </div>
-                </div>
-
-            </div>
-
         </section>
 
     </main>
+
     <?php include './doctor-footer.php'; ?>
+
 </body>
 
 </html>
