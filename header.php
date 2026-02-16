@@ -20,8 +20,8 @@
                     <li class="nav-item"><a class="nav-link active" href="./index.php">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="./doctor/doctor.php">Doctor</a></li>
                     <li class="nav-item"><a class="nav-link" href="./doctor/doctor.php">Hospital</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./about.php">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="./contact.php">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./about.php">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="./faq.php">FAQs</a></li>
                 </ul>
 
