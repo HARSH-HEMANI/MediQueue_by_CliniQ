@@ -2,7 +2,7 @@
     <div class="text-center mb-5">
         <h2 class="fw-bold">What clinics say about <span class="text-brand">MediQueue</span></h2>
         <div class="mx-auto my-3 brand-divider"></div>
-        <p class="text-muted mx-auto" style="max-width: 750px;">
+        <p class="text-muted mx-auto" style="max-width: 750px;font-size: 1.15rem;">
             Trusted by doctors, clinics, and healthcare teams to reduce waiting time and improve patient experience.
         </p>
     </div>
