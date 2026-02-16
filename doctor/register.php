@@ -32,45 +32,91 @@
                     <div class="feature-card">
                         <h5 class="text-center mb-4">Register</h5>
 
-                        <form>
+                        <form id="doctorRegisterForm" method="post">
+
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" placeholder="Dr. John Doe">
+                                    <input type="text"
+                                        name="name"
+                                        class="form-control"
+                                        data-validation="required|min|max"
+                                        data-min="3"
+                                        data-max="50"
+                                        placeholder="Dr. John Doe">
+                                    <small id="name_error"></small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Email Address</label>
-                                    <input type="email" class="form-control" placeholder="doctor@email.com">
+                                    <input type="email"
+                                        name="email"
+                                        class="form-control"
+                                        data-validation="required|email"
+                                        placeholder="doctor@email.com">
+                                    <small id="email_error"></small>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Phone Number</label>
-                                    <input type="text" class="form-control" placeholder="+91 XXXXXXXX">
+                                    <input type="text"
+                                        name="phone"
+                                        class="form-control"
+                                        data-validation="required|number|min|max"
+                                        data-min="10"
+                                        data-max="10"
+                                        placeholder="+91 XXXXXXXX">
+                                    <small id="phone_error"></small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Specialization</label>
-                                    <input type="text" class="form-control" placeholder="Cardiologist">
+                                    <input type="text"
+                                        name="specialization"
+                                        class="form-control"
+                                        data-validation="required|min|max"
+                                        data-min="3"
+                                        data-max="50"
+                                        placeholder="Cardiologist">
+                                    <small id="specialization_error"></small>
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Clinic / Hospital Name</label>
-                                <input type="text" class="form-control" placeholder="Clinic Name">
+                                <input type="text"
+                                    name="clinic"
+                                    class="form-control"
+                                    data-validation="required|min|max"
+                                    data-min="3"
+                                    data-max="100"
+                                    placeholder="Clinic Name">
+                                <small id="clinic_error"></small>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <label class="form-label">Password</label>
-                                    <input type="password" class="form-control" placeholder="Create password">
+                                    <input type="password"
+                                        name="password"
+                                        id="password"
+                                        class="form-control"
+                                        data-validation="required|strongPassword"
+                                        placeholder="Create password">
+                                    <small id="password_error"></small>
                                 </div>
 
                                 <div class="col-md-6 mb-4">
                                     <label class="form-label">Confirm Password</label>
-                                    <input type="password" class="form-control" placeholder="Confirm password">
+                                    <input type="password"
+                                        name="confirm_password"
+                                        class="form-control"
+                                        data-validation="required|confirmPassword"
+                                        data-match="password"
+                                        placeholder="Confirm password">
+                                    <small id="confirm_password_error"></small>
                                 </div>
                             </div>
 
@@ -84,7 +130,9 @@
                                     Login here
                                 </a>
                             </p>
+
                         </form>
+
                     </div>
 
                 </div>
@@ -95,7 +143,10 @@
 
     </main>
 
-<?php include './doctor-footer.php';?>
+    <?php include './doctor-footer.php'; ?>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../js/validation.js"></script>
 </body>
 
 </html>
