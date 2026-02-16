@@ -1,0 +1,702 @@
+
+/* =====================================================
+             RECEPTIONIST DASHBOARD 
+===================================================== */
+
+
+/* BRAND COLOR TEXT */
+.text-brand {
+    color: #FF5A5F !important;
+}
+
+/* GLOBAL CARD SYSTEM */
+.rcard {
+    background: #ffffff;
+    border-radius: 16px;
+    border: none;
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.06),
+        0 10px 24px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s ease;
+    border-right-color: #FF5A5F;
+
+}
+
+/* Right brand border for rcard */
+.summary-card {
+
+    border-right: 4px solid #FF5A5F;
+    border-radius: 16px;
+    background: #ffffff;
+}
+
+span {
+    color: #FF5A5F;
+}
+
+/* CARD HOVER EFFECT */
+.rcard:hover {
+    /* transform: translateY(-5px); */
+    box-shadow:
+        0 8px 22px rgba(255, 90, 95, 0.18);
+}
+
+/* CARD BACKGROUND VARIATION */
+.rcard-bg {
+    background: #ffffff;
+}
+
+/* OPTIONAL SECOND CARD STYLE */
+.card-bg {
+    background: linear-gradient(135deg, #ffffff, #fff5f5);
+}
+
+/* CARD BODY */
+.rcard-body {
+    padding: 20px 22px;
+}
+
+/* CARD TITLES */
+.rcard-body h5 {
+    color: #111827;
+}
+
+/* CARD SMALL TEXT */
+.rcard-body h6 {
+    font-size: 0.85rem;
+}
+
+
+/*===================================================
+                 MANAGE APPOINTMENT 
+===================================================== */
+
+
+/* MAIN DASHBOARD CONTAINER */
+.reception-dashboard {
+    background: #f9fafb;
+    min-height: 100vh;
+    padding-top: 120px; /* fixes header overlap */
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 40px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ================= HEADER ================= */
+
+.dashboard-header {
+    margin-bottom: 20px;
+}
+
+.dashboard-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.dashboard-subtitle {
+    font-size: 0.95rem;
+    color: #6b7280;
+}
+
+/* ================= STAT CARDS ================= */
+
+.stats-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.rstat-card {
+    flex: 1;
+    min-width: 180px;
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 14px;
+    border-right: 4px solid #FF5A5F;
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.05);
+    transition: all 0.25s ease;
+}
+
+.rstat-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 10px 22px rgba(255,90,95,0.18);
+}
+
+.rstat-card h6 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+.rstat-card h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #FF5A5F;
+}
+
+/* ================= CURRENT TOKEN CARD ================= */
+
+.dcard {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow:
+        0 6px 20px rgba(0,0,0,0.06);
+}
+
+.current-token-card {
+    border-left: 6px solid #FF5A5F;
+}
+
+.current-token-number {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #ff6666;
+}
+
+.patient-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* ================= FILTER CARD ================= */
+
+.rcard {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow:
+        0 4px 14px rgba(0,0,0,0.05);
+}
+
+.rcard-body {
+    padding: 18px;
+}
+
+/* ================= TABLE CARD ================= */
+
+.dashboard-card {
+    border-radius: 16px;
+    border: none;
+}
+
+.table thead th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table tbody td {
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background: #fff5f5;
+}
+
+/* ================= BUTTON SYSTEM ================= */
+
+.btn {
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.btn-brand {
+    background: #FF5A5F;
+    color: #ffffff;
+    border: none;
+}
+
+.btn-brand:hover {
+    background: #e0484d;
+    color: #ffffff;
+}
+
+.btn-outline-danger {
+    border-color: #FF5A5F;
+    color: #FF5A5F;
+}
+
+.btn-outline-danger:hover {
+    background: #FF5A5F;
+    color: #ffffff;
+}
+
+/* ================= FORM ELEMENTS ================= */
+
+.form-control,
+.form-select {
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #FF5A5F;
+    box-shadow: 0 0 0 3px rgba(255,90,95,0.15);
+}
+
+/* ================= BADGES ================= */
+
+.badge {
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-weight: 600;
+}
+
+/* ================= LINKS ================= */
+
+a {
+    color: #FF5A5F;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ================= RESPONSIVE ================= */
+/* 
+@media (max-width: 768px) {
+    .stats-row {
+        flex-direction: column;
+    }
+    .current-token-number {
+        font-size: 2.2rem;
+    }
+} */
+
+/* =====================================================
+                 LIVE QUEUE 
+===================================================== */
+
+
+/* MAIN CONTAINER */
+.reception-dashboard {
+    background: #f9fafb;
+    min-height: 100vh;
+    padding-top: 120px;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 40px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ================= HEADER ================= */
+
+.dashboard-header {
+    margin-bottom: 20px;
+}
+
+.dashboard-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.dashboard-subtitle {
+    font-size: 0.95rem;
+    color: #6b7280;
+}
+
+/* ================= SUMMARY CARDS ================= */
+
+.stats-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.rstat-card {
+    flex: 1;
+    min-width: 180px;
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 14px;
+    border-right: 4px solid #FF5A5F;
+    box-shadow:
+        0 3px 10px rgba(0,0,0,0.05);
+    transition: all 0.25s ease;
+}
+
+.rstat-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 24px rgba(255,90,95,0.18);
+}
+
+.rstat-card h6 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+.rstat-card h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #FF5A5F;
+}
+
+/* ================= CURRENT TOKEN CARD ================= */
+
+.dcard {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow:
+        0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* .dcard:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 24px rgba(255,90,95,0.18);
+} */
+
+.current-token-card {
+    border-left: 6px solid #FF5A5F;
+}
+
+.current-token-number {
+    font-size: 3.2rem;
+    font-weight: 900;
+    color: #FF5A5F;
+    letter-spacing: -1px;
+}
+
+.patient-name {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* ================= TABLE CARD ================= */
+
+.dashboard-card {
+    border-radius: 16px;
+    border: none;
+    box-shadow:
+        0 6px 20px rgba(0,0,0,0.06);
+}
+
+.table thead th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table tbody td {
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background: #fff5f5;
+}
+
+/* ================= BADGES ================= */
+
+.badge {
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-weight: 600;
+}
+
+/* ================= BUTTON SYSTEM ================= */
+
+.btn {
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.btn-brand {
+    background: #FF5A5F;
+    color: #ffffff;
+    border: none;
+}
+
+.btn-brand:hover {
+    background: #e0484d;
+    color: #ffffff;
+}
+
+.btn-outline-danger {
+    border-color: #FF5A5F;
+    color: #FF5A5F;
+}
+
+.btn-outline-danger:hover {
+    background: #FF5A5F;
+    color: #ffffff;
+}
+
+.btn-outline-success:hover {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.btn-outline-warning:hover {
+    background: #f59e0b;
+    color: #ffffff;
+}
+
+/* ================= QUEUE CONTROL SECTION ================= */
+
+.mt-4 {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 20px;
+}
+
+/* ================= LINKS ================= */
+
+a {
+    color: #FF5A5F;
+    text-decoration: none !important;
+}
+
+a:hover {
+    text-decoration: underline ;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+    .stats-row {
+        flex-direction: column;
+    }
+    .current-token-number {
+        font-size: 2.2rem;
+    }
+}
+
+/* =====================================================
+                   PROFILE SETTINGS 
+===================================================== */
+
+/* MAIN DASHBOARD CONTAINER */
+
+.reception-dashboard {
+    background: #f9fafb;
+    min-height: 100vh;
+    padding-top: 120px;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 40px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ================= HEADER ================= */
+
+.dashboard-header {
+    margin-bottom: 20px;
+}
+
+.dashboard-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.dashboard-subtitle {
+    font-size: 0.95rem;
+    color: #6b7280;
+}
+
+/* ================= CARD SYSTEM ================= */
+
+.rcard {
+    background: #ffffff;
+    border-radius: 16px;
+    border: none;
+    box-shadow:
+        0 6px 22px rgba(0,0,0,0.06);
+    transition: all 0.25s ease;
+}
+
+.rcard:hover {
+    box-shadow:
+        0 12px 28px rgba(255,90,95,0.15);
+}
+
+.rcard-body {
+    padding: 22px;
+}
+
+/* CARD TITLES */
+
+.rcard-body h5 {
+    font-weight: 700;
+    color: #111827;
+}
+
+/* ================= PROFILE IMAGE ================= */
+
+.rounded-circle {
+    border: 3px solid #FF5A5F;
+    padding: 3px;
+}
+
+/* ================= FORM LABEL ================= */
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+/* ================= FORM INPUT ================= */
+
+.form-control,
+.form-select {
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+/* INPUT FOCUS */
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #FF5A5F;
+    box-shadow:
+        0 0 0 3px rgba(255,90,95,0.15);
+}
+
+/* READONLY INPUT */
+
+.form-control[readonly] {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+/* TEXTAREA */
+
+textarea.form-control {
+    resize: none;
+}
+
+/* ================= SWITCH ================= */
+
+.form-check-input {
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #FF5A5F;
+    border-color: #FF5A5F;
+}
+
+/* ================= CHECKBOX ================= */
+
+.form-check-label {
+    font-size: 0.95rem;
+    color: #374151;
+}
+
+/* ================= BUTTON SYSTEM ================= */
+
+.btn {
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 8px 20px;
+}
+
+/* BRAND BUTTON */
+
+.btn-brand {
+    background: #FF5A5F;
+    color: #ffffff;
+    border: none;
+}
+
+.btn-brand:hover {
+    background: #e0484d;
+    color: #ffffff;
+    box-shadow:
+        0 6px 18px rgba(255,90,95,0.25);
+}
+
+/* ================= ACTIVITY TEXT ================= */
+
+.rcard-body p {
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+    .rcard-body {
+        padding: 18px;
+    }
+}
+
+/* =========================================
+             DASHBOARD FOOTER
+========================================= */
+
+.dashboard-footer {
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 0;
+    margin-top: 40px;
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+/* Footer text */
+.dashboard-footer small {
+    display: inline-block;
+}
+
+/* Brand name */
+.dashboard-footer strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* Footer links */
+.dashboard-footer a {
+    color: #6b7280;
+    text-decoration: none;
+    margin: 0 4px;
+    transition: all 0.2s ease;
+}
+
+/* Hover effect */
+.dashboard-footer a:hover {
+    color: #FF5A5F;
+    text-decoration: underline ;
+}
+
+/* Sticky footer effect */
+@media (min-height: 600px) {
+    .dashboard-footer {
+        position: relative;
+        bottom: 0;
+        width: 100%;
+    }
+}
+
+
+/* Navbar links
+.navbar a {
+    text-decoration: none;
+}
+
+/* Also remove underline on hover */
+/* .navbar a:hover {
+    text-decoration: none;
+} */ 
+
+
