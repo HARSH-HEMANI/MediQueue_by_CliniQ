@@ -8,8 +8,6 @@
 
     <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css">
     <script src="./css/bootstrap/js/bootstrap.bundle.js"></script>
-    <link rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
@@ -42,7 +40,7 @@
                     run smoothly and efficiently every day.
                 </p>
 
-                <a href="#" class="hero-btn">Explore MediQueue</a>
+                <a href="./explore.php" class="hero-btn">Explore MediQueue</a>
             </div>
         </section>
 
@@ -139,9 +137,9 @@
 
     </main>
 
-<section class="py-5 bg-white features">
-    <?php include './testimonial.php';?>
-</section>
+    <section class="py-5 bg-white features">
+        <?php include './testimonial.php'; ?>
+    </section>
 
     <?php include "./footer.php"; ?>
 

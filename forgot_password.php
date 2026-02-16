@@ -24,10 +24,11 @@
                     Enter your registered email address and we'll send you instructions to reset your password.
                 </p>
 
-                <form>
+                <form action="" method="post" id="forgotPassword">
                     <div class="mb-3">
                         <label>Email Address</label>
-                        <input type="email" class="form-control auth-input" placeholder="Enter your email">
+                        <input type="text" class="form-control auth-input" placeholder="Enter your email" data-validation="required|email" name="email" id="email">
+                        <small id="email_error"></small>
                     </div>
 
                     <button type="submit" class="btn auth-btn w-100">
@@ -54,6 +55,8 @@
 
         </div>
     </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="./js/validation.js"></script>
 
 </body>
 
