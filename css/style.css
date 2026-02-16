@@ -315,6 +315,7 @@ label.form-label {
 
 .accordion-button:not(.collapsed) {
     color: #FF5A5F;
+    background-color: #fff4f4 !important;
 }
 
 /* Auth pages spacing fix */
