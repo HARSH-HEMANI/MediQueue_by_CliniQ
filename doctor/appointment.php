@@ -116,7 +116,7 @@
                                     </button>
 
                                     <!-- Go to Queue -->
-                                    <a href="./doctor-dashboard.php#live-queue"
+                                    <a href="./live-queue.php"
                                         class="btn btn-sm btn-light"
                                         title="Go to Live Queue">
                                         <i class="bi bi-arrow-right-circle"></i>
@@ -151,7 +151,7 @@
                                     </button>
 
                                     <!-- Go to Queue -->
-                                    <a href="./doctor-dashboard.php#live-queue"
+                                    <a href="./live-queue.php"
                                         class="btn btn-sm btn-light"
                                         title="Go to Live Queue">
                                         <i class="bi bi-arrow-right-circle"></i>
@@ -190,7 +190,7 @@
                                     </button>
 
                                     <!-- Go to Queue -->
-                                    <a href="./doctor-dashboard.php#live-queue"
+                                    <a href="./live-queue.php"
                                         class="btn btn-sm btn-light"
                                         title="Go to Live Queue">
                                         <i class="bi bi-arrow-right-circle"></i>
