@@ -6,15 +6,14 @@
     <title>Book Appointment</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
         href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/style_mq.css">
     <link rel="stylesheet" href="./css/book_appointment.css">
 
     <style>
@@ -25,44 +24,7 @@
     </style>
 </head>
 <body>
-
-<!-- ================= NAVBAR ================= -->
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" id="nav-home">
-        <div class="container-fluid px-4">
-
-            <!-- Logo -->
-            <a class="navbar-brand" href="index.php">
-                <img src="./img/mediq.png" alt="MediQ Logo" style="height:60px;">
-            </a>
-
-            <!-- Mobile Toggle -->
-            <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Navbar Content -->
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-                <!-- Center Menu -->
-                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Doctor</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Hospital</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">FAQs</a></li>
-                </ul>
-
-            </div>
-        </div>
-    </nav>
-</header>
+<?php include "header.php";?>
 
 <!-- ================= FORM ================= -->
 

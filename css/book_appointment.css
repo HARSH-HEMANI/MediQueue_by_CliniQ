@@ -19,12 +19,12 @@
     background: #fef9f9;
 }
 
-body {
+/* body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #2F2F3A;
     background: linear-gradient(135deg, #f6a2a2 , #FF5A5F);
     min-height: 100vh;
-}
+} */
 
 
 .card-header {
