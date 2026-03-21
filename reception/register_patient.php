@@ -6,16 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reception | Register Patient</title>
 
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/reception.css">
+    <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css?v=vibrant">
+    <link rel="stylesheet" href="../css/style.css?v=vibrant">
+    <link rel="stylesheet" href="../css/reception.css?v=vibrant">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css?v=vibrant" rel="stylesheet">
+    <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-    <script src="../bootstrap/js/bootstrap.bundle.js"></script>
 </head>
 
-<body>
+<body class="layout-with-sidebar">
 
     <?php include '../sidebar/reception-sidebar.php'; ?>
 
@@ -24,7 +23,7 @@
         <!-- PAGE HEADER -->
         <div class="dashboard-header mb-4">
 
-        <h1 class="fw-bold text-black">Register <span>Walk-in Patients</span> </h1>
+            <h1 class="fw-bold text-black">Register <span>Walk-in Patients</span> </h1>
 
 
             <p class="dashboard-subtitle">
@@ -188,8 +187,11 @@
 
     </div>
 
-    <?php include '../reception/reception_footer.php'; ?>
+    <?php include './reception_footer.php'; ?>
 
 </body>
 
 </html>
+
+
+
