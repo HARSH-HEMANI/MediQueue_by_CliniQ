@@ -19,7 +19,7 @@
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link active" href="./index.php">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="./doctor/doctor.php">Doctor</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./reception/hospital_login.php">Hospital</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./reception/reception_dashboard.php">Hospital</a></li>
                     <li class="nav-item"><a class="nav-link" href="./contact.php">Contact</a></li>
                     <li class="nav-item"><a class="nav-link" href="./about.php">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="./faq.php">FAQs</a></li>
