@@ -48,7 +48,7 @@ ob_start();
                             data-doctor="Dr. Emily Stone"
                             data-fee="350">
                             <h6>Dermatology</h6>
-                            <small>Skin Treatment</small>
+                            <small>Skin Treatment</small> 
                         </div>
                     </div>
 
