@@ -1,30 +1,45 @@
-/* Glassmorphism theme variables */
+/* ============================================================
+   MediQueue by CliniQ — Main Stylesheet
+   ============================================================ */
+
+/* ── CSS Custom Properties ── */
 :root {
     --glass-bg: rgba(255, 255, 255, 0.25);
-    --glass-bg-strong: linear-gradient(135deg, var(--glass-bg-strong) 0%, rgba(255, 255, 255, 0.3) 100%);
-    --glass-border: var(--glass-bg-strong);
+    /* FIX: was self-referencing (infinite loop). Now a static gradient value. */
+    --glass-bg-strong: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.3) 100%);
+    /* FIX: was using broken --glass-bg-strong variable. Now uses static rgba. */
+    --glass-border: rgba(255, 255, 255, 0.4);
     --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
     --glass-blur: 16px;
+    --brand: #FF5A5F;
+    --brand-dark: #e64b50;
+    --text-primary: #2F2F3A;
+    --text-muted: #555;
 }
 
+
+/* ── Base ── */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background:
         radial-gradient(circle at 10% 20%, rgba(255, 90, 95, 0.12) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, rgba(110, 231, 183, 0.18) 0%, transparent 40%),
-        linear-gradient(135deg, #f0f4fd 0%, #fcf7f7 100%) !important;
-    background-attachment: fixed !important;
-    color: #2F2F3A;
+        linear-gradient(135deg, #f0f4fd 0%, #fcf7f7 100%);
+    background-attachment: fixed;
+    color: var(--text-primary);
 }
 
+
+/* ── Menu / Offcanvas ── */
 #menu {
-    border: 0px solid var(--glass-border);
+    border: 0 solid var(--glass-border);
     background: var(--glass-bg-strong);
     -webkit-backdrop-filter: blur(var(--glass-blur));
     backdrop-filter: blur(var(--glass-blur));
 }
 
-/* NAVBAR */
+
+/* ── Navbar ── */
 #nav-home {
     background: var(--glass-bg-strong);
     -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -35,7 +50,7 @@ body {
 
 .navbar-nav .nav-link {
     position: relative;
-    color: #2F2F3A;
+    color: var(--text-primary);
     font-weight: 500;
     padding: 8px 14px;
     transition: color 0.3s ease;
@@ -43,10 +58,10 @@ body {
 
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link.active {
-    color: #FF5A5F;
+    color: var(--brand);
 }
 
-/* underline animation */
+/* Underline animation */
 .navbar-nav .nav-link::after {
     content: "";
     position: absolute;
@@ -54,7 +69,7 @@ body {
     bottom: 0;
     width: 0;
     height: 2px;
-    background-color: #FF5A5F;
+    background-color: var(--brand);
     transform: translateX(-50%);
     transition: width 0.3s ease;
 }
@@ -63,10 +78,21 @@ body {
     width: 100%;
 }
 
-/* HERO SECTION */
+
+/* ── Hero Banner (replaces inline style) ── */
+.hero-banner {
+    background: linear-gradient(90deg, #fd686d, #ff8a8f);
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    margin-top: 88px;
+}
+
+
+/* ── Hero Section ── */
 .hero {
     min-height: 90vh;
-    background: url("../img/home-bg1.png") center/cover no-repeat;
+    background: url("../img/home-bg1.png") center / cover no-repeat;
     display: flex;
     align-items: center;
     padding-top: 30px;
@@ -84,20 +110,19 @@ body {
 }
 
 .hero-content h1 span {
-    color: #FF5A5F;
+    color: var(--brand);
 }
 
 .hero-content p {
     margin: 25px 0;
     font-size: 1.15rem;
     line-height: 1.7;
-    color: #555;
+    color: var(--text-muted);
 }
 
-/* Hero button animation */
 .hero-btn {
     display: inline-block;
-    background: #FF5A5F;
+    background: var(--brand);
     color: #fff;
     padding: 14px 32px;
     border-radius: 40px;
@@ -106,18 +131,68 @@ body {
 }
 
 .hero-btn:hover {
-    background: #e64b50;
+    background: var(--brand-dark);
     transform: translateY(-3px);
     box-shadow: 0 10px 25px rgba(255, 90, 95, 0.35);
 }
 
-/* FEATURES */
+
+/* ── Features Section ── */
 .features {
     padding: 80px 0;
+    /* FIX: added background-size so image scales properly */
     background-image: url(../img/home_bg.png);
-
+    background-size: cover;
+    background-position: center;
 }
 
+.features-header {
+    margin-bottom: 60px;
+}
+
+.features-header h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #1f2937;
+    margin-bottom: 15px;
+}
+
+.features-header h2 span {
+    color: var(--brand);
+    font-weight: 900;
+}
+
+.features-header p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    max-width: 820px;
+    margin: 0 auto;
+}
+
+/* FIX: Removed duplicate .section-divider. Merged into one definition.
+   Previously defined twice (200px wide on features header, 80px wide on explore),
+   with the second overriding the first unexpectedly. */
+.section-divider {
+    width: 200px;
+    height: 4px;
+    background: linear-gradient(to right, var(--brand), #ff8a8f);
+    margin: 0 auto 25px;
+    border-radius: 4px;
+}
+
+/* Narrower divider variant for explore/other pages */
+.section-divider-sm {
+    width: 80px;
+    height: 4px;
+    background: var(--brand);
+    margin: 0 auto 30px;
+    border-radius: 4px;
+}
+
+
+/* ── Feature Cards ── */
 .feature-card {
     position: relative;
     background: var(--glass-bg-strong);
@@ -133,13 +208,12 @@ body {
     overflow: hidden;
 }
 
-/* lift animation */
 .feature-card:hover {
     transform: translateY(-12px);
     box-shadow: 0 20px 50px rgba(255, 90, 95, 0.2);
 }
 
-/* gradient underline animation (TOP & BOTTOM) */
+/* Gradient border animation (top & bottom) */
 .animated-card::before,
 .animated-card::after {
     content: "";
@@ -147,7 +221,7 @@ body {
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(to right, #e9a3a5, #FF5A5F);
+    background: linear-gradient(to right, #e9a3a5, var(--brand));
     transform: scaleX(0);
     transition: transform 0.4s ease;
 }
@@ -167,7 +241,6 @@ body {
     transform: scaleX(1);
 }
 
-/* card content */
 .feature-card img {
     height: 50px;
     margin-bottom: 15px;
@@ -179,44 +252,13 @@ body {
 }
 
 .feature-card p {
-    font-size: 1.0rem;
+    font-size: 1rem;
     color: #666;
     line-height: 1.6;
 }
 
-.features-header {
-    margin-bottom: 60px;
-}
 
-.features-header h2 {
-    font-size: 2.8rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    color: #1f2937;
-    margin-bottom: 15px;
-}
-
-.features-header h2 span {
-    color: #FF5A5F;
-    font-weight: 900;
-}
-
-.section-divider {
-    width: 200px;
-    height: 4px;
-    background: linear-gradient(to right, #FF5A5F, #ff8a8f);
-    margin: 0 auto 25px;
-    border-radius: 4px;
-}
-
-.features-header p {
-    font-size: 1.15rem;
-    line-height: 1.8;
-    color: #555;
-    max-width: 820px;
-    margin: 0 auto;
-}
-
+/* ── Shared Glass Card Utility ── */
 .card-bg {
     background: var(--glass-bg-strong);
     -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -224,6 +266,8 @@ body {
     border: 1px solid var(--glass-border);
 }
 
+
+/* ── Testimonial Cards ── */
 .tcard {
     position: relative;
     background: rgba(255, 244, 244, 0.6);
@@ -234,7 +278,7 @@ body {
     border-radius: 18px;
     box-shadow: var(--glass-shadow);
     overflow: visible;
-    border-top: 5px solid #FF5A5F;
+    border-top: 5px solid var(--brand);
     opacity: 0.9;
 }
 
@@ -252,22 +296,21 @@ body {
     pointer-events: none;
 }
 
-.tcard>*:not(.quote-icon) {
+.tcard > *:not(.quote-icon) {
     position: relative;
     z-index: 1;
 }
 
 .text-brand {
-    color: #FF5A5F;
+    color: var(--brand);
 }
 
 .brand-divider {
     width: 70px;
     height: 4px;
-    background: linear-gradient(to right, #FF5A5F, #ff8a8f);
+    background: linear-gradient(to right, var(--brand), #ff8a8f);
     border-radius: 4px;
 }
-
 
 .card:hover {
     transform: translateY(-12px);
@@ -275,12 +318,8 @@ body {
     box-shadow: 0 20px 40px rgba(255, 90, 95, 0.5);
 }
 
-/* ------------- About us -------------------- */
-.about-section .section-divider {
-    margin: 15px 0 25px;
-}
 
-/* About page container styling */
+/* ── About Section ── */
 .about-section {
     background: var(--glass-bg-strong);
     -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -292,7 +331,10 @@ body {
     margin-bottom: 50px;
 }
 
-/* Improve heading spacing */
+.about-section .section-divider {
+    margin: 15px 0 25px;
+}
+
 .about-section h2 {
     font-size: 2rem;
 }
@@ -307,18 +349,18 @@ body {
     border-radius: 18px;
     box-shadow: var(--glass-shadow);
     overflow: visible;
-    border-top: 5px solid #FF5A5F;
+    border-top: 5px solid var(--brand);
 }
 
 
-/* -------------------- Contact us form --------------------------- */
+/* ── Contact Form ── */
 .form-control {
     border-radius: 10px;
     padding: 12px 14px;
 }
 
 .form-control:focus {
-    border-color: #FF5A5F;
+    border-color: var(--brand);
     box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
 }
 
@@ -331,12 +373,12 @@ label.form-label {
     padding-bottom: 30px;
 }
 
-/* FAQs */
+
+/* ── FAQ ── */
 .faq-page {
     padding-bottom: 40px;
 }
 
-/* Accordion polish */
 .accordion-button {
     font-weight: 600;
     background: var(--glass-bg-strong);
@@ -346,18 +388,18 @@ label.form-label {
 }
 
 .accordion-button:not(.collapsed) {
-    color: #FF5A5F;
-    background: rgba(255, 244, 244, 0.7) !important;
+    color: var(--brand);
+    background: rgba(255, 244, 244, 0.7);
     -webkit-backdrop-filter: blur(var(--glass-blur));
     backdrop-filter: blur(var(--glass-blur));
 }
 
-/* Auth pages spacing fix */
+
+/* ── Auth Pages ── */
 .auth-page {
     padding-bottom: 40px;
 }
 
-/* Auth links */
 .auth-page a {
     text-decoration: none;
 }
@@ -366,31 +408,8 @@ label.form-label {
     text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-    .features-header h2 {
-        font-size: 2.1rem;
-    }
 
-    .features-header p {
-        font-size: 1rem;
-    }
-}
-
-
-@media (max-width: 768px) {
-    .hero {
-        text-align: center;
-    }
-
-    .hero-content {
-        margin: 0 20px;
-    }
-
-    .hero-content h1 {
-        font-size: 2.3rem;
-    }
-}
-
+/* ── Explore Page ── */
 .explore-hero {
     margin-top: 88px;
     padding: 30px 0;
@@ -410,14 +429,6 @@ label.form-label {
     margin-bottom: 20px;
 }
 
-.section-divider {
-    width: 80px;
-    height: 4px;
-    background: #FF5A5F;
-    margin: 0 auto 30px;
-    border-radius: 4px;
-}
-
 .workflow-box {
     background: var(--glass-bg-strong);
     -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -431,7 +442,7 @@ label.form-label {
 
 .workflow-step {
     font-weight: 600;
-    color: #FF5A5F;
+    color: var(--brand);
     margin-bottom: 5px;
 }
 
@@ -467,25 +478,26 @@ label.form-label {
     border-top: 1px solid var(--glass-border);
 }
 
-/* ================= NEW SIDEBAR SYSTEM ================= */
+
+/* ── Sidebar ── */
 .custom-sidebar {
     position: fixed;
     top: 0;
     left: 0;
     width: 280px;
     height: 100vh;
-    background: var(--glass-bg-strong) !important;
-    -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
-    backdrop-filter: blur(var(--glass-blur)) !important;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
     border-right: 1px solid var(--glass-border);
-    color: #2F2F3A;
+    color: var(--text-primary);
     z-index: 1040;
     display: flex;
     flex-direction: column;
 }
 
 .custom-sidebar .sidebar-logo {
-    padding: 24px 24px;
+    padding: 24px;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -502,7 +514,7 @@ label.form-label {
 .custom-sidebar .sidebar-logo span {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #2F2F3A;
+    color: var(--text-primary);
 }
 
 .custom-sidebar .sidebar-menu {
@@ -539,13 +551,13 @@ label.form-label {
 }
 
 .custom-sidebar .nav-link:hover {
-    color: #FF5A5F;
+    color: var(--brand);
     background-color: rgba(255, 90, 95, 0.08);
 }
 
 .custom-sidebar .nav-link.active {
     background-color: rgba(255, 90, 95, 0.12);
-    color: #FF5A5F;
+    color: var(--brand);
     font-weight: 600;
 }
 
@@ -554,10 +566,10 @@ label.form-label {
 }
 
 .custom-sidebar .nav-link.active i {
-    color: #FF5A5F;
+    color: var(--brand);
 }
 
-/* User Account Section */
+/* User account */
 .custom-sidebar .user-account {
     padding: 20px 24px;
 }
@@ -583,7 +595,7 @@ label.form-label {
 .custom-sidebar .user-info .name {
     font-weight: 600;
     font-size: 0.95rem;
-    color: #2F2F3A;
+    color: var(--text-primary);
 }
 
 .custom-sidebar .user-info .tag {
@@ -591,12 +603,13 @@ label.form-label {
     color: #6c757d;
 }
 
-/* Mobile Toggle Navbar */
+
+/* ── Mobile Navbar ── */
 .mobile-navbar {
     display: none;
-    background: var(--glass-bg-strong) !important;
-    -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
-    backdrop-filter: blur(var(--glass-blur)) !important;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
     border-bottom: 1px solid var(--glass-border);
     padding: 12px 20px;
     position: fixed;
@@ -606,7 +619,7 @@ label.form-label {
 }
 
 .mobile-navbar .btn-toggle {
-    color: #2F2F3A;
+    color: var(--text-primary);
     font-size: 1.5rem;
     background: none;
     border: none;
@@ -618,21 +631,44 @@ label.form-label {
 }
 
 .mobile-navbar span {
-    color: #2F2F3A !important;
+    color: var(--text-primary);
 }
 
-/* Base Layout Adjustments */
+
+/* ── Responsive ── */
+
+/* FIX: Merged two duplicate @media (max-width: 768px) blocks into one */
+@media (max-width: 768px) {
+    .features-header h2 {
+        font-size: 2.1rem;
+    }
+
+    .features-header p {
+        font-size: 1rem;
+    }
+
+    .hero {
+        text-align: center;
+    }
+
+    .hero-content {
+        margin: 0 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.3rem;
+    }
+}
+
 @media (min-width: 992px) {
     body.layout-with-sidebar {
-        padding-left: 280px !important;
-        /* Make room for the desktop sidebar */
+        padding-left: 280px;
     }
 
     .mobile-navbar {
-        display: none !important;
+        display: none;
     }
 
-    /* Fix header on patient dashboard if it has inline padding */
     .container,
     .container-fluid {
         max-width: 100%;
@@ -651,7 +687,6 @@ label.form-label {
     }
 
     body.layout-with-sidebar {
-        padding-top: 70px !important;
-        /* Make room for the mobile top bar */
+        padding-top: 70px;
     }
 }
