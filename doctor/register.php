@@ -7,7 +7,6 @@
     <title>Doctor Registration | MediQueue</title>
     <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css?v=vibrant">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css?v=vibrant" rel="stylesheet">
-    <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
     <link rel="stylesheet" href="../css/style.css?v=vibrant">
     <link rel="stylesheet" href="../css/doctor.css?v=vibrant">
 </head>
@@ -15,19 +14,16 @@
 <body class="layout-without-sidebar">
 
     <main class="features auth-page">
-
         <div class="container">
+
             <section class="features-header text-center mb-3">
                 <h2>Doctor <span>Registration</span></h2>
                 <div class="section-divider"></div>
-                <p>
-                    Create your MediQueue doctor account
-                </p>
+                <p>Create your MediQueue doctor account</p>
             </section>
+
             <div class="row justify-content-center">
-
                 <div class="col-lg-6 col-md-8">
-
                     <div class="feature-card">
                         <h5 class="text-center mb-4">Register</h5>
 
@@ -125,27 +121,25 @@
 
                             <p class="text-center mb-0">
                                 Already have an account?
-                                <a href="doctor-login.php" class="text-brand fw-semibold">
-                                    Login here
-                                </a>
+                                <!-- FIX: was pointing to "doctor-login.php" which doesn't exist -->
+                                <a href="login.php" class="text-brand fw-semibold">Login here</a>
                             </p>
 
                         </form>
-
                     </div>
-
                 </div>
-
             </div>
 
         </div>
-
     </main>
 
     <?php include './doctor-footer.php'; ?>
 
+    <!-- FIX: Bootstrap JS and scripts moved to bottom of body -->
+    <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/validation.js"></script>
+
 </body>
 
 </html>
