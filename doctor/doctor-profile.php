@@ -1,11 +1,3 @@
-<?php
-// session_start();
-
-// if (!isset($_SESSION['doctor_id'])) {
-//     header("Location: ../login.php");
-//     exit();
-// }
-?>
 <?php include "doctor-auth.php"; ?>
 
 <!DOCTYPE html>
@@ -14,43 +6,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediQueue | Doctor Dashboard</title>
+    <!-- FIX: corrected page title -->
+    <title>MediQueue | Profile Settings</title>
     <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css?v=vibrant">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css?v=vibrant" rel="stylesheet">
-    <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
     <link rel="stylesheet" href="../css/style.css?v=vibrant">
     <link rel="stylesheet" href="../css/doctor.css?v=vibrant">
 </head>
 
 <body class="layout-with-sidebar">
+
     <?php include '../sidebar/doctor-sidebar.php'; ?>
 
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
+
         <section class="features-header my-1">
-            <h2>Welcome, <span>Dr. <?php echo $_SESSION['doctor_name']; ?></span></h2>
+            <!-- FIX: added htmlspecialchars to prevent XSS -->
+            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($_SESSION['doctor_name']); ?></span></h2>
         </section>
+
         <section class="mb-4">
             <h4 class="mb-1">Profile Settings</h4>
             <p class="text-muted mb-0">Manage doctor profile, clinic, and preferences</p>
         </section>
 
-        <!--  profile and clinic  -->
         <form method="post" action="save-profile.php" enctype="multipart/form-data">
 
+            <!-- Doctor Profile & Clinic Info -->
             <section class="row g-4 mb-4">
 
-                <!-- Doctor Profile -->
                 <div class="col-lg-6">
                     <div class="dcard">
                         <div class="card-header">Doctor Profile Information</div>
                         <div class="card-body">
 
-                            <!-- Profile Photo -->
                             <div class="mb-3 text-center">
                                 <img id="profilePreview"
                                     src="../img/default-avatar.png"
                                     class="rounded-circle mb-2"
-                                    width="90">
+                                    width="90"
+                                    alt="Profile Photo">
                                 <input type="file"
                                     name="profile_photo"
                                     class="form-control form-control-sm"
@@ -61,14 +56,17 @@
                             <div class="mb-3">
                                 <label class="form-label">Full Name</label>
                                 <input type="text" id="doctorName" name="name"
-                                    data-save class="form-control" data-validation="required|min|max" data-min="3" data-max="50">
+                                    data-save class="form-control"
+                                    data-validation="required|min|max"
+                                    data-min="3" data-max="50">
                                 <small id="name_error"></small>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Specialization</label>
                                 <input type="text" id="specialization" name="specialization"
-                                    data-save class="form-control" data-validation="required">
+                                    data-save class="form-control"
+                                    data-validation="required">
                                 <small id="specialization_error"></small>
                             </div>
 
@@ -76,15 +74,18 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Qualification</label>
                                     <input type="text" id="qualification" name="qualification"
-                                        data-save class="form-control" data-validation="required">
-                                    <small id="qualification"></small>
+                                        data-save class="form-control"
+                                        data-validation="required">
+                                    <!-- FIX: was id="qualification" (duplicate of the input above) -->
+                                    <small id="qualification_error"></small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Years of Experience</label>
                                     <input type="number" id="experience" name="experience"
-                                        data-save class="form-control" data-validation="required">
-                                    <small id="cname_error"></small>
+                                        data-save class="form-control"
+                                        data-validation="required">
+                                    <small id="experience_error"></small>
                                 </div>
                             </div>
 
@@ -100,15 +101,19 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Clinic Name</label>
-                                <input type="text" id="cName" name="came" data-validation="required|min|max"
-                                    data-min="3" data-max="50" data-save class="form-control">
+                                <!-- FIX: name was "came" (typo), corrected to "cname" -->
+                                <input type="text" id="cName" name="cname"
+                                    data-save class="form-control"
+                                    data-validation="required|min|max"
+                                    data-min="3" data-max="50">
                                 <small id="cname_error"></small>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Clinic Address</label>
                                 <textarea id="cAddress" name="caddress"
-                                    data-save class="form-control" rows="2" data-validation="required"></textarea>
+                                    data-save class="form-control"
+                                    rows="2" data-validation="required"></textarea>
                                 <small id="caddress_error"></small>
                             </div>
 
@@ -116,14 +121,16 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Contact Number</label>
                                     <input type="text" id="contact" name="contact"
-                                        data-save class="form-control" data-validation="required|number">
+                                        data-save class="form-control"
+                                        data-validation="required|number">
                                     <small id="contact_error"></small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Consultation Fee (₹)</label>
                                     <input type="number" id="cFee" name="cfee"
-                                        data-save class="form-control" min="0" data-validation="required">
+                                        data-save class="form-control"
+                                        min="0" data-validation="required">
                                     <small id="cfee_error"></small>
                                 </div>
                             </div>
@@ -134,7 +141,7 @@
 
             </section>
 
-            <!--  acc setting  -->
+            <!-- Account Settings -->
             <section class="row g-4 mb-4">
 
                 <div class="col-lg-6">
@@ -144,35 +151,38 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Username</label>
-                                <input type="text" name="username"
-                                    class="form-control" readonly>
+                                <input type="text" name="username" class="form-control" readonly>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Email / Phone</label>
                                 <input type="text" id="emailPhone" name="email_phone"
-                                    data-save class="form-control" data-validation="required|email">
+                                    data-save class="form-control"
+                                    data-validation="required|email">
                                 <small id="email_phone_error"></small>
                             </div>
 
                             <hr>
-
                             <h6>Change Password</h6>
 
-                            <input type="password" id="oldPassword" 
+                            <input type="password" id="oldPassword"
                                 class="form-control mb-2" name="oldPassword"
-                                placeholder="Old Password" data-validation="required|confirmPassword">
+                                placeholder="Old Password"
+                                data-validation="required">
                             <small id="oldPassword_error"></small>
 
                             <input type="password" id="newPassword"
                                 class="form-control mb-2" name="newPassword"
-                                placeholder="New Password" data-validation="required|strongPassword">
+                                placeholder="New Password"
+                                data-validation="required|strongPassword">
                             <small id="newPassword_error"></small>
 
                             <input type="password" id="confirmPassword"
                                 class="form-control mb-3" name="confirmPassword"
-                                placeholder="Confirm New Password" data-validation="required|confirmPassword">
+                                placeholder="Confirm New Password"
+                                data-validation="required|confirmPassword">
                             <small id="confirmPassword_error"></small>
+
                             <button type="button"
                                 class="btn btn-outline-secondary"
                                 onclick="changePassword()">
@@ -203,10 +213,9 @@
 
             </section>
 
-            <!--  preference  -->
+            <!-- Schedule & Appointment Preferences -->
             <section class="row g-4 mb-4">
 
-                <!-- Schedule -->
                 <div class="col-lg-6">
                     <div class="dcard">
                         <div class="card-header">Schedule Preferences</div>
@@ -234,7 +243,6 @@
                     </div>
                 </div>
 
-                <!-- Appointment Preferences -->
                 <div class="col-lg-6">
                     <div class="dcard">
                         <div class="card-header">Appointment Preferences</div>
@@ -247,21 +255,15 @@
                             </div>
 
                             <div class="form-check mb-2">
-                                <input class="form-check-input"
-                                    type="checkbox"
-                                    id="allowWalkins"
-                                    name="allow_walkins"
-                                    data-save>
-                                <label class="form-check-label">Allow Walk-ins</label>
+                                <input class="form-check-input" type="checkbox"
+                                    id="allowWalkins" name="allow_walkins" data-save>
+                                <label class="form-check-label" for="allowWalkins">Allow Walk-ins</label>
                             </div>
 
                             <div class="form-check">
-                                <input class="form-check-input"
-                                    type="checkbox"
-                                    id="allowEmergency"
-                                    name="allow_emergency"
-                                    data-save>
-                                <label class="form-check-label">Allow Emergency Requests</label>
+                                <input class="form-check-input" type="checkbox"
+                                    id="allowEmergency" name="allow_emergency" data-save>
+                                <label class="form-check-label" for="allowEmergency">Allow Emergency Requests</label>
                             </div>
 
                         </div>
@@ -270,7 +272,7 @@
 
             </section>
 
-            <!--  notification and activity  -->
+            <!-- Notifications & Activity -->
             <section class="row g-4 mb-4">
 
                 <div class="col-lg-6">
@@ -279,53 +281,42 @@
                         <div class="card-body">
 
                             <div class="form-check mb-2">
-                                <input class="form-check-input"
-                                    type="checkbox"
-                                    id="notifyAppointments"
-                                    data-save>
-                                <label class="form-check-label">New Appointments</label>
+                                <input class="form-check-input" type="checkbox"
+                                    id="notifyAppointments" data-save>
+                                <label class="form-check-label" for="notifyAppointments">New Appointments</label>
                             </div>
 
                             <div class="form-check mb-2">
-                                <input class="form-check-input"
-                                    type="checkbox"
-                                    id="notifyEmergency"
-                                    data-save>
-                                <label class="form-check-label">Emergency Requests</label>
+                                <input class="form-check-input" type="checkbox"
+                                    id="notifyEmergency" data-save>
+                                <label class="form-check-label" for="notifyEmergency">Emergency Requests</label>
                             </div>
 
                             <div class="form-check">
-                                <input class="form-check-input"
-                                    type="checkbox"
-                                    id="notifyCancel"
-                                    data-save>
-                                <label class="form-check-label">Appointment Cancellations</label>
+                                <input class="form-check-input" type="checkbox"
+                                    id="notifyCancel" data-save>
+                                <label class="form-check-label" for="notifyCancel">Appointment Cancellations</label>
                             </div>
 
                         </div>
                     </div>
                 </div>
 
-                <!-- Activity Log -->
                 <div class="col-lg-6">
                     <div class="dcard">
                         <div class="card-header">Activity Log</div>
                         <div class="card-body">
                             <p><strong>Last Login:</strong> 08 Feb 2026, 09:12 AM</p>
-                            <p><strong>Last Profile Update:</strong>
-                                <span id="lastUpdate">—</span>
-                            </p>
+                            <p><strong>Last Profile Update:</strong> <span id="lastUpdate">—</span></p>
                         </div>
                     </div>
                 </div>
 
             </section>
 
-            <!--  SAVE  -->
+            <!-- Save -->
             <section class="mb-5 text-end">
-                <button type="button"
-                    class="btn btn-brand px-4"
-                    onclick="saveProfile()">
+                <button type="button" class="btn btn-brand px-4" onclick="saveProfile()">
                     <i class="bi bi-save"></i> Save Changes
                 </button>
             </section>
@@ -335,8 +326,12 @@
     </main>
 
     <?php include './doctor-footer.php'; ?>
+
+    <!-- FIX: Bootstrap JS and scripts moved to bottom of body -->
+    <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/validation.js"></script>
+
 </body>
 
 </html>
