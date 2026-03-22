@@ -1,77 +1,97 @@
-    <nav class="navbar fixed-top navbar-expand-lg" id="nav-home">
-        <div class="container-fluid px-4">
-            <button class="px-5" type="button" data-bs-toggle="offcanvas" id="menu" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-                <i class="bi bi-list fs-2 fw-bolder"></i>
-            </button>
-            <!-- Logo -->
-            <a class="navbar-brand" href="./index.php">
-                <img src="./img/mediq.png" alt="MediQ Logo" style="height:60px;">
-            </a>
+<?php
+$current_page = basename($_SERVER['PHP_SELF']);
+?>
+<!-- Mobile Header -->
+<div class="mobile-navbar d-lg-none">
+    <div class="d-flex align-items-center gap-3">
+        <button class="btn-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#appSidebar">
+            <i class="bi bi-list"></i>
+        </button>
+        <a href="../index.php" class="text-decoration-none">
+            <span class="fs-5 fw-bold">MediQueue</span>
+        </a>
+    </div>
+</div>
 
-            <!-- Mobile Toggle -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Navbar Content -->
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-                <!-- Center Menu -->
-                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="./index.php">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./doctor/doctor.php">Doctor</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./reception.php">Hospital</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./about.php">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./contact.php">Contact</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./faq.php">FAQs</a></li>
-                </ul>
-
-                <!-- Right Buttons -->
-                <div class="d-flex">
-
-                </div>
-
-            </div>
+<!-- Sidebar -->
+<div class="offcanvas-lg offcanvas-start custom-sidebar" tabindex="-1" id="appSidebar">
+    <div class="offcanvas-header d-lg-none border-bottom border-secondary">
+        <div class="sidebar-logo">
+            <span class="fs-5 fw-bold text-dark">MediQueue</span>
         </div>
-    </nav>
-
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-        <div class="offcanvas-header" style="background-color: #fef9f9;">
-            <img src="./img/mediq.png" style="height: 70px;" class="mx-5" alt="">
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body" style="background-color: #fef9f9;">
-            <div class="navbar-nav mb-2 px-5 text-lg-center">
-                <a href="./doctor.php" type="none" class="nav-link">Dashboard</a>
-            </div>
-
-            <div class="navbar-nav mb-2 px-5 text-lg-center">
-                <a href="./doctor.php" type="none" class="nav-link">Book Appointments</a>
-            </div>
-
-            <div class="navbar-nav mb-2 px-5 text-lg-center">
-                <a href="./doctor.php" type="none" class="nav-link">Live Queue</a>
-            </div>
-
-            <div class="navbar-nav mb-2 px-5 text-lg-center">
-                <a href="./doctor.php" type="none" class="nav-link">My Appointment</a>
-            </div>
-
-            <div class="navbar-nav mb-2 px-5 text-lg-center">
-                <a href="./doctor.php" type="none" class="nav-link">Visit History</a>
-            </div>
-
-            <div class="navbar-nav mb-2 px-5 text-lg-center">
-                <a href="./doctor.php" type="none" class="nav-link">Profile Settings</a>
-            </div>
-
-            <div class="navbar-nav mb-2 px-5 text-lg-center">
-                <a href="#"
-                    class="nav-link text-danger"
-                    onclick="return confirm('Are you sure you want to logout?');">
-                    <i class="bi bi-box-arrow-right me-2"></i> Logout
-                </a>
-            </div>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#appSidebar"></button>
+    </div>
+    
+    <div class="d-none d-lg-block">
+        <div class="sidebar-logo">
+           <img src="../img/mediq.png" alt="Logo"> 
+           <span>MediQueue</span>
         </div>
     </div>
+
+    <div class="sidebar-menu offcanvas-body flex-column p-0">
+        <div class="w-100 p-3">
+            <div class="menu-label">NAVIGATION</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="../patient/dashboard.php" class="nav-link <?= ($current_page == 'dashboard.php') ? 'active' : '' ?>">
+                        <i class="bi bi-grid-1x2-fill"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../patient/book_appointment.php" class="nav-link <?= ($current_page == 'book_appointment.php') ? 'active' : '' ?>">
+                        <i class="bi bi-calendar-plus-fill"></i>
+                        <span>Book Appointments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../patient/live_queue.php" class="nav-link <?= ($current_page == 'live_queue.php') ? 'active' : '' ?>">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Live Queue</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../patient/my_appointments.php" class="nav-link <?= ($current_page == 'my_appointments.php') ? 'active' : '' ?>">
+                        <i class="bi bi-calendar-check-fill"></i>
+                        <span>My Appointment</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../patient/prescriptions.php" class="nav-link <?= ($current_page == 'prescriptions.php') ? 'active' : '' ?>">
+                        <i class="bi bi-file-medical-fill"></i>
+                        <span>View Prescription</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../patient/visit_history.php" class="nav-link <?= ($current_page == 'visit_history.php') ? 'active' : '' ?>">
+                        <i class="bi bi-clock-history"></i>
+                        <span>Visit History</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../patient/profile_setting.php" class="nav-link <?= ($current_page == 'profile_setting.php') ? 'active' : '' ?>">
+                        <i class="bi bi-person-fill-gear"></i>
+                        <span>Profile Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="user-account mt-auto">
+        <div class="menu-label text-uppercase mb-2">USER ACCOUNT</div>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="user-profile">
+                <img src="https://i.pravatar.cc/150?u=a04258" alt="User">
+                <div class="user-info">
+                    <span class="name">Patient User</span>
+                    <span class="tag">#patient-1234</span>
+                </div>
+            </div>
+            <a href="../patient/logout.php" class="text-danger fs-5" onclick="return confirm('Are you sure you want to logout?');" title="Logout">
+                <i class="bi bi-box-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
