@@ -1,11 +1,3 @@
-<?php
-// session_start();
-
-// if (!isset($_SESSION['doctor_id'])) {
-//     header("Location: ../login.php");
-//     exit();
-// }
-?>
 <?php include "doctor-auth.php"; ?>
 
 <!DOCTYPE html>
@@ -14,22 +6,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediQueue | Doctor Dashboard</title>
+    <!-- FIX: corrected page title -->
+    <title>MediQueue | Analytics</title>
     <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css?v=vibrant">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css?v=vibrant" rel="stylesheet">
-    <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
     <link rel="stylesheet" href="../css/style.css?v=vibrant">
     <link rel="stylesheet" href="../css/doctor.css?v=vibrant">
 </head>
 
 <body class="layout-with-sidebar">
+
     <?php include '../sidebar/doctor-sidebar.php'; ?>
 
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
+
         <section class="features-header my-1">
-            <h2>Welcome, <span>Dr. <?php echo $_SESSION['doctor_name']; ?></span></h2>
+            <!-- FIX: wrapped session output in htmlspecialchars to prevent XSS -->
+            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($_SESSION['doctor_name']); ?></span></h2>
         </section>
-        <!-- ================= HEADER ================= -->
+
+        <!-- HEADER -->
         <section class="mb-4 d-flex justify-content-between align-items-center">
             <div>
                 <h4 class="mb-1">Consultation Time Analytics</h4>
@@ -50,7 +46,7 @@
             </div>
         </section>
 
-        <!-- ================= KEY METRICS ================= -->
+        <!-- KEY METRICS -->
         <section class="mb-4">
             <div class="row g-3">
 
@@ -85,27 +81,21 @@
             </div>
         </section>
 
-        <!-- ================= CHARTS ================= -->
+        <!-- CHARTS -->
         <section class="row g-4 mb-4">
 
-            <!-- Peak Hours -->
             <div class="col-lg-6">
                 <div class="dcard">
-                    <div class="card-header">
-                        Peak Consultation Hours
-                    </div>
+                    <div class="card-header">Peak Consultation Hours</div>
                     <div class="card-body">
                         <canvas id="peakHoursChart"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Appointment Type Breakdown -->
             <div class="col-lg-6">
                 <div class="dcard">
-                    <div class="card-header">
-                        Appointment Type Breakdown
-                    </div>
+                    <div class="card-header">Appointment Type Breakdown</div>
                     <div class="card-body">
                         <canvas id="appointmentTypeChart"></canvas>
                     </div>
@@ -116,24 +106,18 @@
 
         <section class="row g-4 mb-4">
 
-            <!-- Daily Patient Status -->
             <div class="col-lg-6">
                 <div class="dcard">
-                    <div class="card-header">
-                        Daily Patient Status
-                    </div>
+                    <div class="card-header">Daily Patient Status</div>
                     <div class="card-body">
                         <canvas id="dailyStatusChart"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Consultation Speed -->
             <div class="col-lg-6">
                 <div class="dcard">
-                    <div class="card-header">
-                        Consultation Speed Distribution
-                    </div>
+                    <div class="card-header">Consultation Speed Distribution</div>
                     <div class="card-body">
                         <canvas id="speedChart"></canvas>
                     </div>
@@ -142,15 +126,12 @@
 
         </section>
 
-        <!-- ================= DAILY SUMMARY ================= -->
+        <!-- DAILY SUMMARY -->
         <section class="row g-4 mb-4">
 
-            <!-- Total Time -->
             <div class="col-lg-6">
                 <div class="dcard">
-                    <div class="card-header">
-                        Daily Consultation Summary
-                    </div>
+                    <div class="card-header">Daily Consultation Summary</div>
                     <div class="card-body">
                         <p><strong>Total Consultation Time:</strong> 6 hrs 12 mins</p>
                         <p><strong>Peak Hour:</strong> 10:00 – 11:00 AM</p>
@@ -159,70 +140,54 @@
                 </div>
             </div>
 
-            <!-- Appointment Type Breakdown -->
             <div class="col-lg-6">
                 <div class="dcard">
-                    <div class="card-header">
-                        Appointment Type Breakdown
-                    </div>
+                    <div class="card-header">Appointment Type Breakdown</div>
                     <div class="card-body">
-
                         <div class="analytics-row">
                             <span>New Patients</span>
                             <span>14</span>
                         </div>
-
                         <div class="analytics-row">
                             <span>Follow-ups</span>
                             <span>18</span>
                         </div>
-
                         <div class="analytics-row emergency-visit">
                             <span>Emergency Visits</span>
                             <span>6</span>
                         </div>
-
                     </div>
                 </div>
             </div>
 
         </section>
 
-        <!-- ================= CONSULTATION SPEED ================= -->
+        <!-- CONSULTATION SPEED -->
         <section class="row g-4 mb-4">
 
             <div class="col-lg-6">
                 <div class="dcard">
-                    <div class="card-header">
-                        Consultation Speed Indicator
-                    </div>
+                    <div class="card-header">Consultation Speed Indicator</div>
                     <div class="card-body">
-
                         <div class="speed-indicator fast">
                             <span>Fast (&lt; 8 min)</span>
                             <span>10</span>
                         </div>
-
                         <div class="speed-indicator average">
                             <span>Average (8–15 min)</span>
                             <span>17</span>
                         </div>
-
                         <div class="speed-indicator slow">
                             <span>Slow (&gt; 15 min)</span>
                             <span>11</span>
                         </div>
-
                     </div>
                 </div>
             </div>
 
-            <!-- Weekly Snapshot -->
             <div class="col-lg-6">
                 <div class="dcard">
-                    <div class="card-header">
-                        Weekly Snapshot (Last 7 Days)
-                    </div>
+                    <div class="card-header">Weekly Snapshot (Last 7 Days)</div>
                     <div class="card-body">
                         <p><strong>Avg Consultation Time:</strong> 13 min</p>
                         <p><strong>Total Patients:</strong> 214</p>
@@ -234,14 +199,17 @@
         </section>
 
     </main>
+
+    <?php include './doctor-footer.php'; ?>
+
+    <!-- FIX: Bootstrap JS and Chart.js moved to bottom of body -->
+    <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        /* Global style (no animation drama) */
         Chart.defaults.animation = false;
         Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
         Chart.defaults.color = "#374151";
 
-        /* ================= PEAK HOURS ================= */
         new Chart(document.getElementById('peakHoursChart'), {
             type: 'line',
             data: {
@@ -256,20 +224,11 @@
                 }]
             },
             options: {
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
             }
         });
 
-        /* ================= APPOINTMENT TYPE ================= */
         new Chart(document.getElementById('appointmentTypeChart'), {
             type: 'doughnut',
             data: {
@@ -279,46 +238,26 @@
                     backgroundColor: ['#3b82f6', '#22c55e', '#dc3545']
                 }]
             },
-            options: {
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
+            options: { plugins: { legend: { position: 'bottom' } } }
         });
 
-        /* ================= DAILY STATUS ================= */
         new Chart(document.getElementById('dailyStatusChart'), {
             type: 'bar',
             data: {
                 labels: ['Today'],
-                datasets: [{
-                        label: 'Completed',
-                        data: [31],
-                        backgroundColor: '#22c55e'
-                    },
-                    {
-                        label: 'Pending',
-                        data: [7],
-                        backgroundColor: '#fbbf24'
-                    }
+                datasets: [
+                    { label: 'Completed', data: [31], backgroundColor: '#22c55e' },
+                    { label: 'Pending',   data: [7],  backgroundColor: '#fbbf24' }
                 ]
             },
             options: {
                 scales: {
-                    x: {
-                        stacked: true
-                    },
-                    y: {
-                        stacked: true,
-                        beginAtZero: true
-                    }
+                    x: { stacked: true },
+                    y: { stacked: true, beginAtZero: true }
                 }
             }
         });
 
-        /* ================= CONSULTATION SPEED ================= */
         new Chart(document.getElementById('speedChart'), {
             type: 'bar',
             data: {
@@ -329,11 +268,7 @@
                 }]
             },
             options: {
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
+                plugins: { legend: { display: false } },
                 indexAxis: 'y'
             }
         });
@@ -342,8 +277,6 @@
             window.print();
         }
     </script>
-
-    <?php include './doctor-footer.php'; ?>
 
 </body>
 
