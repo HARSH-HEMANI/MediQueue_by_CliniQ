@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | MediQueue</title>
 
-    <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css?v=vibrant">
     <script src="./css/bootstrap/js/bootstrap.bundle.js"></script>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/style.css?v=vibrant">
 </head>
 
 <body>
@@ -17,7 +17,7 @@
     <header>
         <?php include "./header.php"; ?>
 
-        <div style="background:#FF5A5F;color:#fff;text-align:center;padding:10px;margin-top:88px;">
+        <div style="background: linear-gradient(90deg, #fd686d, #ff8a8f);color:#fff;text-align:center;padding:10px;margin-top:88px;">
             <h2>SMART CLINIC MANAGEMENT SYSTEM</h2>
         </div>
     </header>
