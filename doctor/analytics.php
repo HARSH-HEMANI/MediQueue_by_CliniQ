@@ -206,9 +206,45 @@
     <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        Chart.defaults.animation = false;
         Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
         Chart.defaults.color = "#374151";
+
+        /**
+         * After a chart finishes rendering, snapshot its canvas onto a
+         * white background and inject a hidden <img> beside it.
+         * The @media print CSS hides the canvas and shows the img instead.
+         */
+        function snapshotChart(chart) {
+            var canvas = chart.canvas;
+
+            // Draw white background first, then the chart on top
+            var offscreen = document.createElement('canvas');
+            offscreen.width  = canvas.width;
+            offscreen.height = canvas.height;
+            var ctx = offscreen.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, offscreen.width, offscreen.height);
+            ctx.drawImage(canvas, 0, 0);
+
+            // Find or create the companion <img>
+            var img = canvas.nextElementSibling;
+            if (!img || !img.classList.contains('chart-print-img')) {
+                img = document.createElement('img');
+                img.className = 'chart-print-img';
+                img.style.display = 'none'; // hidden on screen, visible only in print
+                canvas.parentNode.insertBefore(img, canvas.nextSibling);
+            }
+            img.src = offscreen.toDataURL('image/png');
+        }
+
+        // Helper: build chart config with onComplete snapshot callback
+        function makeOptions(extra) {
+            return Object.assign({
+                animation: {
+                    onComplete: function() { snapshotChart(this); }
+                }
+            }, extra);
+        }
 
         new Chart(document.getElementById('peakHoursChart'), {
             type: 'line',
@@ -223,10 +259,10 @@
                     fill: true
                 }]
             },
-            options: {
+            options: makeOptions({
                 plugins: { legend: { display: false } },
                 scales: { y: { beginAtZero: true } }
-            }
+            })
         });
 
         new Chart(document.getElementById('appointmentTypeChart'), {
@@ -238,7 +274,9 @@
                     backgroundColor: ['#3b82f6', '#22c55e', '#dc3545']
                 }]
             },
-            options: { plugins: { legend: { position: 'bottom' } } }
+            options: makeOptions({
+                plugins: { legend: { position: 'bottom' } }
+            })
         });
 
         new Chart(document.getElementById('dailyStatusChart'), {
@@ -250,12 +288,12 @@
                     { label: 'Pending',   data: [7],  backgroundColor: '#fbbf24' }
                 ]
             },
-            options: {
+            options: makeOptions({
                 scales: {
                     x: { stacked: true },
                     y: { stacked: true, beginAtZero: true }
                 }
-            }
+            })
         });
 
         new Chart(document.getElementById('speedChart'), {
@@ -267,10 +305,10 @@
                     backgroundColor: ['#16a34a', '#f59e0b', '#dc3545']
                 }]
             },
-            options: {
+            options: makeOptions({
                 plugins: { legend: { display: false } },
                 indexAxis: 'y'
-            }
+            })
         });
 
         function exportAnalytics() {
