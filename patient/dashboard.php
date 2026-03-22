@@ -9,7 +9,7 @@ ob_start();
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
 
         <div>
-            <small class="text-muted">Welcome back, Krishna 👋</small>
+            <small class="text-muted">Welcome back, Krishna</small>
             <h3 class="fw-semibold mb-0">Patient Dashboard</h3>
         </div>
 
