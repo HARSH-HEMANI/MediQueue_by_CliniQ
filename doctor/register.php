@@ -5,20 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctor Registration | MediQueue</title>
-    <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css?v=vibrant">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css?v=vibrant" rel="stylesheet">
     <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/doctor.css">
+    <link rel="stylesheet" href="../css/style.css?v=vibrant">
+    <link rel="stylesheet" href="../css/doctor.css?v=vibrant">
 </head>
 
-<body>
-    <?php include '../sidebar/doctor-sidebar.php'; ?>
+<body class="layout-without-sidebar">
 
     <main class="features auth-page">
 
         <div class="container">
-            <section class="features-header text-center my-5">
+            <section class="features-header text-center mb-3">
                 <h2>Doctor <span>Registration</span></h2>
                 <div class="section-divider"></div>
                 <p>
