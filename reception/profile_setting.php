@@ -1,400 +1,192 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+$content_page = 'Profile Settings | Reception | MediQueue';
+ob_start();
+?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediQueue | Receptionist Profile Settings</title>
+<div class="reception-dashboard">
 
-    <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css?v=vibrant">
-    <link rel="stylesheet" href="../css/style.css?v=vibrant">
-    <link rel="stylesheet" href="../css/reception.css?v=vibrant">
-    <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css?v=vibrant" rel="stylesheet">
-</head>
+    <div class="mb-4">
+        <small class="text-uppercase fw-semibold text-brand" style="font-size:0.76rem;letter-spacing:1px;">Account management</small>
+        <h1 class="dashboard-title mt-1">Profile <span>Settings</span></h1>
+        <p class="dashboard-subtitle">Manage receptionist profile, account, and preferences</p>
+    </div>
 
-<body class="layout-with-sidebar">
+    <form method="post" action="save-reception-profile.php" enctype="multipart/form-data" id="profileForm">
 
-    <?php include '../sidebar/reception-sidebar.php'; ?>
+        <!-- Profile & Hospital Info -->
+        <div class="row g-4 mb-4">
 
-    <main class="reception-dashboard">
+            <div class="col-lg-6">
+                <div class="rcard h-100">
+                    <div class="rcard-body">
+                        <h5 class="mb-3">Receptionist Profile</h5>
 
-
-        <!-- PAGE HEADER -->
-        <section class="dashboard-header mb-4">
-
-            <h1 class="fw-bold text-black">Profile <span>Settings</span> </h1>
-
-
-            <p class="dashboard-subtitle">
-                Manage receptionist profile, account, and preferences
-            </p>
-
-        </section>
-
-
-
-        <form method="post" action="save-reception-profile.php" enctype="multipart/form-data">
-
-
-            <!-- PROFILE AND WORK INFO -->
-            <section class="row g-4 mb-4">
-
-
-                <!-- PROFILE INFO -->
-                <div class="col-lg-6">
-
-                    <div class="rcard">
-
-                        <div class="rcard-body">
-
-                            <h5 class="mb-3">
-                                Receptionist Profile
-                            </h5>
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Full Name
-                                </label>
-
-                                <input type="text"
-                                    name="full_name"
-                                    class="form-control"
-                                    value="Ajay Patel"
-                                    type="text" id="rName" name="came" data-validation="required|min|max"
-                                    data-min="3" data-max="50" data-save class="form-control">
-                                <small id="rname_error"></small>
-
-                            </div>
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Email
-                                </label>
-
-                                <input id="rAddress" name="rAddress"
-                                    data-save class="form-control" rows="2" data-validation="required"></textarea>
-                                <small id="rAddress_error"></small>
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col-md-6 mb-3">
-
-                                    <label class="form-label">
-                                        Phone
-                                    </label>
-
-                                    <input type="text" id="contact" name="contact"
-                                        data-save class="form-control" data-validation="required|number">
-                                    <small id="contact_error"></small>
-
-                                </div>
-
-
-                                <div class="col-md-6 mb-3">
-
-                                    <label class="form-label">
-                                        Gender
-                                    </label>
-
-                                    <select name="gender"
-                                        class="form-select" data-validation="required">
-
-                                        <option selected>Male</option>
-                                        <option>Female</option>
-                                        <option>Other</option>
-
-                                    </select>
-                                    <small id="gender_error"></small>
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Address
-                                </label>
-
-                                <textarea name="address"
-                                    class="form-control"
-                                    rows="2" data-validation="required">Rajkot, Gujarat</textarea>
-                                <small id="address_error"></small>
-                            </div>
-
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Full Name</label>
+                            <input type="text" name="full_name" id="rName" class="form-control"
+                                value="Ajay Patel"
+                                data-validation="required|min|max" data-min="3" data-max="50">
+                            <small id="rName_error" class="text-danger"></small>
                         </div>
 
-                    </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input type="email" name="email" id="rEmail" class="form-control"
+                                placeholder="Enter email" data-validation="required|email">
+                            <small id="rEmail_error" class="text-danger"></small>
+                        </div>
 
-                </div>
-
-                <!-- HOSPITAL INFO -->
-                <div class="col-lg-6">
-
-                    <div class="rcard">
-
-                        <div class="rcard-body">
-
-                            <h5 class="mb-3">
-                                Hospital Information
-                            </h5>
-
-
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Hospital
-                                </label>
-
-                                <input type="text" id="hospitalName" name="hospitalName"
-                                    data-save class="form-control" data-validation="required|min|max" data-min="3" data-max="50">
-                                <small id="hospitalName_error"></small>
-
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Phone</label>
+                                <input type="text" name="contact" id="contact" class="form-control"
+                                    placeholder="Phone number" data-validation="required|number">
+                                <small id="contact_error" class="text-danger"></small>
                             </div>
-
-
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Department
-                                </label>
-
-                                <input type="text"
-                                    class="form-control"
-                                    value="Reception" name="depart" data-validation="required">
-                                <small id="depart_error"></small>
-                            </div>
-
-
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Work Shift
-                                </label>
-
-                                <select class="form-select">
-
-                                    <option>Morning</option>
-                                    <option selected>Day</option>
-                                    <option>Night</option>
-
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Gender</label>
+                                <select name="gender" class="form-select" data-validation="required">
+                                    <option selected>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
                                 </select>
-
+                                <small id="gender_error" class="text-danger"></small>
                             </div>
+                        </div>
 
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Employee ID
-                                </label>
-
-                                <input type="text"
-                                    class="form-control"
-                                    value="REC1024"
-                                    readonly>
-
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Address</label>
+                            <textarea name="address" class="form-control" rows="2"
+                                data-validation="required">Rajkot, Gujarat</textarea>
+                            <small id="address_error" class="text-danger"></small>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- ACCOUNT SETTINGS -->
-            <section class="row g-4 mb-4">
-                <div class="col-lg-6">
+            <div class="col-lg-6">
+                <div class="rcard h-100">
+                    <div class="rcard-body">
+                        <h5 class="mb-3">Hospital Information</h5>
 
-                    <div class="rcard">
-
-                        <div class="rcard-body">
-
-                            <h5 class="mb-3">
-                                Account Settings
-                            </h5>
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Username
-                                </label>
-
-                                <input type="text" id="recepName" name="recepName"
-                                    data-save class="form-control" data-validation="required|min|max" data-min="3" data-max="50">
-                                <small id="recepName_error"></small>
-                            </div>
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Change Password
-                                </label>
-
-                                <input type="password" id="newPassword"
-                                    class="form-control mb-2" name="newPassword"
-                                    placeholder="New Password" data-validation="required|strongPassword">
-                                <small id="newPassword_error"></small>
-
-                                <input type="password" id="confirmPassword"
-                                    class="form-control mb-3" name="confirmPassword"
-                                    placeholder="Confirm New Password" data-validation="required|confirmPassword">
-                                <small id="confirmPassword_error"></small>
-
-                            </div>
-
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Hospital Name</label>
+                            <input type="text" name="hospitalName" id="hospitalName" class="form-control"
+                                data-validation="required|min|max" data-min="3" data-max="100">
+                            <small id="hospitalName_error" class="text-danger"></small>
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Department</label>
+                            <input type="text" name="depart" class="form-control"
+                                value="Reception" data-validation="required">
+                            <small id="depart_error" class="text-danger"></small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Work Shift</label>
+                            <select class="form-select">
+                                <option>Morning</option>
+                                <option selected>Day</option>
+                                <option>Night</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Employee ID</label>
+                            <input type="text" class="form-control" value="REC1024" readonly>
+                        </div>
                     </div>
-
                 </div>
+            </div>
 
-                <!-- STATUS -->
-                <div class="col-lg-6">
+        </div>
 
-                    <div class="rcard">
+        <!-- Account & Status -->
+        <div class="row g-4 mb-4">
 
-                        <div class="rcard-body d-flex justify-content-between align-items-center">
+            <div class="col-lg-6">
+                <div class="rcard h-100">
+                    <div class="rcard-body">
+                        <h5 class="mb-3">Account Settings</h5>
 
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Username</label>
+                            <input type="text" name="recepName" id="recepName" class="form-control"
+                                data-validation="required|min|max" data-min="3" data-max="50">
+                            <small id="recepName_error" class="text-danger"></small>
+                        </div>
+
+                        <label class="form-label fw-semibold">Change Password</label>
+                        <input type="password" name="newPassword" id="newPassword"
+                            class="form-control mb-2" placeholder="New Password"
+                            data-validation="required|strongPassword">
+                        <small id="newPassword_error" class="text-danger d-block mb-2"></small>
+
+                        <input type="password" name="confirmPassword" id="confirmPassword"
+                            class="form-control" placeholder="Confirm New Password"
+                            data-validation="required|confirmPassword">
+                        <small id="confirmPassword_error" class="text-danger"></small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="rcard h-100">
+                    <div class="rcard-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
                             <div>
-
-                                <h5 class="mb-1">
-                                    Profile Status
-                                </h5>
-
-                                <small class="text-muted">
-                                    Enable or disable receptionist account
-                                </small>
-
+                                <h5 class="mb-1">Profile Status</h5>
+                                <small class="text-muted">Enable or disable your account</small>
                             </div>
-
                             <div class="form-check form-switch">
-
-                                <input class="form-check-input"
-                                    type="checkbox"
-                                    checked>
+                                <input class="form-check-input" type="checkbox" checked>
                             </div>
-
                         </div>
 
-                    </div>
-
-                </div>
-
-
-            </section>
-
-            <!-- NOTIFICATIONS -->
-            <section class="row g-4 mb-4">
-
-                <div class="col-lg-6">
-
-                    <div class="rcard">
-
-                        <div class="rcard-body">
-
-                            <h5 class="mb-3">
-                                Notification Preferences
-                            </h5>
-
-                            <div class="form-check mb-2">
-
-                                <input class="form-check-input"
-                                    type="checkbox"
-                                    checked>
-
-                                <label class="form-check-label">
-                                    New Patient Registration
-                                </label>
-
-                            </div>
-
-                            <div class="form-check mb-2">
-
-                                <input class="form-check-input"
-                                    type="checkbox"
-                                    checked>
-
-                                <label class="form-check-label">
-                                    Appointment Updates
-                                </label>
-
-                            </div>
-
-                            <div class="form-check">
-
-                                <input class="form-check-input"
-                                    type="checkbox">
-
-                                <label class="form-check-label">
-                                    Emergency Alerts
-                                </label>
-
-                            </div>
-
+                        <h5 class="mb-3">Notification Preferences</h5>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="notifReg" checked>
+                            <label class="form-check-label" for="notifReg">New Patient Registration</label>
                         </div>
-
-                    </div>
-
-                </div>
-
-                <!-- ACTIVITY -->
-                <div class="col-lg-6">
-
-                    <div class="rcard">
-
-                        <div class="rcard-body">
-
-                            <h5 class="mb-3">
-                                Activity Log
-                            </h5>
-
-                            <p>
-                                <strong>Last Login:</strong>
-                                16 Feb 2026, 09:15 AM
-                            </p>
-
-                            <p>
-                                <strong>Last Update:</strong>
-                                —
-                            </p>
-
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="notifAppt" checked>
+                            <label class="form-check-label" for="notifAppt">Appointment Updates</label>
                         </div>
-
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="notifEmerg">
+                            <label class="form-check-label" for="notifEmerg">Emergency Alerts</label>
+                        </div>
                     </div>
-
                 </div>
+            </div>
 
-            </section>
+        </div>
 
-            <!-- SAVE BUTTON -->
-            <section class="text-end mb-5">
+        <!-- Activity Log -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+                <div class="rcard">
+                    <div class="rcard-body">
+                        <h5 class="mb-3">Activity Log</h5>
+                        <p class="mb-2" style="font-size:0.9rem;"><strong>Last Login:</strong> 16 Feb 2026, 09:15 AM</p>
+                        <p class="mb-0" style="font-size:0.9rem;"><strong>Last Profile Update:</strong> <span class="text-muted">—</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                <button type="submit"
-                    class="btn btn-brand px-4">
+        <div class="text-end mb-5">
+            <button type="submit" class="btn btn-brand rounded-pill px-5 py-2">
+                <i class="bi bi-save me-2"></i>Save Changes
+            </button>
+        </div>
 
-                    <i class="bi bi-save"></i>
-                    Save Changes
+    </form>
 
-                </button>
+</div>
 
-            </section>
-
-        </form>
-
-    </main>
-
-    <?php include './reception_footer.php'; ?>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="../js/validation.js"></script>
-</body>
-
-</html>
-
-
-
+<?php
+$content = ob_get_clean();
+include './reception-layout.php';
+?>
