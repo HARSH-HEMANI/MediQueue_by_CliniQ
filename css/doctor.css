@@ -1,24 +1,25 @@
 /* DOCTOR DASHBOARD */
 .doctor-dashboard {
-    background: #f9fafb;
     min-height: 100vh;
     padding: 24px;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
-/* GLOBAL CARD SYSTEM */
+/* GLOBAL CARD SYSTEM - Glassmorphism */
 .doctor-dashboard .dcard {
-    background: #ffffff;
-    border: none;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
     border-radius: 14px;
-    box-shadow:
-        0 1px 2px rgba(0, 0, 0, 0.04),
-        0 6px 18px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--glass-shadow);
 }
 
 .doctor-dashboard .card-header {
-    background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border-bottom: 1px solid var(--glass-border);
     font-weight: 700;
     padding: 14px 18px;
 }
@@ -29,12 +30,13 @@
 
 /* TODAY OVERVIEW – STAT CARDS */
 .doctor-dashboard .dstat-card {
-    background: #ffffff;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
     border-radius: 14px;
     padding: 18px 20px;
-    box-shadow:
-        0 1px 2px rgba(0, 0, 0, 0.04),
-        0 6px 16px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--glass-shadow);
     border-left: 4px solid transparent;
 }
 
@@ -61,7 +63,9 @@
 
 .doctor-dashboard .dstat-card.danger {
     border-left-color: #dc3545;
-    background: #fff5f5;
+    background: rgba(255, 245, 245, 0.7);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
 }
 
 /* LIVE QUEUE CONTROL */
@@ -107,7 +111,10 @@
 
 /* EMERGENCY ALERTS (ONLY ATTENTION ZONE) */
 .doctor-dashboard .emergency-card {
-    border: 1px solid #fecaca;
+    background: rgba(255, 245, 245, 0.6);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid rgba(254, 202, 202, 0.8);
 }
 
 .doctor-dashboard .emergency-header {
@@ -117,8 +124,10 @@
 }
 
 .doctor-dashboard .emergency-item {
-    background: #fff5f5;
-    border: 1px solid #fecaca;
+    background: rgba(255, 245, 245, 0.7);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid rgba(254, 202, 202, 0.6);
     border-radius: 10px;
     padding: 12px 14px;
     margin-bottom: 10px;
@@ -138,8 +147,10 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: #6b7280;
-    background: #f9fafb;
-    border-bottom: 1px solid #e5e7eb;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border-bottom: 1px solid var(--glass-border);
 }
 
 .doctor-dashboard tbody td {
@@ -188,7 +199,9 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: #6b7280;
-    background: #f9fafb;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
 }
 
 .doctor-dashboard .appointment-table td {
@@ -263,7 +276,9 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: #6b7280;
-    background: #f9fafb;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
 }
 
 .queue-table td {
@@ -292,7 +307,9 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: #6b7280;
-    background: #f9fafb;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
 }
 
 .patient-table td {
@@ -385,7 +402,7 @@ canvas {
 
 /* Read-only feel */
 input[readonly] {
-    background: #f9fafb;
+    background: rgba(249, 250, 251, 0.8);
     color: #6b7280;
 }
 
@@ -427,12 +444,13 @@ input[readonly] {
 /* ---------------------------------DASHBOARD FOOTER------------------------------------ */
 
 .dashboard-footer {
-    background: #ffffff;
-    border-top: 1px solid #e5e7eb;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border-top: 1px solid var(--glass-border);
     padding: 12px 0;
-    margin-top: 30px;
     color: #6b7280;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
 }
 
 .dashboard-footer small {
