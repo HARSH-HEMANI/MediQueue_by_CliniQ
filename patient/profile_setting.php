@@ -108,7 +108,7 @@ ob_start();
                     <div class="row g-3 mb-4">
 
                         <div class="col-md-4">
-                            <label class="form-label">Name</label>
+                            <label class="form-label" >Name</label>
                             <input type="text" class="form-control" value="Jane Doe" name="emergency_contact_name" id="emergency_contact_name" data-validation="required|min|max" data-min="3" data-max="50">
                             <small id="emergency_contact_name_error"></small>
                         </div>
