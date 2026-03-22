@@ -7,7 +7,8 @@
 
 body {
   height: 100vh;
-  background: linear-gradient(135deg, #ff7a7f, #ffb3b6);
+  background: radial-gradient(circle, #ffe1e2, #ff7a7f);
+  background-attachment: fixed;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,12 +16,16 @@ body {
 
 .container {
   width: 900px;
+  max-width: 95%;
+  background: #f1e8f4;
+  display: flex;
+  border-radius: 12px;
   height: 520px;
   background: white;
   border-radius: 25px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
 }
 
 /* FORMS */
@@ -68,7 +73,7 @@ input {
 button {
   width: 100%;
   padding: 14px;
-  border-radius: 14px;
+  border-radius: var(--card-radius);
   border: none;
   background: #FF5A5F;
   color: white;
@@ -101,7 +106,8 @@ button:hover {
   right: 0;
   width: 50%;
   height: 100%;
-  background: linear-gradient(135deg, #e9a3a5, #FF5A5F);
+  background: linear-gradient(135deg, rgba(233, 163, 165, 0.9), rgba(255, 90, 95, 0.9));
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   display: flex;
   align-items: center;
@@ -200,12 +206,12 @@ small {
 input.is-invalid,
 select.is-invalid,
 textarea.is-invalid {
-    border: 2px solid #ff4d4f !important;
-    background-color: #fff6f6;
+  border: 2px solid #ff4d4f !important;
+  background-color: #fff6f6;
 }
 
 select.is-invalid {
-    color: #000;
+  color: #000;
 }
 
 
