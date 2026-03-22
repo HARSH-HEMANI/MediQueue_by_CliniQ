@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediQueue | Contact Us</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css?v=vibrant" rel="stylesheet">
+    <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css?v=vibrant">
+    <link rel="stylesheet" href="./css/style.css?v=vibrant">
     <script src="./css/bootstrap/js/bootstrap.bundle.js"></script>
 
 </head>
