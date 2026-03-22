@@ -82,7 +82,7 @@
     margin-top: 6px;
 }
 
-/* BUTTON SYSTEM (PROFESSIONAL) */
+/* BUTTON SYSTEM */
 .doctor-dashboard .btn {
     border-radius: 10px;
     font-weight: 600;
@@ -109,7 +109,7 @@
     color: inherit;
 }
 
-/* EMERGENCY ALERTS (ONLY ATTENTION ZONE) */
+/* EMERGENCY ALERTS */
 .doctor-dashboard .emergency-card {
     background: rgba(255, 245, 245, 0.6);
     -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -137,7 +137,7 @@
     align-items: center;
 }
 
-/* UPCOMING PATIENTS TABLE */
+/* TABLES */
 .doctor-dashboard table {
     margin: 0;
 }
@@ -165,7 +165,6 @@
     font-weight: 600;
 }
 
-/* CLINIC STATUS */
 .doctor-dashboard .clinic-status {
     display: flex;
     justify-content: space-between;
@@ -177,7 +176,6 @@
     font-weight: 600;
 }
 
-/* QUICK ACTIONS */
 .doctor-dashboard .quick-actions .btn {
     text-align: center;
     padding: 10px;
@@ -185,15 +183,13 @@
     font-weight: 600;
 }
 
-/* REMOVE ALL CHILDISH MOTION */
 .doctor-dashboard * {
     transition: none !important;
 }
 
 
-/* ----------------------------------------------- APPOINTMENTS PAGE ------------------------------------------------------*/
+/* ------- APPOINTMENTS PAGE ------- */
 
-/* Table */
 .doctor-dashboard .appointment-table th {
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -209,7 +205,6 @@
     vertical-align: middle;
 }
 
-/* Appointment Type Badges */
 .type-new {
     background: #dbeafe;
     color: #1e40af;
@@ -228,7 +223,6 @@
     font-weight: 700;
 }
 
-/* Status Badges */
 .status-waiting {
     background: #fef3c7;
     color: #92400e;
@@ -244,21 +238,19 @@
     color: #374151;
 }
 
-/* Emergency Row Highlight */
 .emergency-row {
     background: #fff5f5;
     border-left: 4px solid #dc3545;
 }
 
-/* Actions */
 .action-cell .btn {
     padding: 4px 8px;
     margin-right: 4px;
 }
 
-/* ------------------------------------------------- LIVE QUEUE PAGE ------------------------------------------------------ */
 
-/* Current Token */
+/* ------- LIVE QUEUE PAGE ------- */
+
 .current-token-card {
     border-left: 6px solid #FF5A5F;
 }
@@ -270,7 +262,6 @@
     letter-spacing: -1px;
 }
 
-/* Queue Table */
 .queue-table th {
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -286,22 +277,20 @@
     vertical-align: middle;
 }
 
-/* Priority Row */
 .priority-row {
     background: #fff5f5;
     border-left: 4px solid #dc3545;
 }
 
-/* Status Badges */
 .status-waiting {
     background: #fef3c7;
     color: #92400e;
     font-weight: 600;
 }
 
-/* ------------------------- PATIENT RECORDS ----------------------------- */
 
-/* Patient Table */
+/* ------- PATIENT RECORDS ------- */
+
 .patient-table th {
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -317,13 +306,6 @@
     vertical-align: middle;
 }
 
-/* Emergency Patient Row */
-.emergency-row {
-    background: #fff5f5;
-    border-left: 4px solid #dc3545;
-}
-
-/* Visit Timeline */
 .visit-timeline {
     list-style: none;
     padding-left: 0;
@@ -339,7 +321,6 @@
     margin-right: 8px;
 }
 
-/* Emergency Visit */
 .emergency-visit {
     background: #fff5f5;
     padding: 12px;
@@ -347,7 +328,8 @@
     border-radius: 8px;
 }
 
-/* -----------------------CONSULTATION ANALYTICS--------------------------- */
+
+/* ------- CONSULTATION ANALYTICS ------- */
 
 .analytics-row,
 .speed-indicator {
@@ -358,7 +340,6 @@
     font-weight: 600;
 }
 
-/* Speed Indicators */
 .speed-indicator.fast {
     color: #166534;
 }
@@ -371,7 +352,6 @@
     color: #7f1d1d;
 }
 
-/* Emergency emphasis reused */
 .analytics-row.emergency-visit {
     background: #fff5f5;
     padding: 10px;
@@ -383,7 +363,8 @@ canvas {
     max-height: 260px;
 }
 
-/* --------------------------PROFILE SETTINGS------------------------------ */
+
+/* ------- PROFILE SETTINGS ------- */
 
 .form-label {
     font-weight: 600;
@@ -395,53 +376,160 @@ canvas {
     border-radius: 10px;
 }
 
-/* Toggle */
 .form-switch .form-check-input {
     cursor: pointer;
 }
 
-/* Read-only feel */
 input[readonly] {
     background: rgba(249, 250, 251, 0.8);
     color: #6b7280;
 }
 
 
-/* ------------------PRINT / PDF EXPORT------------------- */
+/* =====================================================
+   PRINT / PDF EXPORT  —  Full fix
+   ===================================================== */
 @media print {
 
-    body {
-        background: #ffffff !important;
+    /* 1. Clean white page, no background gradients */
+    *,
+    *::before,
+    *::after {
+        background: #fff !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        box-shadow: none !important;
+        color: #111827 !important;
+        text-shadow: none !important;
     }
 
-    .doctor-dashboard {
+    /* 2. Reset body and remove sidebar padding */
+    html,
+    body {
+        width: 100% !important;
         padding: 0 !important;
         margin: 0 !important;
+        font-size: 12pt;
     }
 
-    /* Hide sidebar, buttons, filters */
-    .sidebar,
-    button,
+    /* 3. Hide everything that shouldn't appear in PDF */
+    .custom-sidebar,
+    .mobile-navbar,
+    .offcanvas,
+    .offcanvas-backdrop,
+    .btn,
     select,
-    input,
-    .btn {
+    input[type="date"],
+    .dashboard-footer,
+    .no-print {
         display: none !important;
     }
 
-    /* Cards print clean */
-    .dcard {
-        box-shadow: none !important;
-        border: 1px solid #e5e7eb;
-        page-break-inside: avoid;
+    /* 4. Remove sidebar-induced left padding on body */
+    body.layout-with-sidebar {
+        padding-left: 0 !important;
     }
 
+    /* 5. Dashboard fills full width */
+    .doctor-dashboard {
+        padding: 10px 20px !important;
+        margin: 0 !important;
+        min-height: unset !important;
+    }
+
+    /* 6. Cards look clean with a simple border */
+    .dcard,
+    .dstat-card,
+    .card-header,
+    .card-body {
+        border: 1px solid #d1d5db !important;
+        border-radius: 8px !important;
+        background: #fff !important;
+        margin-bottom: 12px !important;
+        page-break-inside: avoid !important;
+    }
+
+    .card-header {
+        border-bottom: 1px solid #d1d5db !important;
+        border-radius: 8px 8px 0 0 !important;
+        padding: 10px 14px !important;
+        font-weight: 700 !important;
+        font-size: 11pt !important;
+    }
+
+    /* 7. Stat cards — keep the coloured left border */
+    .dstat-card {
+        border-radius: 8px !important;
+    }
+
+    .dstat-card.highlight {
+        border-left: 4px solid #FF5A5F !important;
+    }
+
+    .dstat-card.danger {
+        border-left: 4px solid #dc3545 !important;
+        background: #fff5f5 !important;
+    }
+
+    .dstat-card h2 {
+        color: #111827 !important;
+    }
+
+    /* 8. Bootstrap grid — force 2-col layout for stat cards */
+    .col-md-3 {
+        width: 25% !important;
+        float: left !important;
+    }
+
+    .row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+
+    /* 9. Charts: canvas is replaced by an <img> by exportAnalytics(),
+          so just make sure the img fills its container */
     canvas {
-        max-height: 200px;
+        display: none !important;
     }
 
+    .chart-print-img {
+        display: block !important;
+        width: 100% !important;
+        max-height: 220px !important;
+        object-fit: contain !important;
+        page-break-inside: avoid !important;
+    }
+
+    /* 10. Keep brand accent colours on text */
+    h2 span,
+    .text-brand {
+        color: #FF5A5F !important;
+    }
+
+    /* 11. Tables */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    th,
+    td {
+        border: 1px solid #e5e7eb !important;
+        padding: 6px 10px !important;
+    }
+
+    thead th {
+        background: #f9fafb !important;
+    }
+
+    /* 12. Page breaks */
+    section {
+        page-break-inside: avoid !important;
+    }
 }
 
-/* ---------------------------------DASHBOARD FOOTER------------------------------------ */
+
+/* ------- DASHBOARD FOOTER ------- */
 
 .dashboard-footer {
     background: var(--glass-bg-strong);
@@ -472,7 +560,6 @@ input[readonly] {
     text-decoration: underline;
     color: #374151;
 }
-
 
 @media (min-height: 600px) {
     .dashboard-footer {
