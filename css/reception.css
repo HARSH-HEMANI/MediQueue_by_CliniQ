@@ -51,8 +51,8 @@ body {
 /* ── Glassmorphism card ── */
 .rcard {
     background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border) !important;
     border-radius: var(--radius-card) !important;
     box-shadow: var(--glass-shadow) !important;
@@ -83,8 +83,8 @@ body {
     flex: 1;
     min-width: 160px;
     background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
     border-right: 4px solid var(--brand);
     border-radius: var(--radius-card);
@@ -117,8 +117,8 @@ body {
 /* ── Current token card ── */
 .dcard {
     background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-card);
     box-shadow: var(--glass-shadow);
@@ -301,8 +301,8 @@ body {
 /* ── Dashboard footer ── */
 .dashboard-footer {
     background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
     border-top: 1px solid var(--glass-border);
     padding: 12px 0;
     margin-top: 40px;

@@ -27,8 +27,8 @@ body {
 /* ── Glassmorphism card ── */
 .p-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border) !important;
     border-radius: var(--radius-card) !important;
     box-shadow: var(--glass-shadow) !important;
@@ -355,8 +355,8 @@ body {
 /* ── Appointment cards (My Appointments) ── */
 .appt-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border) !important;
     border-radius: var(--radius-card) !important;
     box-shadow: var(--glass-shadow);
@@ -410,8 +410,8 @@ body {
 /* ── Prescription cards ── */
 .rx-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-card);
     box-shadow: var(--glass-shadow);
@@ -439,8 +439,8 @@ body {
 /* ── Visit cards ── */
 .visit-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-card);
     box-shadow: var(--glass-shadow);
