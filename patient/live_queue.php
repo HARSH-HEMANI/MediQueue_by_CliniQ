@@ -3,208 +3,137 @@ $content_page = 'Live Queue | MediQueue';
 ob_start();
 ?>
 
-<div class="container-fluid px-4 py-4">
+<div class="container-fluid patient-page px-4 py-4">
 
-    <div class="page-header mb-4">
-        <small>Real-time clinic updates</small>
-        <h3>Live Queue Monitor</h3>
+    <div class="mb-4">
+        <small class="text-uppercase fw-semibold text-brand" style="font-size:0.76rem;letter-spacing:1px;">Real-time clinic updates</small>
+        <h3 class="fw-bold mb-0 mt-1">Live Queue Monitor</h3>
     </div>
 
     <div class="row g-4">
-
-        <!-- LEFT SIDE -->
         <div class="col-xl-8 col-lg-7">
 
-            <!-- Now Serving -->
-            <div class="card-glass mb-4 text-center">
-
-                <h6 class="section-title">Now Serving</h6>
-
-                <div class="now-serving">
-                    <h1 id="currentToken" class="display-4 fw-bold">#101</h1>
-                    <p class="text-muted">Dr. Sarah Wilson – Cardiology</p>
-                </div>
-
+            <div class="now-serving-display mb-4">
+                <span class="section-label">Now Serving</span>
+                <div class="token-number" id="currentToken">#101</div>
+                <div class="token-label">Dr. Sarah Wilson &nbsp;·&nbsp; Cardiology</div>
             </div>
 
-            <!-- Queue List -->
-            <div class="card-glass">
-
-                <h6 class="section-title">Queue List</h6>
-
+            <div class="p-card">
+                <h6 class="fw-bold mb-3">Queue List</h6>
                 <div class="table-responsive">
-                    <table class="table align-middle">
-                        <thead>
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <th>Token</th>
-                                <th>Patient</th>
-                                <th>Status</th>
+                                <th class="text-uppercase text-muted fw-semibold" style="font-size:0.75rem;">Token</th>
+                                <th class="text-uppercase text-muted fw-semibold" style="font-size:0.75rem;">Patient</th>
+                                <th class="text-uppercase text-muted fw-semibold" style="font-size:0.75rem;">Status</th>
                             </tr>
                         </thead>
                         <tbody id="queueTable">
-
-                            <tr class="consulting">
-                                <td>#101</td>
+                            <tr class="queue-row-active">
+                                <td><strong>#101</strong></td>
                                 <td>Ravi Patel</td>
-                                <td><span class="badge-confirmed">Consulting</span></td>
+                                <td><span class="badge-soft-success">Consulting</span></td>
                             </tr>
-
                             <tr>
-                                <td>#102</td>
+                                <td><strong>#102</strong></td>
                                 <td>Meera Shah</td>
-                                <td><span class="badge-pending">Waiting</span></td>
+                                <td><span class="badge-soft-warning">Waiting</span></td>
                             </tr>
-
-                            <tr class="your-row">
-                                <td>#103</td>
-                                <td><strong>You</strong></td>
+                            <tr class="queue-row-you">
+                                <td><strong>#103</strong></td>
+                                <td>You <i class="bi bi-person-fill text-brand ms-1"></i></td>
                                 <td><span class="badge bg-primary">Waiting</span></td>
                             </tr>
-
                             <tr>
-                                <td>#104</td>
+                                <td><strong>#104</strong></td>
                                 <td>Ankit Verma</td>
-                                <td><span class="badge-pending">Waiting</span></td>
+                                <td><span class="badge-soft-warning">Waiting</span></td>
                             </tr>
-
                         </tbody>
                     </table>
                 </div>
-
             </div>
 
         </div>
 
-        <!-- RIGHT SIDE -->
         <div class="col-xl-4 col-lg-5">
 
-            <!-- Your Status -->
-            <div class="card-glass mb-4 text-center">
+            <div class="p-card mb-4 text-center">
+                <span class="section-label">Your Position</span>
+                <div class="display-4 fw-bold text-brand" id="positionNumber">2</div>
+                <p class="text-muted mb-3" style="font-size:0.85rem;">Patients Ahead</p>
 
-                <h6 class="section-title">Your Status</h6>
-
-                <h2 id="positionNumber" class="fw-bold">2</h2>
-                <p class="text-muted">Patients Ahead</p>
-
-                <div class="progress mb-3">
-                    <div id="queueProgress"
-                        class="progress-bar bg-success"
-                        style="width:40%">
-                    </div>
+                <div class="progress mb-3" style="height:8px;border-radius:20px;">
+                    <div id="queueProgress" class="progress-bar progress-bar-brand" style="width:40%"></div>
                 </div>
 
-                <p>
-                    <strong>Estimated Wait:</strong>
-                    <span id="waitTime">15</span> min
+                <p class="text-muted" style="font-size:0.9rem;">
+                    <i class="bi bi-clock me-1"></i>Estimated Wait: <strong id="waitTime">15</strong> min
                 </p>
 
-                <div id="alertArea" class="mt-3 text-muted">
-                    Please wait. You will be notified.
+                <div id="alertArea" class="alert alert-light border-0 mt-3 text-muted" style="font-size:0.84rem;background:var(--brand-soft)!important;">
+                    <i class="bi bi-info-circle me-1 text-brand"></i>Please wait. You will be notified when it's your turn.
                 </div>
 
-                <button id="arriveBtn"
-                    class="btn btn-brand mt-3 d-none">
-                    Mark as Arrived
+                <button id="arriveBtn" class="btn btn-brand w-100 mt-2 d-none">
+                    <i class="bi bi-check2-circle me-1"></i>Mark as Arrived
                 </button>
-
             </div>
 
-            <!-- Queue Metrics -->
-            <div class="card-glass">
-
-                <h6 class="section-title">Queue Metrics</h6>
-
-                <p><strong>Total Patients Today:</strong> 28</p>
-                <p><strong>Average Consultation:</strong> 7 min</p>
-                <p>
-                    <strong>Doctor Status:</strong>
-                    <span class="text-success">Available</span>
-                </p>
-
+            <div class="p-card">
+                <h6 class="fw-bold mb-3">Queue Metrics</h6>
+                <div class="d-flex flex-column gap-3">
+                    <div class="d-flex justify-content-between" style="font-size:0.88rem;">
+                        <span class="text-muted">Total Patients Today</span><strong>28</strong>
+                    </div>
+                    <div class="d-flex justify-content-between" style="font-size:0.88rem;">
+                        <span class="text-muted">Avg Consultation</span><strong>7 min</strong>
+                    </div>
+                    <div class="d-flex justify-content-between" style="font-size:0.88rem;">
+                        <span class="text-muted">Doctor Status</span>
+                        <strong class="text-success"><i class="bi bi-circle-fill me-1" style="font-size:0.5rem;"></i>Available</strong>
+                    </div>
+                </div>
             </div>
 
         </div>
-
     </div>
 </div>
 
 <script>
-    let position = 2;
-    let waitTime = 15;
-    let currentToken = 101;
-
+    let position = 2,
+        waitTime = 15,
+        currentToken = 101;
     const queueTable = document.getElementById("queueTable");
-    const positionNumber = document.getElementById("positionNumber");
-    const waitTimeText = document.getElementById("waitTime");
-    const progressBar = document.getElementById("queueProgress");
-    const currentTokenDisplay = document.getElementById("currentToken");
-    const alertArea = document.getElementById("alertArea");
-    const arriveBtn = document.getElementById("arriveBtn");
 
     function updateQueue() {
-
         if (position > 0) {
-
-            const firstRow = queueTable.querySelector("tr");
-
-            firstRow.classList.remove("consulting");
-            firstRow.querySelector("td:last-child").innerHTML =
-                "<span class='badge bg-secondary'>Completed</span>";
-
-            queueTable.removeChild(firstRow);
-
+            const first = queueTable.querySelector("tr");
+            first.classList.remove("queue-row-active");
+            first.querySelector("td:last-child").innerHTML = "<span class='badge bg-secondary'>Done</span>";
+            queueTable.removeChild(first);
             currentToken++;
-            currentTokenDisplay.innerText = "#" + currentToken;
-
+            document.getElementById("currentToken").innerText = "#" + currentToken;
             position--;
-            waitTime -= 5;
-
-            positionNumber.innerText = position;
-            waitTimeText.innerText = waitTime;
-
-            let progress = 100 - (position * 40);
-            progressBar.style.width = progress + "%";
-
-            const newFirstRow = queueTable.querySelector("tr");
-
-            if (newFirstRow) {
-                newFirstRow.classList.add("consulting");
-                newFirstRow.querySelector("td:last-child").innerHTML =
-                    "<span class='badge-confirmed'>Consulting</span>";
-            }
-
-            document.querySelectorAll(".your-row").forEach(row => {
-                row.classList.remove("your-row");
-            });
-
-            const rows = queueTable.querySelectorAll("tr");
-
-            if (rows[position]) {
-                rows[position].classList.add("your-row");
+            waitTime = Math.max(0, waitTime - 7);
+            document.getElementById("positionNumber").innerText = position;
+            document.getElementById("waitTime").innerText = waitTime;
+            document.getElementById("queueProgress").style.width = Math.min(100, 100 - position * 35) + "%";
+            const newFirst = queueTable.querySelector("tr");
+            if (newFirst) {
+                newFirst.classList.add("queue-row-active");
+                newFirst.querySelector("td:last-child").innerHTML = "<span class='badge-soft-success'>Consulting</span>";
             }
         }
-
         if (position === 0) {
-
-            alertArea.innerHTML =
-                "<strong class='text-success'>It's your turn! Please proceed to Cabin 2.</strong>";
-
-            arriveBtn.classList.remove("d-none");
-
-            const yourRow = queueTable.querySelector("tr");
-
-            if (yourRow) {
-                yourRow.classList.add("consulting");
-                yourRow.querySelector("td:last-child").innerHTML =
-                    "<span class='badge-confirmed'>Consulting</span>";
-            }
+            document.getElementById("alertArea").innerHTML = "<strong class='text-success'><i class='bi bi-check-circle-fill me-1'></i>It's your turn! Proceed to Cabin 2.</strong>";
+            document.getElementById("arriveBtn").classList.remove("d-none");
         }
     }
-
     setInterval(updateQueue, 30000);
 </script>
 
-<?php
-$content = ob_get_clean();
-include './patient-layout.php';
-?>
+<?php $content = ob_get_clean();
+include './patient-layout.php'; ?>
