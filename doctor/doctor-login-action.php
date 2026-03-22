@@ -3,17 +3,19 @@ session_start();
 
 $demo = include "./doc-credential.php";
 
-$email = $_POST['email'] ?? '';
+$email    = $_POST['email']    ?? '';
 $password = $_POST['password'] ?? '';
 
-if($email == $demo['email'] && $password == $demo['password']){
+if ($email === $demo['email'] && $password === $demo['password']) {
 
-$_SESSION['doctor_id'] = 1;
-$_SESSION['doctor_name'] = $demo['name'];
+    // FIX: Regenerate session ID after login to prevent session fixation attacks
+    session_regenerate_id(true);
 
-header("Location: doctor.php");
-exit();
+    $_SESSION['doctor_id']   = 1;
+    $_SESSION['doctor_name'] = $demo['name'];
 
+    header("Location: doctor.php");
+    exit();
 }
 
 header("Location: login.php?error=1");
