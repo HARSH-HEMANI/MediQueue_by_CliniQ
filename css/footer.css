@@ -28,12 +28,42 @@ main {
 
 .main-content {
     padding: 2rem 0;
-    background-color: #fef9f9;
+    background: linear-gradient(135deg, #fef9f9 0%, #fff0f0 50%, #f5f9ff 100%);
+    background-attachment: fixed;
 }
 
 .main-content-wrapper {
-    background-color: #ffffff;
-    /* Set this to your main page background color */
+    background: transparent;
+}
+
+forgot_password.css .auth-body {
+    background: linear-gradient(135deg, #ff7a7f, #ffb3b6);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+/* Center container */
+.auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding-top: 120px;
+}
+
+/* Card - Glassmorphism */
+.auth-card {
+    background: var(--card-bg);
+
+
+    border: 1px solid var(--card-border);
+    width: 900px;
+    max-width: 95%;
+    min-height: 420px;
+    display: flex;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
 }
 
 /* FOOTER STYLES START HERE */
