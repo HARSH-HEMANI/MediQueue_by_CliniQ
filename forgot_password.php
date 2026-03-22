@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forgot Password | MediQueue</title>
-    <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css?v=vibrant">
     <script src="./css/bootstrap/js/bootstrap.bundle.js"></script>
     <link rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/forgot_password.css">
+        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css?v=vibrant">
+    <link rel="stylesheet" href="./css/style.css?v=vibrant">
+    <link rel="stylesheet" href="./css/forgot_password.css?v=vibrant">
 </head>
 
 <body class="auth-body">
