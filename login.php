@@ -7,8 +7,8 @@
   <title>Login | MediQueue</title>
 
   <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="./css/login.css">
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css?v=vibrant">
+  <link rel="stylesheet" href="./css/login.css?v=vibrant">
 </head>
 
 <body>
@@ -23,7 +23,7 @@
         <input type="password" name="password" placeholder="Password" data-validation="required|min" data-min="6">
         <small id="password_error"></small>
         <a href="./forgot_password.php" class="forgot">Forgot Password?</a>
-        <button>Login</button>
+        <button type="button" onclick="window.location.href='./patient/dashboard.php'">Login</button>
       </form>
     </div>
 
