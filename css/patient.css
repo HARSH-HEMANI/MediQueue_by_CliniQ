@@ -1,446 +1,640 @@
-/* =========================================================
-   MediQueue - Patient Module Styles
-   Supports: Dashboard + Book Appointment
-========================================================= */
+/* ============================================================
+   MediQueue — Patient Module CSS
+   Only styles Bootstrap cannot provide.
+   All layout/spacing/typography uses Bootstrap utility classes
+   directly in HTML.
+   ============================================================ */
 
-/* ================= ROOT VARIABLES ================= */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
 :root {
-    --primary: #FF5A5F;
-    --primary-soft: #ff8a8f;
-    --mint: #6ee7b7;
-
-    --glass: var(--card-bg);
-    --glass-light: rgba(255, 255, 255, 0.92);
-    --glass-border: rgba(255, 255, 255, 0.2);
-
-    --text-dark: #1f2937;
-    --text-light: #6b7280;
-
-    --radius-lg: 24px;
-    --radius-md: 18px;
+    --brand: #FF5A5F;
+    --brand-dark: #e64b50;
+    --brand-soft: rgba(255, 90, 95, 0.08);
+    --brand-mid: rgba(255, 90, 95, 0.15);
+    --glass-bg: rgba(255, 255, 255, 0.72);
+    --glass-border: rgba(255, 255, 255, 0.55);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.08);
+    --glass-blur: 18px;
+    --radius-card: 20px;
     --radius-sm: 12px;
 }
 
-/* ================= GLOBAL ================= */
 body {
-    font-family: 'Poppins', sans-serif;
-    color: var(--text-dark);
-    padding-top: 90px;
-    /* for fixed navbar */
+    font-family: 'Outfit', 'Segoe UI', sans-serif !important;
 }
 
-a {
-    text-decoration: none;
+/* ── Glassmorphism card ── */
+.p-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius-card) !important;
+    box-shadow: var(--glass-shadow) !important;
+    padding: 24px;
+    transition: box-shadow 0.25s ease;
 }
 
-/* ================= SIDEBAR ================= */
-.sidebar {
-    min-height: calc(100vh - 90px);
-    background: var(--glass);
-
-
-    border-right: 1px solid var(--card-border);
-    padding: 30px 20px;
+.p-card:hover {
+    box-shadow: 0 16px 48px rgba(31, 38, 135, 0.12) !important;
 }
 
-.nav-link {
-    border-radius: 50px;
-    padding: 12px 18px;
-    font-weight: 500;
-    color: var(--text-dark);
-    transition: all 0.2s ease;
-}
-
-.nav-link:hover {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-.nav-link.active {
-    background: linear-gradient(90deg, var(--primary), var(--primary-soft));
+/* ── Brand button ── */
+.btn-brand {
+    background-color: var(--brand) !important;
+    border-color: var(--brand) !important;
     color: #fff !important;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
-/* ================= GLASS CARD SYSTEM ================= */
-.card-glass {
-    background: var(--glass);
-
-
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius-lg);
-    padding: 28px;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+.btn-brand:hover,
+.btn-brand:focus {
+    background-color: var(--brand-dark) !important;
+    border-color: var(--brand-dark) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 90, 95, 0.3) !important;
 }
 
-/* ================= PAGE HEADER ================= */
-.page-header small {
-    font-weight: 500;
-    color: var(--text-light);
+/* Gradient full-width submit button */
+.btn-confirm {
+    background: linear-gradient(135deg, var(--brand), #ff8a8f);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: 12px;
+    padding: 13px 28px;
+    width: 100%;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    font-family: 'Outfit', sans-serif;
 }
 
-.page-header h3 {
-    font-size: 26px;
-    margin-top: 6px;
+.btn-confirm:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-2px);
 }
 
-/* ================= DASHBOARD ================= */
+.btn-confirm:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
 
-/* Stats */
+/* ── Section label ── */
+.section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--brand);
+    margin-bottom: 12px;
+    display: block;
+}
+
+/* ── Stat box ── */
 .stat-box {
-    background: var(--glass-light);
-    border-radius: var(--radius-md);
-    padding: 18px;
+    background: var(--brand-soft);
+    border: 1px solid rgba(255, 90, 95, 0.12);
+    border-radius: var(--radius-sm);
+    padding: 18px 14px;
+    text-align: center;
+    transition: background 0.2s;
+}
+
+.stat-box:hover {
+    background: var(--brand-mid);
 }
 
 .stat-box h4 {
-    margin-bottom: 4px;
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--brand);
+    margin: 0 0 4px;
+    line-height: 1;
 }
 
-/* Appointment Status */
-.badge-confirmed {
-    background: #d1fae5;
-    color: #065f46;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
+.stat-box small {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
 }
 
-.badge-pending {
-    background: #fef3c7;
-    color: #92400e;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-}
-
-/* Reminder */
-.reminder {
-    background: linear-gradient(135deg, var(--primary), var(--mint));
-    color: #fff;
-    border-radius: var(--radius-lg);
+/* ── Upcoming appointment card ── */
+.upcoming-appt {
+    background: linear-gradient(135deg, #fff5f5 0%, rgba(255, 255, 255, 0.9) 100%);
+    border: 1.5px solid rgba(255, 90, 95, 0.2) !important;
+    border-left: 5px solid var(--brand) !important;
+    border-radius: var(--radius-card);
     padding: 24px;
+    box-shadow: 0 4px 24px rgba(255, 90, 95, 0.1);
 }
 
-/* ================= FORM SYSTEM ================= */
-.form-control,
-.form-select {
+/* ── Reminder gradient card ── */
+.reminder-card {
+    background: linear-gradient(135deg, var(--brand) 0%, #ff8a8f 100%);
+    border-radius: var(--radius-card);
+    padding: 24px;
+    color: #fff;
+}
+
+.reminder-card h5 {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.reminder-card p {
+    font-size: 0.88rem;
+    opacity: 0.9;
+    margin-bottom: 16px;
+}
+
+/* ── Quick action links ── */
+.quick-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
     border-radius: var(--radius-sm);
-    padding: 12px;
-    border: 1px solid #e5e7eb;
-}
-
-.form-control:focus,
-.form-select:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
-}
-
-input[type="date"],
-input[type="time"] {
-    cursor: pointer;
-}
-
-/* ================= BOOK APPOINTMENT ================= */
-
-.section-title {
+    border: 1.5px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.6);
+    color: #1a1a2e;
     font-weight: 600;
-    margin-bottom: 15px;
+    font-size: 0.88rem;
+    text-decoration: none;
+    transition: all 0.2s;
 }
 
-/* Doctor Card */
-.doctor-card {
-    background: var(--glass-light);
-    border-radius: var(--radius-md);
-    padding: 18px;
+.quick-btn:hover {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+    color: var(--brand);
+    transform: translateX(4px);
 }
 
-/* Department Cards */
-.department-card {
-    background: var(--glass-light);
-    border-radius: var(--radius-md);
-    padding: 16px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: all 0.2s ease;
+.quick-btn .qb-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--brand-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand);
+    font-size: 1rem;
+    flex-shrink: 0;
 }
 
-.department-card:hover {
-    border-color: var(--primary);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-}
-
-.active-department {
-    border-color: var(--primary);
-    background: rgba(255, 90, 95, 0.08);
-}
-
-.department-card h6 {
-    margin-bottom: 4px;
-    font-weight: 600;
-}
-
-.department-card small {
-    color: var(--text-light);
-}
-
-/* Time Slots */
-.slot {
-    background: var(--glass-light);
-    padding: 10px;
+/* ── Department cards ── */
+.dept-card {
+    border: 2px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 18px 12px;
     text-align: center;
-    border-radius: var(--radius-sm);
     cursor: pointer;
-    border: 2px solid transparent;
-    font-size: 14px;
-    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all 0.2s;
+}
+
+.dept-card:hover {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+}
+
+.dept-card.active-department {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+    box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.1);
+}
+
+.dept-card.active-department h6 {
+    color: var(--brand);
+}
+
+/* ── Doctor info card ── */
+.doctor-info-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--brand-soft);
+    border: 1.5px solid rgba(255, 90, 95, 0.15);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+}
+
+.doctor-info-card .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* ── Time slots ── */
+.slot {
+    border: 1.5px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #6b7280;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all 0.2s;
 }
 
 .slot:hover {
-    border-color: var(--primary);
+    border-color: var(--brand);
+    color: var(--brand);
+    background: var(--brand-soft);
 }
 
-.active-slot {
-    border-color: var(--primary);
-    background: rgba(255, 90, 95, 0.12);
+.slot.active-slot {
+    border-color: var(--brand);
+    background: var(--brand);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(255, 90, 95, 0.3);
 }
 
-/* Payment Cards */
+/* ── Payment cards ── */
 .payment-card {
-    background: var(--glass-light);
-    border-radius: var(--radius-md);
-    padding: 14px;
+    border: 1.5px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 12px;
     text-align: center;
     cursor: pointer;
-    border: 2px solid transparent;
-    transition: all 0.2s ease;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.88rem;
+    background: rgba(255, 255, 255, 0.5);
+    color: #6b7280;
+    transition: all 0.2s;
 }
 
 .payment-card:hover {
-    border-color: var(--primary);
+    border-color: var(--brand);
+    color: var(--brand);
 }
 
-.active-payment {
-    border-color: var(--primary);
-    background: rgba(255, 90, 95, 0.08);
+.payment-card.active-payment {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+    color: var(--brand);
 }
 
-/* Summary */
-.summary-box {
-    background: var(--glass-light);
-    border-radius: var(--radius-md);
-    padding: 20px;
-}
-
-.summary-box p {
-    margin-bottom: 8px;
-    font-size: 14px;
-}
-
-/* Sticky Summary */
+/* ── Appointment summary ── */
 .summary-sticky {
     position: sticky;
-    top: 120px;
+    top: 24px;
 }
 
-/* ================= PRIMARY BUTTON ================= */
-
-.btn-confirm {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--primary), var(--primary-soft));
-    color: #fff;
-    border: none;
-    border-radius: 50px;
-    padding: 14px 32px;
-    font-weight: 600;
-    font-size: 15px;
-    box-shadow: 0 12px 25px rgba(255, 90, 95, 0.35);
-    transition: all 0.25s ease;
+.summary-box {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
 }
 
-.btn-confirm:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 18px 35px rgba(255, 90, 95, 0.45);
-    color: #fff;
+.summary-box h6 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--brand);
+    margin: 0;
 }
 
-/* ================= MODAL ================= */
-.modal-content {
-    border-radius: var(--radius-md);
-}
-
-/* ================= LIVE QUEUE ================= */
-
-.progress {
-    border-radius: 20px;
-}
-
-.progress-bar {
-    transition: width 0.5s ease;
-}
-
-.table-primary {
-    background-color: rgba(255, 90, 95, 0.08) !important;
-}
-
-/* LIVE QUEUE ENHANCEMENTS */
-
-.now-serving {
+/* ── Live queue display ── */
+.now-serving-display {
+    background: linear-gradient(135deg, #fff5f5, #fff);
+    border: 2px solid rgba(255, 90, 95, 0.18);
+    border-radius: var(--radius-card);
+    padding: 36px 24px;
     text-align: center;
 }
 
-.now-serving h1 {
-    font-size: 48px;
+.now-serving-display .token-number {
+    font-size: 5rem;
+    font-weight: 800;
+    color: var(--brand);
+    line-height: 1;
+    letter-spacing: -2px;
+}
+
+.now-serving-display .token-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #9ca3af;
+    margin-top: 6px;
+}
+
+.queue-row-you>td {
+    background: rgba(255, 90, 95, 0.05) !important;
     font-weight: 700;
-    color: var(--primary);
 }
 
-.consulting {
-    background: rgba(255, 90, 95, 0.05);
+.queue-row-active>td {
+    background: rgba(34, 197, 94, 0.05) !important;
 }
 
-.your-row {
-    background: rgba(0, 123, 255, 0.08);
-}
-
-.progress {
-    height: 10px;
+/* Brand progress bar */
+.progress-bar-brand {
+    background: linear-gradient(90deg, var(--brand), #ff8a8f) !important;
     border-radius: 20px;
 }
 
-.consulting {
-    background: rgba(255, 90, 95, 0.08);
-    transition: background 0.4s ease;
+/* ── Appointment cards (My Appointments) ── */
+.appt-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius-card) !important;
+    box-shadow: var(--glass-shadow);
+    border-left: 5px solid transparent !important;
+    transition: all 0.22s;
 }
 
-.your-row {
-    background: rgba(0, 123, 255, 0.08);
-    transition: background 0.4s ease;
+.appt-card.upcoming {
+    border-left-color: var(--brand) !important;
 }
 
-/* ENHANCED MY APPOINTMENTS */
-
-.appointment-card {
-    background: var(--glass-light);
-    border-radius: var(--radius-md);
-    padding: 20px;
-    margin-bottom: 20px;
-    transition: all 0.2s ease;
+.appt-card.completed {
+    border-left-color: #22c55e !important;
 }
 
-.appointment-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.appt-card.cancelled {
+    border-left-color: #ef4444 !important;
+    opacity: 0.72;
 }
 
-.appointment-body {
-    margin-top: 10px;
+.appt-card:hover {
+    box-shadow: 0 12px 36px rgba(31, 38, 135, 0.12) !important;
+    transform: translateY(-2px);
 }
 
-.appointment-actions {
-    margin-top: 12px;
-    display: flex;
-    gap: 10px;
+/* ── Filter pill buttons ── */
+.filter-btn {
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.81rem;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: 'Outfit', sans-serif;
 }
 
-.appointment-card.upcoming {
-    border-left: 4px solid var(--primary);
-}
-
-.appointment-card.completed {
-    border-left: 4px solid #6c757d;
-}
-
-.appointment-card.cancelled {
-    border-left: 4px solid #dc3545;
-    opacity: 0.7;
+.filter-btn:hover {
+    border-color: var(--brand);
+    color: var(--brand);
 }
 
 .filter-btn.active {
-    background-color: var(--primary);
+    background: var(--brand);
+    border-color: var(--brand);
     color: #fff;
 }
 
-.modal-body p {
-    margin-bottom: 10px;
-    font-size: 14px;
+/* ── Prescription cards ── */
+.rx-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--glass-shadow);
+    transition: all 0.2s;
 }
 
-/* ================= PRESCRIPTIONS ================= */
-
-.prescription-card {
-    background: var(--glass-light);
-    border-radius: var(--radius-md);
-    padding: 20px;
-    margin-bottom: 20px;
-    transition: all 0.2s ease;
+.rx-card:hover {
+    box-shadow: 0 12px 36px rgba(31, 38, 135, 0.12);
+    transform: translateY(-2px);
 }
 
-.prescription-card:hover {
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+.rx-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--brand-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand);
+    font-size: 1.3rem;
+    flex-shrink: 0;
 }
 
-/* ================= VISIT HISTORY ================= */
-
+/* ── Visit cards ── */
 .visit-card {
-    background: var(--glass-light);
-    border-radius: var(--radius-md);
-    padding: 20px;
-    margin-bottom: 20px;
-    transition: all 0.2s ease;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--glass-shadow);
+    transition: all 0.2s;
 }
 
 .visit-card:hover {
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 12px 36px rgba(31, 38, 135, 0.12);
+    transform: translateY(-2px);
 }
 
-.visit-header {
+/* ── Profile avatar ── */
+.profile-avatar-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-avatar-wrap img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--brand);
+    box-shadow: 0 4px 20px rgba(255, 90, 95, 0.2);
+}
+
+.upload-overlay {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: #fff;
+    border: none;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    box-shadow: 0 2px 8px rgba(255, 90, 95, 0.4);
 }
 
-.visit-body {
-    margin-top: 10px;
+.profile-section-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--brand);
+    margin: 28px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 90, 95, 0.15);
 }
 
-.visit-actions {
-    margin-top: 12px;
+/* ── Override Bootstrap's blue focus ring with brand colour ── */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--brand) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 90, 95, 0.15) !important;
+}
+
+/* ── Notification button ── */
+.notif-btn {
+    position: relative;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    width: 42px;
+    height: 42px;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.notif-btn:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+}
+
+.notif-dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--brand);
+    border: 2px solid #fff;
+}
+
+/* ── User chip ── */
+.user-chip {
+    display: flex;
+    align-items: center;
     gap: 10px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 6px 14px 6px 6px;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-.modal-body pre {
-    font-family: inherit;
-    font-size: 14px;
-    white-space: pre-wrap;
+.user-chip:hover {
+    border-color: var(--brand);
 }
 
-/* PROFILE SETTINGS */
-
-#profileImage {
-    border: 4px solid var(--primary);
+.user-chip img {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    object-fit: cover;
 }
 
-textarea {
-    resize: none;
+/* ── Modal glass polish ── */
+.modal-content {
+    border-radius: var(--radius-card) !important;
+    border: 1px solid var(--glass-border) !important;
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px) !important;
+    font-family: 'Outfit', sans-serif !important;
 }
 
+/* ── Soft badge variants Bootstrap doesn't include ── */
+.badge-soft-success {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 4px 11px;
+}
 
+.badge-soft-warning {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 4px 11px;
+}
 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 992px) {
-    .sidebar {
-        min-height: auto;
+.badge-soft-danger {
+    background: #fee2e2 !important;
+    color: #991b1b !important;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 4px 11px;
+}
+
+/* ── Page entrance animation ── */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
     }
 
-    .card-glass {
-        padding: 22px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
 
-    .summary-sticky {
-        position: static;
-    }
+.patient-page>* {
+    animation: fadeUp 0.4s ease both;
+}
+
+.patient-page>*:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.patient-page>*:nth-child(2) {
+    animation-delay: 0.10s;
+}
+
+.patient-page>*:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.patient-page>*:nth-child(4) {
+    animation-delay: 0.20s;
+}
+
+/* ── Utilities ── */
+.text-brand {
+    color: var(--brand) !important;
+}
+
+.bg-brand-soft {
+    background: var(--brand-soft) !important;
+}
+
+.border-brand {
+    border-color: var(--brand) !important;
 }
