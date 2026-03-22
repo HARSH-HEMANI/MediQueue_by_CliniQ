@@ -1,36 +1,117 @@
-<div class="offcanvas offcanvas-start" tabindex="-1" id="adminSidebar">
-    <div class="offcanvas-header  admin-sidebar-header">
-        <h5 class="ms-3"><span>Admin</span> Control</h5>
-        <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+<?php
+$current_page = basename($_SERVER['PHP_SELF']);
+?>
+<!-- Mobile Header -->
+<div class="mobile-navbar d-lg-none">
+    <div class="d-flex align-items-center gap-3">
+        <button class="btn-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#appSidebar">
+            <i class="bi bi-list"></i>
+        </button>
+        <a href="../index.php" class="text-decoration-none">
+            <span class="fs-5 fw-bold">MediQueue</span>
+        </a>
+    </div>
+</div>
+
+<!-- Sidebar -->
+<div class="offcanvas-lg offcanvas-start custom-sidebar" tabindex="-1" id="appSidebar">
+    <div class="offcanvas-header d-lg-none border-bottom border-secondary">
+        <div class="sidebar-logo">
+            <span class="fs-5 fw-bold text-dark">MediQueue</span>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#appSidebar"></button>
     </div>
 
-    <div class="offcanvas-body">
-
-        <div class="navbar-nav px-4">
-
-            <a href="./admin.php" class="nav-link">Dashboard</a>
-            <a href="./doctor.php" class="nav-link">Doctor Management</a>
-            <a href="./staff.php" class="nav-link">Staff Management</a>
-            <a href="./clinic.php" class="nav-link">Clinic Management</a>
-
-            <hr>
-
-            <a href="./patients.php" class="nav-link">Patients</a>
-            <a href="./appointments.php" class="nav-link">Appointments</a>
-            <a href="./queues.php" class="nav-link">Live Queues</a>
-
-            <hr>
-
-            <a href="./analytics.php" class="nav-link">Analytics</a>
-            <a href="./settings.php" class="nav-link">System Settings</a>
-
-            <hr>
-
-            <a href="./admin-logout.php" class="nav-link text-danger">
-                Logout
-            </a>
-
+    <div class="d-none d-lg-block">
+        <div class="sidebar-logo">
+            <img src="../img/mediq.png" alt="Logo">
+            <span>MediQueue Admin</span>
         </div>
+    </div>
 
+    <div class="sidebar-menu offcanvas-body flex-column p-0">
+        <div class="w-100 p-3">
+            <div class="menu-label">NAVIGATION</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="./admin.php" class="nav-link <?= ($current_page == 'admin.php') ? 'active' : '' ?>">
+                        <i class="bi bi-grid-1x2-fill"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./doctor.php" class="nav-link <?= ($current_page == 'doctor.php') ? 'active' : '' ?>">
+                        <i class="bi bi-heart-pulse-fill"></i>
+                        <span>Doctor Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./staff.php" class="nav-link <?= ($current_page == 'staff.php') ? 'active' : '' ?>">
+                        <i class="bi bi-diagram-3-fill"></i>
+                        <span>Staff Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./clinic.php" class="nav-link <?= ($current_page == 'clinic.php') ? 'active' : '' ?>">
+                        <i class="bi bi-building-fill"></i>
+                        <span>Clinic Management</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="menu-label mt-3">OPERATIONS</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="./patients.php" class="nav-link <?= ($current_page == 'patients.php') ? 'active' : '' ?>">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Patients</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./appointments.php" class="nav-link <?= ($current_page == 'appointments.php') ? 'active' : '' ?>">
+                        <i class="bi bi-calendar-range-fill"></i>
+                        <span>Appointments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./queues.php" class="nav-link <?= ($current_page == 'queues.php') ? 'active' : '' ?>">
+                        <i class="bi bi-sort-numeric-down"></i>
+                        <span>Live Queues</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="menu-label mt-3">SYSTEM</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="./analytics.php" class="nav-link <?= ($current_page == 'analytics.php') ? 'active' : '' ?>">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        <span>Analytics</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./settings.php" class="nav-link <?= ($current_page == 'settings.php') ? 'active' : '' ?>">
+                        <i class="bi bi-gear-fill"></i>
+                        <span>System Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="user-account mt-auto">
+        <div class="menu-label text-uppercase mb-2">USER ACCOUNT</div>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="user-profile">
+                <img src="https://i.pravatar.cc/150?u=admin" alt="Admin">
+                <div class="user-info">
+                    <span class="name">System Admin</span>
+                    <span class="tag">#admin-001</span>
+                </div>
+            </div>
+            <a href="./admin-logout.php" class="text-danger fs-5" onclick="return confirm('Are you sure you want to logout?');" title="Logout">
+                <i class="bi bi-box-arrow-right"></i>
+            </a>
+        </div>
     </div>
 </div>
