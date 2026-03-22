@@ -1,18 +1,43 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediQueue | Doctor Dashboard</title>
-    <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Login | Doctor Dashboard</title>
+    <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css?v=vibrant">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css?v=vibrant" rel="stylesheet">
     <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/doctor.css">
+    <link rel="stylesheet" href="../css/style.css?v=vibrant">
+    <link rel="stylesheet" href="../css/doctor.css?v=vibrant">
 </head>
 
 <body>
+    <?php
+    if (isset($_COOKIE['error'])) {
+    ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error</strong> <?= $_COOKIE['error'] ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php
+    }
+    ?>
+
+    <?php
+    if (isset($_COOKIE['success'])) {
+    ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success</strong> <?= $_COOKIE['success'] ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <script>
+            Window.location.href = "./doctor.php";
+        </script>
+    <?php
+    }
+    ?>
 
     <main class="features auth-page">
         <section class="features-header text-center">
@@ -48,7 +73,7 @@
                                 <small id="password_error"></small>
                             </div>
 
-                            <button type="submit" class="hero-btn w-100 mb-3">
+                            <button type="submit" class="hero-btn w-100 mb-3" name="doc_login">
                                 Login
                             </button>
 
