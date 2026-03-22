@@ -1,0 +1,446 @@
+/* =========================================================
+   MediQueue - Patient Module Styles
+   Supports: Dashboard + Book Appointment
+========================================================= */
+
+/* ================= ROOT VARIABLES ================= */
+:root {
+    --primary: #FF5A5F;
+    --primary-soft: #ff8a8f;
+    --mint: #6ee7b7;
+
+    --glass: var(--card-bg);
+    --glass-light: rgba(255, 255, 255, 0.92);
+    --glass-border: rgba(255, 255, 255, 0.2);
+
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+
+    --radius-lg: 24px;
+    --radius-md: 18px;
+    --radius-sm: 12px;
+}
+
+/* ================= GLOBAL ================= */
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    padding-top: 90px;
+    /* for fixed navbar */
+}
+
+a {
+    text-decoration: none;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+    min-height: calc(100vh - 90px);
+    background: var(--glass);
+
+
+    border-right: 1px solid var(--card-border);
+    padding: 30px 20px;
+}
+
+.nav-link {
+    border-radius: 50px;
+    padding: 12px 18px;
+    font-weight: 500;
+    color: var(--text-dark);
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.nav-link.active {
+    background: linear-gradient(90deg, var(--primary), var(--primary-soft));
+    color: #fff !important;
+}
+
+/* ================= GLASS CARD SYSTEM ================= */
+.card-glass {
+    background: var(--glass);
+
+
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+}
+
+/* ================= PAGE HEADER ================= */
+.page-header small {
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+.page-header h3 {
+    font-size: 26px;
+    margin-top: 6px;
+}
+
+/* ================= DASHBOARD ================= */
+
+/* Stats */
+.stat-box {
+    background: var(--glass-light);
+    border-radius: var(--radius-md);
+    padding: 18px;
+}
+
+.stat-box h4 {
+    margin-bottom: 4px;
+}
+
+/* Appointment Status */
+.badge-confirmed {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.badge-pending {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* Reminder */
+.reminder {
+    background: linear-gradient(135deg, var(--primary), var(--mint));
+    color: #fff;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+}
+
+/* ================= FORM SYSTEM ================= */
+.form-control,
+.form-select {
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
+}
+
+input[type="date"],
+input[type="time"] {
+    cursor: pointer;
+}
+
+/* ================= BOOK APPOINTMENT ================= */
+
+.section-title {
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Doctor Card */
+.doctor-card {
+    background: var(--glass-light);
+    border-radius: var(--radius-md);
+    padding: 18px;
+}
+
+/* Department Cards */
+.department-card {
+    background: var(--glass-light);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.department-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.active-department {
+    border-color: var(--primary);
+    background: rgba(255, 90, 95, 0.08);
+}
+
+.department-card h6 {
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.department-card small {
+    color: var(--text-light);
+}
+
+/* Time Slots */
+.slot {
+    background: var(--glass-light);
+    padding: 10px;
+    text-align: center;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    border: 2px solid transparent;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.slot:hover {
+    border-color: var(--primary);
+}
+
+.active-slot {
+    border-color: var(--primary);
+    background: rgba(255, 90, 95, 0.12);
+}
+
+/* Payment Cards */
+.payment-card {
+    background: var(--glass-light);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.payment-card:hover {
+    border-color: var(--primary);
+}
+
+.active-payment {
+    border-color: var(--primary);
+    background: rgba(255, 90, 95, 0.08);
+}
+
+/* Summary */
+.summary-box {
+    background: var(--glass-light);
+    border-radius: var(--radius-md);
+    padding: 20px;
+}
+
+.summary-box p {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+/* Sticky Summary */
+.summary-sticky {
+    position: sticky;
+    top: 120px;
+}
+
+/* ================= PRIMARY BUTTON ================= */
+
+.btn-confirm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary), var(--primary-soft));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 32px;
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow: 0 12px 25px rgba(255, 90, 95, 0.35);
+    transition: all 0.25s ease;
+}
+
+.btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 35px rgba(255, 90, 95, 0.45);
+    color: #fff;
+}
+
+/* ================= MODAL ================= */
+.modal-content {
+    border-radius: var(--radius-md);
+}
+
+/* ================= LIVE QUEUE ================= */
+
+.progress {
+    border-radius: 20px;
+}
+
+.progress-bar {
+    transition: width 0.5s ease;
+}
+
+.table-primary {
+    background-color: rgba(255, 90, 95, 0.08) !important;
+}
+
+/* LIVE QUEUE ENHANCEMENTS */
+
+.now-serving {
+    text-align: center;
+}
+
+.now-serving h1 {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.consulting {
+    background: rgba(255, 90, 95, 0.05);
+}
+
+.your-row {
+    background: rgba(0, 123, 255, 0.08);
+}
+
+.progress {
+    height: 10px;
+    border-radius: 20px;
+}
+
+.consulting {
+    background: rgba(255, 90, 95, 0.08);
+    transition: background 0.4s ease;
+}
+
+.your-row {
+    background: rgba(0, 123, 255, 0.08);
+    transition: background 0.4s ease;
+}
+
+/* ENHANCED MY APPOINTMENTS */
+
+.appointment-card {
+    background: var(--glass-light);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+}
+
+.appointment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.appointment-body {
+    margin-top: 10px;
+}
+
+.appointment-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+}
+
+.appointment-card.upcoming {
+    border-left: 4px solid var(--primary);
+}
+
+.appointment-card.completed {
+    border-left: 4px solid #6c757d;
+}
+
+.appointment-card.cancelled {
+    border-left: 4px solid #dc3545;
+    opacity: 0.7;
+}
+
+.filter-btn.active {
+    background-color: var(--primary);
+    color: #fff;
+}
+
+.modal-body p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+/* ================= PRESCRIPTIONS ================= */
+
+.prescription-card {
+    background: var(--glass-light);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+}
+
+.prescription-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= VISIT HISTORY ================= */
+
+.visit-card {
+    background: var(--glass-light);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+}
+
+.visit-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.visit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.visit-body {
+    margin-top: 10px;
+}
+
+.visit-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+}
+
+.modal-body pre {
+    font-family: inherit;
+    font-size: 14px;
+    white-space: pre-wrap;
+}
+
+/* PROFILE SETTINGS */
+
+#profileImage {
+    border: 4px solid var(--primary);
+}
+
+textarea {
+    resize: none;
+}
+
+
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 992px) {
+    .sidebar {
+        min-height: auto;
+    }
+
+    .card-glass {
+        padding: 22px;
+    }
+
+    .summary-sticky {
+        position: static;
+    }
+}
