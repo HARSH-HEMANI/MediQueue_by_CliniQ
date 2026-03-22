@@ -1,0 +1,181 @@
+query.txt
+
+// step:2 - create the database (run once)
+// $create_db = "CREATE DATABASE IF NOT EXISTS mediqueue_db";
+// if (mysqli_query($con, $create_db)) {
+//     echo "Database created successfully<br>";
+// } else {
+//     echo "Error creating database: " . mysqli_error($con);
+// }
+
+// step:3 - select the database (run everytime while running queries)
+// mysqli_select_db($con, "mediqueue_db");
+
+// step:4 - create the tables (run once)
+// $q1 = "CREATE TABLE IF NOT EXISTS clinics (
+//     clinic_id INT AUTO_INCREMENT PRIMARY KEY,
+//     clinic_name VARCHAR(100),
+//     address TEXT,
+//     pincode VARCHAR(10),
+//     phone VARCHAR(15),
+//     email VARCHAR(100),
+//     start_time TIME,
+//     end_time TIME,
+//     is_active BOOLEAN DEFAULT TRUE
+// )";
+
+// if (mysqli_query($con, $q1)) {
+//     echo "Clinics table created<br>";
+// } else {
+//     echo "Error creating clinics table<br>";
+// }
+
+// $q2 = "CREATE TABLE IF NOT EXISTS doctors (
+//     doctor_id INT AUTO_INCREMENT PRIMARY KEY,
+//     clinic_id INT,
+//     full_name VARCHAR(100),
+//     specialization VARCHAR(100),
+//     qualification VARCHAR(100),
+//     experience_years INT,
+//     consultation_fee DECIMAL(10,2),
+//     email VARCHAR(100) UNIQUE,
+//     password VARCHAR(255),
+//     phone VARCHAR(15),
+//     address TEXT,
+//     is_active BOOLEAN DEFAULT TRUE,
+//     FOREIGN KEY (clinic_id) REFERENCES clinics(clinic_id)
+//         ON DELETE CASCADE
+// )";
+
+// if (mysqli_query($con, $q2)) {
+//     echo "Doctors table created<br>";
+// } else {
+//     echo "Error creating doctors table<br>";
+// }
+
+// $q3 = "CREATE TABLE IF NOT EXISTS admins (
+//     admin_id INT AUTO_INCREMENT PRIMARY KEY,
+//     full_name VARCHAR(100),
+//     email VARCHAR(100) UNIQUE,
+//     password VARCHAR(255)
+// )";
+// if (mysqli_query($con, $q3)) {
+//     echo "Admins table created<br>";
+// } else {
+//     echo "Error creating admins table<br>";
+// }
+
+// $q4 = "CREATE TABLE IF NOT EXISTS patients (
+//     patient_id INT AUTO_INCREMENT PRIMARY KEY,
+//     full_name VARCHAR(100),
+//     phone VARCHAR(15),
+//     email VARCHAR(100),
+//     password VARCHAR(255),
+//     gender ENUM('Male','Female','Other'),
+//     date_of_birth DATE,
+//     address TEXT,
+//     pincode VARCHAR(10),
+//     is_active BOOLEAN DEFAULT TRUE
+// )";
+// if (mysqli_query($con, $q4)) {
+//     echo "Patients table created<br>";
+// } else {
+//     echo "Error creating patients table<br>";
+// }
+
+// $q5 = "CREATE TABLE IF NOT EXISTS appointments (
+//     appointment_id INT AUTO_INCREMENT PRIMARY KEY,
+//     patient_id INT NOT NULL,
+//     doctor_id INT NOT NULL,
+//     clinic_id INT NOT NULL,
+//     appointment_date DATE,
+//     appointment_time TIME,
+//     appointment_type ENUM('New','Follow Up','Emergency'),
+//     status ENUM('Pending','Confirmed','Completed','Cancelled') DEFAULT 'Pending',
+//     visit_reason TEXT,
+
+//     FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+//         ON DELETE CASCADE,
+
+//     FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id)
+//         ON DELETE CASCADE,
+
+//     FOREIGN KEY (clinic_id) REFERENCES clinics(clinic_id)
+//         ON DELETE CASCADE
+// )";
+
+// if (mysqli_query($con, $q5)) {
+//     echo "Appointments table created<br>";
+// } else {
+//     echo "Error creating appointments table<br>";
+// }
+
+// $q6 = "CREATE TABLE IF NOT EXISTS tokens (
+//     token_id INT AUTO_INCREMENT PRIMARY KEY,
+//     appointment_id INT NOT NULL,
+//     token_no INT,
+//     queue_position INT,
+//     status ENUM('Waiting','In Progress','Completed','Skipped') DEFAULT 'Waiting',
+//     called_at DATETIME,
+//     completed_at DATETIME,
+
+//     FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id)
+//         ON DELETE CASCADE
+// )";
+
+// if (mysqli_query($con, $q6)) {
+//     echo "Tokens table created<br>";
+// } else {
+//     echo "Error creating tokens table<br>";
+// }
+
+// $q7 = "CREATE TABLE IF NOT EXISTS consultation_notes (
+//     note_id INT AUTO_INCREMENT PRIMARY KEY,
+//     appointment_id INT NOT NULL,
+//     note_text TEXT,
+
+//     FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id)
+//         ON DELETE CASCADE
+// )";
+
+// if (mysqli_query($con, $q7)) {
+//     echo "Consultation Notes table created<br>";
+// } else {
+//     echo "Error creating consultation notes table<br>";
+// }
+
+// $q8 = "CREATE TABLE IF NOT EXISTS receptionists (
+//     receptionist_id INT AUTO_INCREMENT PRIMARY KEY,
+//     clinic_id INT NOT NULL,
+//     full_name VARCHAR(100) NOT NULL,
+//     email VARCHAR(100) UNIQUE,
+//     password VARCHAR(255) NOT NULL,
+//     phone VARCHAR(15),
+//     address TEXT,
+//     is_active BOOLEAN DEFAULT TRUE,
+
+//     FOREIGN KEY (clinic_id) REFERENCES clinics(clinic_id)
+//         ON DELETE CASCADE
+// )";
+
+// if (mysqli_query($con, $q8)) {
+//     echo "Receptionists table created successfully<br>";
+// } else {
+//     echo "Error creating receptionists table: " . mysqli_error($con);
+// }
+
+// $q9 = "CREATE TABLE IF NOT EXISTS contact_us (
+//     contact_id INT AUTO_INCREMENT PRIMARY KEY,
+//     full_name VARCHAR(100) NOT NULL,
+//     email VARCHAR(100) NOT NULL,
+//     subject VARCHAR(200),
+//     message TEXT NOT NULL,
+//     reply TEXT,
+//     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+// )";
+
+// if (mysqli_query($con, $q9)) {
+//     echo "Contact Us table created successfully<br>";
+// } else {
+//     echo "Error creating contact_us table: " . mysqli_error($con);
+// }
