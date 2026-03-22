@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Dashboard | MediQueue</title>
-    <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css?v=vibrant">
     <script src="./css/bootstrap/js/bootstrap.bundle.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css?v=vibrant" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css?v=vibrant">
 </head>
 
-<body>
+<body class="layout-with-sidebar">
     <?php include './sidebar/patient-sidebar.php';?>
 </body>
 
