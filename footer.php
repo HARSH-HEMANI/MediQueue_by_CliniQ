@@ -1,4 +1,4 @@
-    <link rel="stylesheet" href="./css/footer.css">
+    <link rel="stylesheet" href="./css/footer.css?v=vibrant">
 
 
     <div class="footer-divider" aria-hidden="true">
