@@ -1,6 +1,7 @@
+reception.css
 
 /* =====================================================
-             RECEPTIONIST DASHBOARD 
+            RECEPTIONIST DASHBOARD 
 ===================================================== */
 
 
@@ -9,25 +10,25 @@
     color: #FF5A5F !important;
 }
 
-/* GLOBAL CARD SYSTEM */
+/* GLOBAL CARD SYSTEM - Glassmorphism */
 .rcard {
-    background: #ffffff;
-    border-radius: 16px;
-    border: none;
-    box-shadow:
-        0 4px 12px rgba(0, 0, 0, 0.06),
-        0 10px 24px rgba(0, 0, 0, 0.04);
-    transition: all 0.25s ease;
-    border-right-color: #FF5A5F;
+    background: var(--card-bg);
 
+
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    transition: all 0.25s ease;
 }
 
 /* Right brand border for rcard */
 .summary-card {
-
     border-right: 4px solid #FF5A5F;
-    border-radius: 16px;
-    background: #ffffff;
+    border-radius: var(--card-radius);
+    background: var(--card-bg);
+
+
+    border: 1px solid var(--card-border);
 }
 
 span {
@@ -43,12 +44,16 @@ span {
 
 /* CARD BACKGROUND VARIATION */
 .rcard-bg {
-    background: #ffffff;
+    background: var(--card-bg);
+
+
 }
 
 /* OPTIONAL SECOND CARD STYLE */
 .card-bg {
-    background: linear-gradient(135deg, #ffffff, #fff5f5);
+    background: var(--card-bg);
+
+
 }
 
 /* CARD BODY */
@@ -68,15 +73,15 @@ span {
 
 
 /*===================================================
-                 MANAGE APPOINTMENT 
+                MANAGE APPOINTMENT 
 ===================================================== */
 
 
 /* MAIN DASHBOARD CONTAINER */
 .reception-dashboard {
-    background: #f9fafb;
     min-height: 100vh;
-    padding-top: 120px; /* fixes header overlap */
+    padding-top: 120px;
+    /* fixes header overlap */
     padding-left: 24px;
     padding-right: 24px;
     padding-bottom: 40px;
@@ -111,19 +116,21 @@ span {
 .rstat-card {
     flex: 1;
     min-width: 180px;
-    background: #ffffff;
+    background: var(--card-bg);
+
+
+    border: 1px solid var(--card-border);
     padding: 18px;
-    border-radius: 14px;
+    border-radius: var(--card-radius);
     border-right: 4px solid #FF5A5F;
-    box-shadow:
-        0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: var(--card-shadow);
     transition: all 0.25s ease;
 }
 
 .rstat-card:hover {
     transform: translateY(-4px);
     box-shadow:
-        0 10px 22px rgba(255,90,95,0.18);
+        0 10px 22px rgba(255, 90, 95, 0.18);
 }
 
 .rstat-card h6 {
@@ -142,10 +149,12 @@ span {
 /* ================= CURRENT TOKEN CARD ================= */
 
 .dcard {
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow:
-        0 6px 20px rgba(0,0,0,0.06);
+    background: var(--card-bg);
+
+
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
 }
 
 .current-token-card {
@@ -166,10 +175,12 @@ span {
 /* ================= FILTER CARD ================= */
 
 .rcard {
-    background: #ffffff;
-    border-radius: 14px;
-    box-shadow:
-        0 4px 14px rgba(0,0,0,0.05);
+    background: var(--card-bg);
+
+
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
 }
 
 .rcard-body {
@@ -179,7 +190,7 @@ span {
 /* ================= TABLE CARD ================= */
 
 .dashboard-card {
-    border-radius: 16px;
+    border-radius: var(--card-radius);
     border: none;
 }
 
@@ -237,7 +248,7 @@ span {
 .form-control:focus,
 .form-select:focus {
     border-color: #FF5A5F;
-    box-shadow: 0 0 0 3px rgba(255,90,95,0.15);
+    box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.15);
 }
 
 /* ================= BADGES ================= */
@@ -259,15 +270,24 @@ a:hover {
     text-decoration: underline;
 }
 
+/* ================= RESPONSIVE ================= */
+/* 
+@media (max-width: 768px) {
+    .stats-row {
+        flex-direction: column;
+    }
+    .current-token-number {
+        font-size: 2.2rem;
+    }
+} */
 
 /* =====================================================
-                 LIVE QUEUE 
+                LIVE QUEUE 
 ===================================================== */
 
 
 /* MAIN CONTAINER */
 .reception-dashboard {
-    background: #f9fafb;
     min-height: 100vh;
     padding-top: 120px;
     padding-left: 24px;
@@ -304,19 +324,21 @@ a:hover {
 .rstat-card {
     flex: 1;
     min-width: 180px;
-    background: #ffffff;
+    background: var(--card-bg);
+
+
+    border: 1px solid var(--card-border);
     padding: 18px;
-    border-radius: 14px;
+    border-radius: var(--card-radius);
     border-right: 4px solid #FF5A5F;
-    box-shadow:
-        0 3px 10px rgba(0,0,0,0.05);
+    box-shadow: var(--card-shadow);
     transition: all 0.25s ease;
 }
 
 .rstat-card:hover {
     transform: translateY(-4px);
     box-shadow:
-        0 12px 24px rgba(255,90,95,0.18);
+        0 12px 24px rgba(255, 90, 95, 0.18);
 }
 
 .rstat-card h6 {
@@ -335,10 +357,11 @@ a:hover {
 /* ================= CURRENT TOKEN CARD ================= */
 
 .dcard {
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow:
-        0 8px 24px rgba(0,0,0,0.08);
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+
+
 }
 
 /* .dcard:hover {
@@ -367,10 +390,12 @@ a:hover {
 /* ================= TABLE CARD ================= */
 
 .dashboard-card {
-    border-radius: 16px;
-    border: none;
-    box-shadow:
-        0 6px 20px rgba(0,0,0,0.06);
+    border-radius: var(--card-radius);
+    background: var(--card-bg);
+
+
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
 }
 
 .table thead th {
@@ -453,7 +478,19 @@ a {
 }
 
 a:hover {
-    text-decoration: underline ;
+    text-decoration: underline;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+    .stats-row {
+        flex-direction: column;
+    }
+
+    .current-token-number {
+        font-size: 2.2rem;
+    }
 }
 
 /* =====================================================
@@ -461,9 +498,7 @@ a:hover {
 ===================================================== */
 
 /* MAIN DASHBOARD CONTAINER */
-
 .reception-dashboard {
-    background: #f9fafb;
     min-height: 100vh;
     padding-top: 120px;
     padding-left: 24px;
@@ -492,17 +527,18 @@ a:hover {
 /* ================= CARD SYSTEM ================= */
 
 .rcard {
-    background: #ffffff;
-    border-radius: 16px;
-    border: none;
-    box-shadow:
-        0 6px 22px rgba(0,0,0,0.06);
+    background: var(--card-bg);
+
+
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
     transition: all 0.25s ease;
 }
 
 .rcard:hover {
     box-shadow:
-        0 12px 28px rgba(255,90,95,0.15);
+        0 12px 28px rgba(255, 90, 95, 0.15);
 }
 
 .rcard-body {
@@ -548,7 +584,7 @@ a:hover {
 .form-select:focus {
     border-color: #FF5A5F;
     box-shadow:
-        0 0 0 3px rgba(255,90,95,0.15);
+        0 0 0 3px rgba(255, 90, 95, 0.15);
 }
 
 /* READONLY INPUT */
@@ -602,7 +638,7 @@ textarea.form-control {
     background: #e0484d;
     color: #ffffff;
     box-shadow:
-        0 6px 18px rgba(255,90,95,0.25);
+        0 6px 18px rgba(255, 90, 95, 0.25);
 }
 
 /* ================= ACTIVITY TEXT ================= */
@@ -625,8 +661,10 @@ textarea.form-control {
 ========================================= */
 
 .dashboard-footer {
-    background: #ffffff;
-    border-top: 1px solid #e5e7eb;
+    background: var(--card-bg);
+
+
+    border-top: 1px solid var(--card-border);
     padding: 12px 0;
     margin-top: 40px;
     font-size: 0.85rem;
@@ -655,7 +693,7 @@ textarea.form-control {
 /* Hover effect */
 .dashboard-footer a:hover {
     color: #FF5A5F;
-    text-decoration: underline ;
+    text-decoration: underline;
 }
 
 /* Sticky footer effect */
@@ -676,6 +714,4 @@ textarea.form-control {
 /* Also remove underline on hover */
 /* .navbar a:hover {
     text-decoration: none;
-} */ 
-
-
+} */
