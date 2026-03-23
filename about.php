@@ -18,7 +18,7 @@
         <?php include './header.php'; ?>
     </header>
 
-    <main class="features">
+    <main class="explore-hero">
 
         <div class="container">
             <section class="features-header text-center my-5">

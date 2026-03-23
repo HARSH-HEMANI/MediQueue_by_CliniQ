@@ -411,17 +411,322 @@ label.form-label {
 
 /* ── Explore Page ── */
 .explore-hero {
-    margin-top: 88px;
-    padding: 30px 0;
-    background: var(--glass-bg-strong);
+    margin-top: 50px;
+    padding: 50px 0 60px;
+    background:
+        radial-gradient(circle at 10% 30%, rgba(255, 90, 95, 0.10) 0%, transparent 45%),
+        radial-gradient(circle at 90% 70%, rgba(110, 231, 183, 0.12) 0%, transparent 45%),
+        var(--glass-bg-strong);
     -webkit-backdrop-filter: blur(var(--glass-blur));
     backdrop-filter: blur(var(--glass-blur));
     border-bottom: 1px solid var(--glass-border);
-    text-align: center;
 }
 
 .explore-section {
-    padding: 15px 0;
+    padding: 80px 0;
+}
+
+/* ── Explore hero stats ── */
+.explore-stat h3 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--brand);
+    margin: 0 0 4px;
+}
+
+.explore-stat p {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #9ca3af;
+    margin: 0;
+}
+
+/* ── Hero floating card ── */
+.hero-float-card {
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: var(--glass-shadow);
+    padding: 28px;
+    animation: floatCard 4s ease-in-out infinite;
+}
+
+@keyframes floatCard {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ── Role pills ── */
+.role-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin: 3px;
+}
+
+.role-pill.doctor {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.role-pill.reception {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.role-pill.patient {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.role-pill.admin {
+    background: #ede9fe;
+    color: #6d28d9;
+}
+
+/* ── Timeline ── */
+.timeline-wrap {
+    position: relative;
+    padding-left: 56px;
+}
+
+.timeline-wrap::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 18px;
+    bottom: 18px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--brand), #ff8a8f, rgba(255, 90, 95, 0.1));
+    border-radius: 2px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateX(-16px);
+    transition: all 0.45s ease;
+}
+
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -44px;
+    top: 14px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(255, 90, 95, 0.4);
+}
+
+.timeline-card {
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 18px 22px;
+    box-shadow: var(--glass-shadow);
+    transition: all 0.25s ease;
+}
+
+.timeline-card:hover {
+    transform: translateX(8px);
+    border-color: rgba(255, 90, 95, 0.3);
+    box-shadow: 0 8px 28px rgba(255, 90, 95, 0.12);
+}
+
+.timeline-card-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--brand);
+    margin-bottom: 4px;
+    display: block;
+}
+
+/* ── Role cards (new) ── */
+.role-card-new {
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 32px 26px;
+    box-shadow: var(--glass-shadow);
+    height: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.role-card-new::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 20px 20px 0 0;
+}
+
+.role-card-new.doctor::before {
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+}
+
+.role-card-new.recep::before {
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.role-card-new.patient::before {
+    background: linear-gradient(90deg, var(--brand), #ff8a8f);
+}
+
+.role-card-new.admin::before {
+    background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+}
+
+.role-card-new:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 24px 56px rgba(31, 38, 135, 0.14);
+}
+
+.role-icon-box {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 18px;
+}
+
+.role-card-new.doctor .role-icon-box {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.role-card-new.recep .role-icon-box {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.role-card-new.patient .role-icon-box {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.role-card-new.admin .role-icon-box {
+    background: #ede9fe;
+    color: #6d28d9;
+}
+
+.role-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-size: 0.88rem;
+    color: #374151;
+}
+
+.role-feature-item:last-child {
+    border-bottom: none;
+}
+
+.role-feature-item i {
+    color: var(--brand);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+/* ── Dark arch section ── */
+.arch-dark {
+    background: linear-gradient(145deg, #1a1a2e 0%, #2d1f3d 100%);
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.arch-dark::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 90, 95, 0.1) 0%, transparent 70%);
+    top: -150px;
+    right: -100px;
+}
+
+.arch-card-dark {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 26px 22px;
+    transition: all 0.25s ease;
+    height: 100%;
+}
+
+.arch-card-dark:hover {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 90, 95, 0.4);
+    transform: translateY(-4px);
+}
+
+.arch-card-dark h6 {
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.arch-card-dark p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.87rem;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* ── Scroll fade-in ── */
+.fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: all 0.55s ease;
+}
+
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .section-title {
@@ -634,9 +939,12 @@ label.form-label {
     color: var(--text-primary);
 }
 
-/* ── Offcanvas mobile sidebar overrides ──
-   Bootstrap sets --bs-offcanvas-bg to a dark/grey color by default.
-   Override so the mobile sidebar matches the desktop glass style. ── */
+/* ── Offcanvas transparent backdrop — click outside closes sidebar without darkening page ── */
+.offcanvas-backdrop {
+    background-color: transparent !important;
+    opacity: 0 !important;
+}
+
 .custom-sidebar.offcanvas,
 .custom-sidebar.offcanvas-start {
     --bs-offcanvas-bg: #fdf6f6;
@@ -667,10 +975,6 @@ label.form-label {
     border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.offcanvas-backdrop {
-    background-color: transparent;
-    opacity: 0;
-}
 
 /* ── Responsive ── */
 

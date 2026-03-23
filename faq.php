@@ -19,7 +19,7 @@
         <?php include "./header.php"; ?>
     </header>
 
-    <main class="features faq-page">
+    <main class="explore-hero">
 
         <div class="container">
             <section class="features-header text-center my-5">

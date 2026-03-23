@@ -28,7 +28,7 @@
         </div>
     <?php endif; ?>
 
-    <main class="features auth-page">
+    <main class="explore-hero">
         <section class="features-header text-center">
             <h2>Doctor <span>Login</span></h2>
             <div class="section-divider"></div>

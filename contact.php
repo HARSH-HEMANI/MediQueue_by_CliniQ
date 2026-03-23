@@ -22,7 +22,7 @@
 
     </header>
 
-    <main class="features contact-page">
+    <main class="explore-hero">
 
         <div class="container">
             <section class="features-header text-center my-5">
@@ -56,7 +56,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Subject</label>
-                                <input type="text" name="sub" id="sub"  data-validation="required" class="form-control" placeholder="Subject">
+                                <input type="text" name="sub" id="sub" data-validation="required" class="form-control" placeholder="Subject">
                                 <small id="sub_error"></small>
                             </div>
 
@@ -67,9 +67,9 @@
                             </div>
 
                             <div class="text-center">
-                                <button type="submit" class="hero-btn px-5">
+                                <a type="submit" class="hero-btn me-3" href="">
                                     Send Message
-                                </button>
+                                </a>
                             </div>
                         </form>
                     </div>
