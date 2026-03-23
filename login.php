@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,102 +6,88 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login | MediQueue</title>
-
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css?v=vibrant">
-  <link rel="stylesheet" href="./css/login.css?v=vibrant">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="./css/login.css">
 </head>
 
 <body>
   <div class="container" id="container">
 
-    <!-- LOGIN -->
+    <!-- LOGIN FORM -->
     <div class="form login">
       <h2>Login</h2>
-      <form action="" method="post" id="loginform">
-        <input type="text" placeholder="Email" name="email" id="email" data-validation="required|email">
+
+      <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert-error"><?php echo $_SESSION['error'];
+                                  unset($_SESSION['error']); ?></div>
+      <?php endif; ?>
+
+      <form action="./login_action.php" method="POST" id="loginform">
+        <input type="text" placeholder="Email" name="email" id="email"
+          data-validation="required|email">
         <small id="email_error"></small>
-        <input type="password" name="password" placeholder="Password" data-validation="required|min" data-min="6">
+
+        <input type="password" name="password" placeholder="Password"
+          data-validation="required|min" data-min="6">
         <small id="password_error"></small>
+
         <a href="./forgot_password.php" class="forgot">Forgot Password?</a>
-        <button type="button" onclick="window.location.href='./patient/dashboard.php'">Login</button>
+        <button type="submit" name="submit">Login</button>
       </form>
     </div>
 
-    <!-- REGISTER (UPDATED) -->
+    <!-- REGISTER FORM -->
     <section id="register">
       <div class="form register" id="regform">
         <h2>Register</h2>
 
-        <form id="registerForm">
+        <?php if (isset($_SESSION['reg_error'])): ?>
+          <div class="alert-error"><?php echo $_SESSION['reg_error'];
+                                    unset($_SESSION['reg_error']); ?></div>
+        <?php endif; ?>
 
-          <input type="text"
-            name="firstName"
-            placeholder="First Name"
-            data-validation="required|min"
-            data-min="2">
-          <small id="firstName_error"></small>
+        <form action="./register_action.php" method="POST" id="registerForm">
 
-          <input type="text"
-            name="lastName"
-            placeholder="Last Name"
-            data-validation="required|min"
-            data-min="3">
-          <small id="lastName_error"></small>
+          <input type="text" name="full_name" placeholder="Full Name"
+            data-validation="required|min" data-min="2">
+          <small id="full_name_error"></small>
 
-          <input type="email"
-            name="regEmail"
-            placeholder="Email"
+          <input type="email" name="email" placeholder="Email"
             data-validation="required|email">
-          <small id="regEmail_error"></small>
+          <small id="email_error"></small>
 
-          <input type="date"
-            name="dob"
+          <input type="date" name="dob"
             data-validation="required">
           <small id="dob_error"></small>
 
-          <input type="tel"
-            name="phone"
-            placeholder="Phone Number"
-            data-validation="required|number|min|max"
-            data-min="10"
-            data-max="10">
+          <input type="tel" name="phone" placeholder="Phone Number"
+            data-validation="required|number|min|max" data-min="10" data-max="10">
           <small id="phone_error"></small>
 
-          <select name="gender"
-            data-validation="required|select">
+          <select name="gender" data-validation="required|select">
             <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
           </select>
           <small id="gender_error"></small>
 
-          <textarea name="address"
-            placeholder="Address"
-            data-validation="required|min"
-            data-min="10"></textarea>
+          <textarea name="address" placeholder="Address"
+            data-validation="required|min" data-min="10"></textarea>
           <small id="address_error"></small>
 
-          <input type="password"
-            name="regPassword"
-            id="regPassword"
-            placeholder="Password"
+          <input type="password" name="password" id="regPassword" placeholder="Password"
             data-validation="required|strongPassword">
           <small id="regPassword_error"></small>
 
-          <input type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            data-validation="required|confirmPassword"
-            data-match="regPassword">
+          <input type="password" name="confirm_password" placeholder="Confirm Password"
+            data-validation="required|confirmPassword" data-match="regPassword">
           <small id="confirmPassword_error"></small>
 
-          <button type="submit">Register</button>
+          <button type="submit" name="submit">Register</button>
 
         </form>
       </div>
-
 
       <!-- OVERLAY -->
       <div class="overlay">
@@ -110,8 +97,8 @@
           <button id="toggle">Register</button>
         </div>
       </div>
-
     </section>
+
   </div>
 
   <script>
@@ -124,7 +111,6 @@
 
     toggle.onclick = () => {
       container.classList.toggle("active");
-
       if (login) {
         title.innerText = "Welcome Back!";
         text.innerText = "Already have an account?";
@@ -136,15 +122,17 @@
       }
       login = !login;
     };
+
+    // Auto-show register panel if redirected with #register
     if (window.location.hash === "#register") {
       container.classList.add("active");
-
       title.innerText = "Welcome Back!";
       text.innerText = "Already have an account?";
       toggle.innerText = "Login";
       login = false;
     }
   </script>
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="./js/validation.js"></script>
 
