@@ -14,11 +14,18 @@ if (isset($_POST['submit'])) {
     }
 
     // Fetch patient by email
-    $query  = "SELECT * FROM patients WHERE email = '$email' AND is_active = 1";
+    $query  = "SELECT * FROM patients WHERE email = '$email'";
     $result = mysqli_query($con, $query);
 
     if (mysqli_num_rows($result) == 1) {
         $row = mysqli_fetch_assoc($result);
+
+        // Check if email is verified
+        if ($row['is_active'] == 0) {
+            $_SESSION['error'] = "Please verify your email before logging in. Check your inbox.";
+            header("Location: ./login.php");
+            exit();
+        }
 
         if (password_verify($password, $row['password'])) {
             $_SESSION['patient_id']    = $row['patient_id'];
