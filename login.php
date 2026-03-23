@@ -8,19 +8,130 @@
   <title>Login | MediQueue</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="./css/login.css">
+  <style>
+    /* Toast Popup */
+    .toast-popup {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 9999;
+      min-width: 300px;
+      max-width: 420px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      animation: slideIn 0.4s ease;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .toast-popup.success {
+      background: #fff;
+      border-left: 5px solid #10b981;
+    }
+
+    .toast-popup.error {
+      background: #fff;
+      border-left: 5px solid #FF5A5F;
+    }
+
+    .toast-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .toast-popup.success .toast-icon {
+      background: rgba(16, 185, 129, 0.12);
+      color: #10b981;
+    }
+
+    .toast-popup.error .toast-icon {
+      background: rgba(255, 90, 95, 0.12);
+      color: #FF5A5F;
+    }
+
+    .toast-body {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: #1a1a2e;
+      margin-bottom: 3px;
+    }
+
+    .toast-msg {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .toast-close:hover {
+      color: #555;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(60px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  </style>
 </head>
 
 <body>
+
+  <?php if (isset($_SESSION['success'])): ?>
+    <div class="toast-popup success" id="toast">
+      <div class="toast-icon"><i class="fas fa-check"></i></div>
+      <div class="toast-body">
+        <div class="toast-title">Success!</div>
+        <div class="toast-msg"><?php echo $_SESSION['success'];
+                                unset($_SESSION['success']); ?></div>
+      </div>
+      <button class="toast-close" onclick="document.getElementById('toast').remove()">&times;</button>
+    </div>
+  <?php endif; ?>
+
+  <?php if (isset($_SESSION['error'])): ?>
+    <div class="toast-popup error" id="toast">
+      <div class="toast-icon"><i class="fas fa-times"></i></div>
+      <div class="toast-body">
+        <div class="toast-title">Error</div>
+        <div class="toast-msg"><?php echo $_SESSION['error'];
+                                unset($_SESSION['error']); ?></div>
+      </div>
+      <button class="toast-close" onclick="document.getElementById('toast').remove()">&times;</button>
+    </div>
+  <?php endif; ?>
+
   <div class="container" id="container">
 
     <!-- LOGIN FORM -->
     <div class="form login">
       <h2>Login</h2>
-
-      <?php if (isset($_SESSION['error'])): ?>
-        <div class="alert-error"><?php echo $_SESSION['error'];
-                                  unset($_SESSION['error']); ?></div>
-      <?php endif; ?>
 
       <form action="./login_action.php" method="POST" id="loginform">
         <input type="text" placeholder="Email" name="email" id="email"
@@ -42,8 +153,10 @@
         <h2>Register</h2>
 
         <?php if (isset($_SESSION['reg_error'])): ?>
-          <div class="alert-error"><?php echo $_SESSION['reg_error'];
-                                    unset($_SESSION['reg_error']); ?></div>
+          <div style="background:#ffe5e5;color:#c0392b;padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:13px;">
+            <?php echo $_SESSION['reg_error'];
+            unset($_SESSION['reg_error']); ?>
+          </div>
         <?php endif; ?>
 
         <form action="./register_action.php" method="POST" id="registerForm">
@@ -75,6 +188,10 @@
           <textarea name="address" placeholder="Address"
             data-validation="required|min" data-min="10"></textarea>
           <small id="address_error"></small>
+
+          <input type="number" name="pincode" placeholder="Pincode"
+            data-validation="required">
+          <small id="pincode_error"></small>
 
           <input type="password" name="password" id="regPassword" placeholder="Password"
             data-validation="required|strongPassword">
@@ -130,6 +247,15 @@
       text.innerText = "Already have an account?";
       toggle.innerText = "Login";
       login = false;
+    }
+
+    // Auto-dismiss toast after 5 seconds
+    const toast = document.getElementById('toast');
+    if (toast) {
+      setTimeout(() => {
+        toast.style.animation = 'slideIn 0.4s ease reverse';
+        setTimeout(() => toast.remove(), 400);
+      }, 5000);
     }
   </script>
 
