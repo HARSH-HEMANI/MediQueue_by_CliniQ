@@ -15,7 +15,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </div>
 
 <!-- Sidebar -->
-<div class="offcanvas-lg offcanvas-start custom-sidebar" tabindex="-1" id="appSidebar" data-bs-backdrop="false" data-bs-scroll="true">
+<div class="offcanvas-lg offcanvas-start custom-sidebar" tabindex="-1" id="appSidebar" data-bs-scroll="true">
 
     <!-- Mobile header inside offcanvas -->
     <div class="offcanvas-header d-lg-none">

@@ -667,6 +667,10 @@ label.form-label {
     border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+.offcanvas-backdrop {
+    background-color: transparent;
+    opacity: 0;
+}
 
 /* ── Responsive ── */
 
