@@ -34,7 +34,7 @@
                     </button>
 
                     <button class="btn btn-outline-secondary"
-                        onclick="window.location.href='./register.php'"
+                        onclick="window.location.href='./login.php#register'"
                         style="border-radius:38px; border-width:2px;">
                         Register
                     </button>
