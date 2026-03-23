@@ -296,7 +296,7 @@ body {
     pointer-events: none;
 }
 
-.tcard > *:not(.quote-icon) {
+.tcard>*:not(.quote-icon) {
     position: relative;
     z-index: 1;
 }
@@ -508,7 +508,7 @@ label.form-label {
 }
 
 .custom-sidebar .sidebar-logo img {
-    height: 40px;
+    height: 52px;
 }
 
 .custom-sidebar .sidebar-logo span {
@@ -632,6 +632,39 @@ label.form-label {
 
 .mobile-navbar span {
     color: var(--text-primary);
+}
+
+/* ── Offcanvas mobile sidebar overrides ──
+   Bootstrap sets --bs-offcanvas-bg to a dark/grey color by default.
+   Override so the mobile sidebar matches the desktop glass style. ── */
+.custom-sidebar.offcanvas,
+.custom-sidebar.offcanvas-start {
+    --bs-offcanvas-bg: #fdf6f6;
+    background: #fdf6f6 !important;
+    border-right: 1px solid var(--glass-border) !important;
+}
+
+.custom-sidebar .offcanvas-header {
+    background: #fdf6f6 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    padding: 16px 20px !important;
+}
+
+.custom-sidebar .offcanvas-header .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0;
+}
+
+.custom-sidebar .offcanvas-body {
+    background: #fdf6f6 !important;
+    padding: 0 !important;
+}
+
+.custom-sidebar .user-account {
+    background: #fdf6f6;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 
