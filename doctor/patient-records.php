@@ -92,9 +92,9 @@ $current = $patients[$patientId];
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
 
         <!-- HEADER -->
-        <section class="mb-4">
-            <h4 class="mb-1">Patient Records</h4>
-            <p class="text-muted mb-0">Search and review registered patients</p>
+        <section class="features-header my-1">
+            <h2>Patient <span>Records</span></h2>
+            <p class="text-muted text-decoration-underline mx-0 mb-3">Search and review registered patients</p>
         </section>
 
         <!-- PATIENT TABLE -->

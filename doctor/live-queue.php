@@ -65,12 +65,12 @@ if ($state === "emergency") {
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
 
         <!-- HEADER -->
-        <section class="mb-4 d-flex justify-content-between align-items-center">
+        <section class="mb-4 d-flex justify-content-between align-items-center features-header my-1">
             <div>
-                <h4 class="mb-1">Live Queue</h4>
+                <h2>Live <span>Queue</span></h2>
                 <p class="text-muted mb-0">Real-time patient queue control</p>
             </div>
-            <a href="doctor.php" class="btn btn-outline-secondary btn-sm">
+            <a href="./live-queue.php" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-clockwise"></i> Refresh
             </a>
         </section>

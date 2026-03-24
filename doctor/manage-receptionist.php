@@ -52,7 +52,7 @@ if (isset($_GET['edit_id'])) {
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
 
         <!-- Header -->
-        <section class="mb-4">
+        <section class="features-header my-1">
             <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($_SESSION['doctor_name']); ?></span></h2>
         </section>
 
