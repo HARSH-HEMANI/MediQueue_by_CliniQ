@@ -1,3 +1,8 @@
+<?php
+session_start();
+$login_error = $_SESSION['login_error'] ?? '';
+unset($_SESSION['login_error']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,6 +20,16 @@
 <body>
 
     <main class="explore-hero">
+
+        <?php if ($login_error): ?>
+            <div class="container mt-3">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Error:</strong> <?php echo htmlspecialchars($login_error); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <section class="features-header text-center">
             <h2>Receptionist <span>Login</span></h2>
             <div class="section-divider"></div>
@@ -27,13 +42,12 @@
                     <div class="feature-card">
                         <h5 class="text-center mb-4 fw-bold">Sign In</h5>
 
-                        <!-- FIX: action corrected, login button is now a proper submit button -->
-                        <form action="./reception_dashboard.php" method="post" id="loginForm">
+                        <form action="./reception-login-action.php" method="post" id="loginForm">
 
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Email Address</label>
                                 <input type="email" class="form-control" name="email" id="email"
-                                    placeholder="hospital@email.com"
+                                    placeholder="receptionist@email.com"
                                     data-validation="required|email">
                                 <small id="email_error" class="text-danger"></small>
                             </div>
@@ -42,7 +56,7 @@
                                 <label class="form-label fw-semibold">Password</label>
                                 <input type="password" class="form-control" name="password" id="password"
                                     placeholder="Enter password"
-                                    data-validation="required|strongPassword">
+                                    data-validation="required">
                                 <small id="password_error" class="text-danger"></small>
                             </div>
 
@@ -51,8 +65,7 @@
                             </button>
 
                             <p class="text-center mb-0 text-muted" style="font-size:0.9rem;">
-                                Don't have an account?
-                                <a href="./hospital_registration.php" class="text-brand fw-semibold">Register here</a>
+                                Contact your doctor to get your account credentials.
                             </p>
                         </form>
                     </div>
