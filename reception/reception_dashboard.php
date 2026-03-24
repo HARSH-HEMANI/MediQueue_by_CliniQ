@@ -1,4 +1,5 @@
 <?php
+include_once "reception-auth.php";
 $content_page = 'Reception Dashboard | MediQueue';
 ob_start();
 ?>
