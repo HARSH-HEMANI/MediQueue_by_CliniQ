@@ -16,53 +16,38 @@ ob_start();
         <div class="col-xl-8 col-lg-7">
             <div class="p-card">
 
-                <span class="section-label">Select Department</span>
-                <div class="row g-3 mb-4">
-                    <div class="col-md-4">
-                        <div class="dept-card active-department"
-                            data-dept="Cardiology"
-                            data-doctor="Dr. Sarah Wilson"
-                            data-spec="Cardiologist"
-                            data-initials="SW"
-                            data-fee="500">
-                            <div class="fs-3 mb-2">🫀</div>
-                            <h6 class="fw-bold mb-1">Cardiology</h6>
-                            <small class="text-muted">Heart Specialists</small>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="dept-card"
-                            data-dept="Orthopedics"
-                            data-doctor="Dr. Michael Ray"
-                            data-spec="Orthopedist"
-                            data-initials="MR"
-                            data-fee="450">
-                            <div class="fs-3 mb-2">🦴</div>
-                            <h6 class="fw-bold mb-1">Orthopedics</h6>
-                            <small class="text-muted">Bone & Joint Care</small>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="dept-card"
-                            data-dept="Dermatology"
-                            data-doctor="Dr. Emily Stone"
-                            data-spec="Dermatologist"
-                            data-initials="ES"
-                            data-fee="350">
-                            <div class="fs-3 mb-2">🩺</div>
-                            <h6 class="fw-bold mb-1">Dermatology</h6>
-                            <small class="text-muted">Skin Treatment</small>
-                        </div>
-                    </div>
+                <?php
+                include_once '../db.php';
+                // Fetch distinct specializations
+                $spec_query = "SELECT DISTINCT specialization FROM doctors WHERE is_active = 1";
+                $spec_res = mysqli_query($con, $spec_query);
+                
+                // Fetch all active doctors to pass to JS
+                $doc_query = "SELECT doctor_id, full_name, specialization, consultation_fee FROM doctors WHERE is_active = 1";
+                $doc_res = mysqli_query($con, $doc_query);
+                $all_doctors = [];
+                while ($rd = mysqli_fetch_assoc($doc_res)) {
+                    $all_doctors[] = $rd;
+                }
+                ?>
+
+                <span class="section-label">Select Specialization</span>
+                <div class="mb-4">
+                    <select id="specSelect" class="form-select rounded-3">
+                        <option value="">-- Select Specialization --</option>
+                        <?php while ($row = mysqli_fetch_assoc($spec_res)): ?>
+                            <option value="<?php echo htmlspecialchars($row['specialization']); ?>">
+                                <?php echo htmlspecialchars($row['specialization']); ?>
+                            </option>
+                        <?php endwhile; ?>
+                    </select>
                 </div>
 
-                <span class="section-label">Assigned Doctor</span>
-                <div class="doctor-info-card mb-4">
-                    <div class="avatar" id="doctorAvatar">SW</div>
-                    <div>
-                        <strong id="doctorName" class="d-block">Dr. Sarah Wilson</strong>
-                        <span id="doctorSpec" class="text-muted" style="font-size:0.82rem;">Cardiologist</span>
-                    </div>
+                <span class="section-label">Select Doctor</span>
+                <div class="mb-4">
+                    <select id="doctorSelect" class="form-select rounded-3" disabled>
+                        <option value="">-- First Select Specialization --</option>
+                    </select>
                 </div>
 
                 <span class="section-label">Select Date</span>
@@ -156,29 +141,64 @@ ob_start();
 </div>
 
 <script>
+    const allDoctors = <?php echo json_encode($all_doctors); ?>;
     let selectedTime = null;
     let selectedDate = null;
+    let selectedDoctorId = null;
 
-    // Department selection
-    document.querySelectorAll(".dept-card").forEach(card => {
-        card.addEventListener("click", function() {
-            document.querySelectorAll(".dept-card").forEach(c => c.classList.remove("active-department"));
-            this.classList.add("active-department");
+    // Specialization Selection
+    document.getElementById("specSelect").addEventListener("change", function() {
+        const spec = this.value;
+        const docSelect = document.getElementById("doctorSelect");
+        
+        // Reset doctor dropdown
+        docSelect.innerHTML = '<option value="">-- Select Doctor --</option>';
+        docSelect.disabled = true;
+        selectedDoctorId = null;
+        
+        // Reset summary info
+        document.getElementById("summaryDept").innerText = spec || '--';
+        document.getElementById("summaryDoctor").innerText = '--';
+        document.getElementById("summaryFee").innerText = '0';
+        document.getElementById("summaryTotal").innerText = '0';
+        
+        if (spec) {
+            // Filter doctors by specialization
+            const filteredDoctors = allDoctors.filter(d => d.specialization === spec);
+            
+            if (filteredDoctors.length > 0) {
+                docSelect.disabled = false;
+                filteredDoctors.forEach(doc => {
+                    const opt = document.createElement('option');
+                    opt.value = doc.doctor_id;
+                    opt.textContent = doc.full_name + ' (₹' + doc.consultation_fee + ')';
+                    docSelect.appendChild(opt);
+                });
+            } else {
+                docSelect.innerHTML = '<option value="">No doctors available</option>';
+            }
+        }
+        validateForm();
+    });
 
-            const dept = this.dataset.dept;
-            const doctor = this.dataset.doctor;
-            const spec = this.dataset.spec;
-            const initials = this.dataset.initials;
-            const fee = parseInt(this.dataset.fee);
-
-            document.getElementById("summaryDept").innerText = dept;
-            document.getElementById("summaryDoctor").innerText = doctor;
+    // Doctor Selection
+    document.getElementById("doctorSelect").addEventListener("change", function() {
+        const docId = this.value;
+        selectedDoctorId = docId;
+        
+        if (docId) {
+            const doc = allDoctors.find(d => d.doctor_id == docId);
+            const fee = parseInt(doc.consultation_fee);
+            
+            document.getElementById("summaryDoctor").innerText = doc.full_name;
             document.getElementById("summaryFee").innerText = fee;
-            document.getElementById("summaryTotal").innerText = fee + 20;
-            document.getElementById("doctorName").innerText = doctor;
-            document.getElementById("doctorSpec").innerText = spec;
-            document.getElementById("doctorAvatar").innerText = initials;
-        });
+            document.getElementById("summaryTotal").innerText = fee + 20; // 20 is platform fee
+        } else {
+            document.getElementById("summaryDoctor").innerText = '--';
+            document.getElementById("summaryFee").innerText = '0';
+            document.getElementById("summaryTotal").innerText = '0';
+        }
+        validateForm();
     });
 
     // Date
@@ -208,7 +228,7 @@ ob_start();
     });
 
     function validateForm() {
-        document.getElementById("confirmBtn").disabled = !(selectedDate && selectedTime);
+        document.getElementById("confirmBtn").disabled = !(selectedDoctorId && selectedDate && selectedTime);
     }
 
     document.getElementById("confirmBtn").addEventListener("click", function() {
