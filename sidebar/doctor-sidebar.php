@@ -63,6 +63,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="../doctor/manage-receptionist.php" class="nav-link <?= ($current_page == 'manage-receptionist.php') ? 'active' : '' ?>">
+                        <i class="bi bi-person-badge-fill"></i><span>Manage Receptionists</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="../doctor/doctor-profile.php" class="nav-link <?= ($current_page == 'doctor-profile.php') ? 'active' : '' ?>">
                         <i class="bi bi-person-fill-gear"></i><span>Profile Settings</span>
                     </a>
@@ -78,8 +83,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <div class="user-profile">
                 <img src="https://i.pravatar.cc/150?u=doc" alt="Doctor">
                 <div class="user-info">
-                    <span class="name">Dr. <?php echo isset($_SESSION['doctor_name']) ? htmlspecialchars($_SESSION['doctor_name']) : 'Doctor'; ?></span>
-                    <span class="tag">#doc-1234</span>
+                    <span class="name"><?php echo isset($_SESSION['doctor_name']) ? htmlspecialchars($_SESSION['doctor_name']) : 'Doctor'; ?></span>
+                    <span class="tag">#DOC-<?php echo isset($_SESSION['doctor_id']) ? str_pad($_SESSION['doctor_id'], 4, '0', STR_PAD_LEFT) : '0000'; ?></span>
                 </div>
             </div>
             <a href="../doctor/logout.php" class="text-danger fs-5"
