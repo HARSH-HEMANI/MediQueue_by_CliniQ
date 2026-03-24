@@ -62,11 +62,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <i class="bi bi-people-fill"></i><span>Live Queue</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="../reception/profile_setting.php" class="nav-link <?= ($current_page == 'profile_setting.php') ? 'active' : '' ?>">
-                        <i class="bi bi-person-fill-gear"></i><span>Profile Settings</span>
-                    </a>
-                </li>
             </ul>
         </div>
     </div>
