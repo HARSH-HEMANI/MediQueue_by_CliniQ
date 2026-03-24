@@ -78,8 +78,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <div class="user-profile">
                 <img src="https://i.pravatar.cc/150?u=rec" alt="Receptionist">
                 <div class="user-info">
-                    <span class="name">Receptionist</span>
-                    <span class="tag">#rec-789</span>
+                    <span class="name"><?php echo isset($_SESSION['receptionist_name']) ? htmlspecialchars($_SESSION['receptionist_name']) : 'Receptionist'; ?></span>
+                    <span class="tag">#REC-<?php echo isset($_SESSION['receptionist_id']) ? str_pad($_SESSION['receptionist_id'], 4, '0', STR_PAD_LEFT) : '0000'; ?></span>
                 </div>
             </div>
             <a href="../reception/logout.php" class="text-danger fs-5"
