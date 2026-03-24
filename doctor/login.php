@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,17 +14,16 @@
 
 <body>
 
-    <!-- FIX: Replaced insecure cookie-based flash messages with GET parameter -->
-    <?php if (isset($_GET['error'])): ?>
+    <?php if (isset($_SESSION['login_error'])): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Error:</strong> Invalid email or password.
+            <strong>Error:</strong> <?php echo htmlspecialchars($_SESSION['login_error']); unset($_SESSION['login_error']); ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
 
-    <?php if (isset($_GET['success'])): ?>
+    <?php if (isset($_GET['success']) || isset($_SESSION['login_success'])): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Success!</strong> Registration successful. Please log in.
+            <strong>Success!</strong> <?php echo isset($_SESSION['login_success']) ? htmlspecialchars($_SESSION['login_success']) : 'Registration successful. Please log in.'; unset($_SESSION['login_success']); ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
