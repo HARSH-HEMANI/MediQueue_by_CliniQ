@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,9 +26,17 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6 col-md-8">
                     <div class="feature-card">
+
+                        <?php if (isset($_SESSION['reg_error'])): ?>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Error:</strong> <?php echo htmlspecialchars($_SESSION['reg_error']); unset($_SESSION['reg_error']); ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        <?php endif; ?>
+
                         <h5 class="text-center mb-4">Register</h5>
 
-                        <form id="doctorRegisterForm" method="post">
+                        <form id="doctorRegisterForm" method="post" action="doctor-register-action.php">
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -76,6 +85,31 @@
                                         data-max="50"
                                         placeholder="Cardiologist">
                                     <small id="specialization_error"></small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Qualification</label>
+                                    <input type="text"
+                                        name="qualification"
+                                        class="form-control"
+                                        data-validation="required|min|max"
+                                        data-min="2"
+                                        data-max="50"
+                                        placeholder="MBBS, MD">
+                                    <small id="qualification_error"></small>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Years of Experience</label>
+                                    <input type="number"
+                                        name="experience_years"
+                                        class="form-control"
+                                        data-validation="required"
+                                        min="0"
+                                        placeholder="e.g. 5">
+                                    <small id="experience_years_error"></small>
                                 </div>
                             </div>
 
