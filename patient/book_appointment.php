@@ -15,7 +15,7 @@ ob_start();
         <!-- LEFT -->
         <div class="col-xl-8 col-lg-7">
             <div class="p-card">
-
+                <form action="book_appointment_action.php" method="POST" id="bookingForm">
                 <?php
                 include_once '../db.php';
                 // Fetch distinct specializations
@@ -23,7 +23,7 @@ ob_start();
                 $spec_res = mysqli_query($con, $spec_query);
                 
                 // Fetch all active doctors to pass to JS
-                $doc_query = "SELECT doctor_id, full_name, specialization, consultation_fee FROM doctors WHERE is_active = 1";
+                $doc_query = "SELECT doctor_id, clinic_id, full_name, specialization, consultation_fee FROM doctors WHERE is_active = 1";
                 $doc_res = mysqli_query($con, $doc_query);
                 $all_doctors = [];
                 while ($rd = mysqli_fetch_assoc($doc_res)) {
@@ -45,16 +45,20 @@ ob_start();
 
                 <span class="section-label">Select Doctor</span>
                 <div class="mb-4">
-                    <select id="doctorSelect" class="form-select rounded-3" disabled>
+                    <select id="doctorSelect" name="doctor_id" class="form-select rounded-3" disabled required>
                         <option value="">-- First Select Specialization --</option>
                     </select>
                 </div>
+                
+                <!-- Hidden inputs for clinic ID and time -->
+                <input type="hidden" name="clinic_id" id="hiddenClinicId">
+                <input type="hidden" name="appointment_time" id="hiddenTime">
 
                 <span class="section-label">Select Date</span>
-                <input type="date" id="appointmentDate" name="appointmentDate"
+                <input type="date" id="appointmentDate" name="appointment_date"
                     class="form-control rounded-3 mb-1"
                     style="max-width:260px;"
-                    data-validation="required">
+                    data-validation="required" required>
                 <small id="appointmentDate_error" class="text-danger d-block mb-4"></small>
 
                 <span class="section-label">Select Time Slot</span>
@@ -69,28 +73,44 @@ ob_start();
                     <?php endforeach; ?>
                 </div>
 
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <span class="section-label">Appointment Type</span>
+                        <select name="appointment_type" class="form-select rounded-3" required>
+                            <option value="New">New Consultation</option>
+                            <option value="Follow Up">Follow Up</option>
+                            <option value="Emergency">Emergency</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="section-label">Reason for Visit</span>
+                        <textarea name="visit_reason" class="form-control rounded-3" rows="1" placeholder="Briefly describe your symptoms" required></textarea>
+                    </div>
+                </div>
+
                 <span class="section-label">Payment Method</span>
                 <div class="row g-3 mb-4">
                     <div class="col-md-4">
                         <div class="payment-card active-payment">
-                            <i class="bi bi-cash-stack me-2"></i>Cash
+                            <i class="bi bi-cash-stack me-2"></i>Pay at Clinic
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="payment-card">
+                        <div class="payment-card" style="opacity:0.5; cursor:not-allowed;" title="Coming Soon">
                             <i class="bi bi-phone me-2"></i>UPI
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="payment-card">
+                        <div class="payment-card" style="opacity:0.5; cursor:not-allowed;" title="Coming Soon">
                             <i class="bi bi-credit-card me-2"></i>Card
                         </div>
                     </div>
                 </div>
 
-                <button id="confirmBtn" class="btn-confirm" disabled>
+                <button type="submit" id="confirmBtn" class="btn-confirm" disabled>
                     <i class="bi bi-calendar-check me-2"></i>Confirm Appointment
                 </button>
+                </form>
 
             </div>
         </div>
@@ -155,6 +175,7 @@ ob_start();
         docSelect.innerHTML = '<option value="">-- Select Doctor --</option>';
         docSelect.disabled = true;
         selectedDoctorId = null;
+        document.getElementById("hiddenClinicId").value = "";
         
         // Reset summary info
         document.getElementById("summaryDept").innerText = spec || '--';
@@ -168,9 +189,17 @@ ob_start();
             
             if (filteredDoctors.length > 0) {
                 docSelect.disabled = false;
+                
+                // Add default
+                const defaultOpt = document.createElement('option');
+                defaultOpt.value = "";
+                defaultOpt.textContent = "-- Select Doctor --";
+                docSelect.appendChild(defaultOpt);
+                
                 filteredDoctors.forEach(doc => {
                     const opt = document.createElement('option');
                     opt.value = doc.doctor_id;
+                    opt.dataset.clinic = doc.clinic_id;
                     opt.textContent = doc.full_name + ' (₹' + doc.consultation_fee + ')';
                     docSelect.appendChild(opt);
                 });
@@ -187,6 +216,9 @@ ob_start();
         selectedDoctorId = docId;
         
         if (docId) {
+            const selectedOpt = this.options[this.selectedIndex];
+            document.getElementById("hiddenClinicId").value = selectedOpt.dataset.clinic;
+            
             const doc = allDoctors.find(d => d.doctor_id == docId);
             const fee = parseInt(doc.consultation_fee);
             
@@ -194,6 +226,7 @@ ob_start();
             document.getElementById("summaryFee").innerText = fee;
             document.getElementById("summaryTotal").innerText = fee + 20; // 20 is platform fee
         } else {
+            document.getElementById("hiddenClinicId").value = "";
             document.getElementById("summaryDoctor").innerText = '--';
             document.getElementById("summaryFee").innerText = '0';
             document.getElementById("summaryTotal").innerText = '0';
@@ -214,6 +247,7 @@ ob_start();
             document.querySelectorAll(".slot").forEach(s => s.classList.remove("active-slot"));
             this.classList.add("active-slot");
             selectedTime = this.innerText;
+            document.getElementById("hiddenTime").value = selectedTime;
             document.getElementById("summaryTime").innerText = selectedTime;
             validateForm();
         });
@@ -221,6 +255,7 @@ ob_start();
 
     // Payment
     document.querySelectorAll(".payment-card").forEach(card => {
+        if(card.style.opacity == "0.5") return; // disable coming soon cards
         card.addEventListener("click", function() {
             document.querySelectorAll(".payment-card").forEach(c => c.classList.remove("active-payment"));
             this.classList.add("active-payment");
@@ -230,10 +265,19 @@ ob_start();
     function validateForm() {
         document.getElementById("confirmBtn").disabled = !(selectedDoctorId && selectedDate && selectedTime);
     }
-
-    document.getElementById("confirmBtn").addEventListener("click", function() {
+    
+    // Check for success session flag
+    <?php if(isset($_SESSION['booking_success'])): ?>
+    document.addEventListener("DOMContentLoaded", function() {
         new bootstrap.Modal(document.getElementById("successModal")).show();
     });
+    <?php unset($_SESSION['booking_success']); endif; ?>
+    
+    <?php if(isset($_SESSION['booking_error'])): ?>
+    document.addEventListener("DOMContentLoaded", function() {
+        alert("Error: <?php echo $_SESSION['booking_error']; ?>");
+    });
+    <?php unset($_SESSION['booking_error']); endif; ?>
 </script>
 
 <?php $content = ob_get_clean();
