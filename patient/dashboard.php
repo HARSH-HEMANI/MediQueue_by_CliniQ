@@ -33,12 +33,12 @@ ob_start();
                     <i class="bi bi-chevron-down text-muted" style="font-size:0.7rem;"></i>
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2">
-                    <li><a class="dropdown-item rounded-2 py-2" href="profile_setting.php"><i class="bi bi-person me-2"></i>My Profile</a></li>
-                    <li><a class="dropdown-item rounded-2 py-2" href="profile_setting.php"><i class="bi bi-gear me-2"></i>Settings</a></li>
+                    <li><a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="profile_setting.php"><i class="bi bi-person"></i>My Profile</a></li>
+                    <li><a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="profile_setting.php"><i class="bi bi-gear"></i>Settings</a></li>
                     <li>
                         <hr class="dropdown-divider my-1">
                     </li>
-                    <li><a class="dropdown-item rounded-2 py-2 text-danger" href="logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                    <li><a class="dropdown-item rounded-2 py-2 text-danger d-flex align-items-center gap-2" href="logout.php"><i class="bi bi-box-arrow-right"></i>Logout</a></li>
                 </ul>
             </div>
         </div>
