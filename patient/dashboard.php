@@ -1,4 +1,47 @@
 <?php
+session_start();
+require_once '../db.php';
+
+if (!isset($_SESSION['patient_id'])) {
+    header("Location: ../login.php");
+    exit();
+}
+$patient_id = $_SESSION['patient_id'];
+
+// Get Patient Info
+$q_pat = mysqli_query($con, "SELECT full_name FROM patients WHERE patient_id = $patient_id");
+$patient_name = ($q_pat && mysqli_num_rows($q_pat) > 0) ? mysqli_fetch_assoc($q_pat)['full_name'] : 'Patient User';
+
+// Get Stats
+$q_total = mysqli_query($con, "SELECT COUNT(*) as c FROM appointments WHERE patient_id = $patient_id AND status = 'Completed'");
+$total_visits = ($q_total) ? mysqli_fetch_assoc($q_total)['c'] : 0;
+
+$q_upc = mysqli_query($con, "SELECT COUNT(*) as c FROM appointments WHERE patient_id = $patient_id AND status IN ('Pending', 'Confirmed') AND appointment_date >= CURDATE()");
+$upcoming_count = ($q_upc) ? mysqli_fetch_assoc($q_upc)['c'] : 0;
+
+$rx_count = 0;
+$q_tb = mysqli_query($con, "SHOW TABLES LIKE 'prescriptions'");
+if($q_tb && mysqli_num_rows($q_tb) > 0) {
+    $q_rx = mysqli_query($con, "SELECT COUNT(*) as c FROM prescriptions p JOIN appointments a ON p.appointment_id = a.appointment_id WHERE a.patient_id = $patient_id");
+    if($q_rx) { $rx_count = mysqli_fetch_assoc($q_rx)['c']; }
+}
+
+$q_next = mysqli_query($con, "SELECT a.*, d.full_name as doctor_name, d.specialization, c.clinic_name 
+                              FROM appointments a 
+                              LEFT JOIN doctors d ON a.doctor_id = d.doctor_id 
+                              LEFT JOIN clinics c ON a.clinic_id = c.clinic_id 
+                              WHERE a.patient_id = $patient_id 
+                              AND a.status IN ('Pending', 'Confirmed') 
+                              AND a.appointment_date >= CURDATE() 
+                              ORDER BY a.appointment_date ASC, a.appointment_time ASC LIMIT 1");
+$next_appt = ($q_next && mysqli_num_rows($q_next) > 0) ? mysqli_fetch_assoc($q_next) : null;
+
+$q_hist = mysqli_query($con, "SELECT a.*, d.full_name as doctor_name, d.specialization 
+                              FROM appointments a 
+                              LEFT JOIN doctors d ON a.doctor_id = d.doctor_id 
+                              WHERE a.patient_id = $patient_id 
+                              ORDER BY a.appointment_id DESC LIMIT 4");
+
 $content_page = 'Patient Dashboard | MediQueue';
 ob_start();
 ?>
@@ -9,7 +52,7 @@ ob_start();
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
             <small class="text-uppercase fw-semibold text-brand" style="font-size:0.76rem;letter-spacing:1px;">Welcome back</small>
-            <h3 class="fw-bold mb-0 mt-1">John Doe <span class="text-brand">👋</span></h3>
+            <h3 class="fw-bold mb-0 mt-1"><?php echo htmlspecialchars($patient_name); ?> <span class="text-brand">👋</span></h3>
         </div>
         <div class="d-flex align-items-center gap-2 flex-wrap">
             <input type="text" id="dashboardSearch" class="form-control rounded-pill"
@@ -18,18 +61,21 @@ ob_start();
             <div class="dropdown">
                 <button class="notif-btn" data-bs-toggle="dropdown">
                     <i class="bi bi-bell"></i>
-                    <span class="notif-dot"></span>
+                    <?php if($upcoming_count > 0): ?><span class="notif-dot"></span><?php endif; ?>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2">
-                    <li><a class="dropdown-item rounded-2 py-2"><i class="bi bi-check-circle text-success me-2"></i>Appointment Confirmed</a></li>
-                    <li><a class="dropdown-item rounded-2 py-2"><i class="bi bi-file-earmark-text text-brand me-2"></i>New Prescription Added</a></li>
+                    <?php if($upcoming_count > 0): ?>
+                    <li><a class="dropdown-item rounded-2 py-2"><i class="bi bi-check-circle text-success me-2"></i>You have upcoming appointments!</a></li>
+                    <?php else: ?>
+                    <li><a class="dropdown-item rounded-2 py-2 text-muted">No new notifications</a></li>
+                    <?php endif; ?>
                 </ul>
             </div>
 
             <div class="dropdown">
                 <div class="user-chip" data-bs-toggle="dropdown">
-                    <img src="https://i.pravatar.cc/40" alt="Profile">
-                    <span class="fw-semibold" style="font-size:0.87rem;">John Doe</span>
+                    <img src="https://i.pravatar.cc/40?u=patient<?php echo $patient_id; ?>" alt="Profile">
+                    <span class="fw-semibold" style="font-size:0.87rem;"><?php echo htmlspecialchars($patient_name); ?></span>
                     <i class="bi bi-chevron-down text-muted" style="font-size:0.7rem;"></i>
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2">
@@ -52,18 +98,24 @@ ob_start();
             <!-- Upcoming Appointment -->
             <div class="upcoming-appt mb-4">
                 <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                    <?php if($next_appt): ?>
                     <div>
                         <span class="section-label">Next Appointment</span>
-                        <p class="fw-bold fs-5 mb-1">Dr. Sarah Wilson</p>
-                        <p class="text-muted mb-1" style="font-size:0.85rem;"><i class="bi bi-heart-pulse me-1 text-brand"></i>Cardiologist &nbsp;·&nbsp; CityCare Hospital</p>
-                        <p class="text-muted mb-0" style="font-size:0.85rem;"><i class="bi bi-calendar3 me-1"></i>20 Feb 2026 &nbsp;·&nbsp; <i class="bi bi-clock me-1"></i>10:30 AM</p>
+                        <p class="fw-bold fs-5 mb-1">Dr. <?php echo htmlspecialchars($next_appt['doctor_name']); ?></p>
+                        <p class="text-muted mb-1" style="font-size:0.85rem;"><i class="bi bi-heart-pulse me-1 text-brand"></i><?php echo htmlspecialchars($next_appt['specialization']); ?> &nbsp;·&nbsp; <?php echo htmlspecialchars($next_appt['clinic_name'] ?? 'Clinic'); ?></p>
+                        <p class="text-muted mb-0" style="font-size:0.85rem;"><i class="bi bi-calendar3 me-1"></i><?php echo date('d M Y', strtotime($next_appt['appointment_date'])); ?> &nbsp;·&nbsp; <i class="bi bi-clock me-1"></i><?php echo htmlspecialchars($next_appt['appointment_time']); ?></p>
                     </div>
                     <div class="d-flex flex-column align-items-end gap-2">
-                        <span class="badge-soft-success">Confirmed</span>
-                        <button class="btn btn-brand btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#appointmentModal">
-                            View Details
-                        </button>
+                        <span class="<?php echo ($next_appt['status']=='Confirmed') ? 'badge-soft-success' : 'badge-soft-warning'; ?>"><?php echo htmlspecialchars($next_appt['status']); ?></span>
+                        <a href="my_appointment.php" class="btn btn-brand btn-sm mt-1">View Details</a>
                     </div>
+                    <?php else: ?>
+                    <div class="w-100 text-center py-3">
+                        <span class="section-label d-block text-center mb-2">Next Appointment</span>
+                        <p class="text-muted">You have no upcoming appointments.</p>
+                        <a href="book_appointment.php" class="btn btn-brand btn-sm mt-2">Book Now</a>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -85,20 +137,26 @@ ob_start();
                             </tr>
                         </thead>
                         <tbody>
+                            <?php if($q_hist && mysqli_num_rows($q_hist) > 0): while($hist = mysqli_fetch_assoc($q_hist)): ?>
                             <tr>
-                                <td>10 Jan 2026</td>
-                                <td><strong>Dr. Smith</strong></td>
-                                <td>Dental</td>
-                                <td><span class="badge-soft-success">Completed</span></td>
-                                <td><button class="btn btn-outline-secondary btn-sm rounded-pill view-history">View</button></td>
+                                <td><?php echo date('d M Y', strtotime($hist['appointment_date'])); ?></td>
+                                <td><strong>Dr. <?php echo htmlspecialchars($hist['doctor_name'] ?? 'Unknown'); ?></strong></td>
+                                <td><?php echo htmlspecialchars($hist['specialization'] ?? ''); ?></td>
+                                <td>
+                                    <?php
+                                    if ($hist['status'] == 'Completed') echo '<span class="badge-soft-success">Completed</span>';
+                                    elseif ($hist['status'] == 'Cancelled') echo '<span class="badge bg-danger">Cancelled</span>';
+                                    elseif ($hist['status'] == 'Confirmed') echo '<span class="badge-soft-success">Confirmed</span>';
+                                    else echo '<span class="badge-soft-warning">'.$hist['status'].'</span>';
+                                    ?>
+                                </td>
+                                <td><a href="my_appointment.php" class="btn btn-outline-secondary btn-sm rounded-pill">View</a></td>
                             </tr>
+                            <?php endwhile; else: ?>
                             <tr>
-                                <td>22 Dec 2025</td>
-                                <td><strong>Dr. Ray</strong></td>
-                                <td>Orthopedic</td>
-                                <td><span class="badge-soft-warning">Pending</span></td>
-                                <td><button class="btn btn-outline-secondary btn-sm rounded-pill view-history">View</button></td>
+                                <td colspan="5" class="text-center py-3 text-muted">No appointment history found.</td>
                             </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -115,22 +173,22 @@ ob_start();
                 <div class="row g-2">
                     <div class="col-6">
                         <div class="stat-box">
-                            <h4>12</h4><small>Total Visits</small>
+                            <h4><?php echo $total_visits; ?></h4><small>Total Visits</small>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-box">
-                            <h4>2</h4><small>Upcoming</small>
+                            <h4><?php echo $upcoming_count; ?></h4><small>Upcoming</small>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-box">
-                            <h4>8</h4><small>Prescriptions</small>
+                            <h4><?php echo $rx_count; ?></h4><small>Prescriptions</small>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-box">
-                            <h4>1</h4><small>Pending Pay</small>
+                            <h4>0</h4><small>Pending Pay</small>
                         </div>
                     </div>
                 </div>
@@ -150,33 +208,10 @@ ob_start();
             <!-- Reminder -->
             <div class="reminder-card">
                 <h5><i class="bi bi-bell-fill me-2"></i>Reminder</h5>
-                <p>Your annual heart checkup is due next week. Don't miss it!</p>
-                <a href="book_appointment.php" class="btn btn-light btn-sm rounded-pill fw-semibold" style="color:var(--brand);">Schedule Now</a>
+                <p>Complete your profile settings to enjoy seamless appointment booking and medical history tracking.</p>
+                <a href="profile_setting.php" class="btn btn-light btn-sm rounded-pill fw-semibold" style="color:var(--brand);">Update Profile</a>
             </div>
 
-        </div>
-    </div>
-</div>
-
-<!-- Appointment Modal -->
-<div class="modal fade" id="appointmentModal">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold">Appointment Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Doctor:</strong> Dr. Sarah Wilson</p>
-                <p><strong>Department:</strong> Cardiology</p>
-                <p><strong>Date:</strong> 20 Feb 2026</p>
-                <p><strong>Time:</strong> 10:30 AM</p>
-                <p><strong>Location:</strong> CityCare Hospital</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                <a href="book_appointment.php" class="btn btn-brand">Reschedule</a>
-            </div>
         </div>
     </div>
 </div>
@@ -187,9 +222,6 @@ ob_start();
         document.querySelectorAll("#historyTable tbody tr").forEach(row => {
             row.style.display = row.innerText.toLowerCase().includes(val) ? "" : "none";
         });
-    });
-    document.querySelectorAll(".view-history").forEach(btn => {
-        btn.addEventListener("click", () => new bootstrap.Modal(document.getElementById("appointmentModal")).show());
     });
 </script>
 
