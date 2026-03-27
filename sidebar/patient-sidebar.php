@@ -1,5 +1,20 @@
 <?php
 $current_page = basename($_SERVER['PHP_SELF']);
+require_once __DIR__ . '/../db.php';
+$patient_id = $_SESSION['patient_id'] ?? 0;
+
+if ($patient_id > 0) {
+    $q_pat = mysqli_query($con, "SELECT full_name FROM patients WHERE patient_id = $patient_id");
+    if($q_pat && mysqli_num_rows($q_pat) > 0) {
+        $pdata = mysqli_fetch_assoc($q_pat);
+        $sidebar_patient_name = $pdata['full_name'];
+    } else {
+        $sidebar_patient_name = 'Patient User';
+    }
+} else {
+    $sidebar_patient_name = 'Patient User';
+}
+$sidebar_display_id = str_pad($patient_id, 4, '0', STR_PAD_LEFT);
 ?>
 
 <!-- Mobile Header -->
@@ -81,10 +96,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="menu-label text-uppercase mb-2">USER ACCOUNT</div>
         <div class="d-flex justify-content-between align-items-center">
             <div class="user-profile">
-                <img src="https://i.pravatar.cc/150?u=a04258" alt="Patient">
+                <!-- Use actual generic UI faces avatar with deterministic ID based seed -->
+                <img src="https://i.pravatar.cc/150?u=patient<?php echo $patient_id; ?>" alt="Patient">
                 <div class="user-info">
-                    <span class="name">Patient User</span>
-                    <span class="tag">#patient-1234</span>
+                    <span class="name"><?php echo htmlspecialchars($sidebar_patient_name); ?></span>
+                    <span class="tag">#P-<?php echo $sidebar_display_id; ?></span>
                 </div>
             </div>
             <a href="../patient/logout.php" class="text-danger fs-5"
