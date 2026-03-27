@@ -1,4 +1,20 @@
 <?php
+session_start();
+require_once '../db.php';
+
+if (!isset($_SESSION['patient_id'])) {
+    header("Location: ../login.php");
+    exit();
+}
+$patient_id = $_SESSION['patient_id'];
+
+$q_appts = mysqli_query($con, "SELECT a.*, d.full_name as doctor_name, d.specialization, c.clinic_name, d.consultation_fee 
+                               FROM appointments a 
+                               LEFT JOIN doctors d ON a.doctor_id = d.doctor_id 
+                               LEFT JOIN clinics c ON a.clinic_id = c.clinic_id 
+                               WHERE a.patient_id = $patient_id 
+                               ORDER BY a.appointment_date DESC, a.appointment_time DESC");
+
 $content_page = 'My Appointments | MediQueue';
 ob_start();
 ?>
@@ -27,63 +43,68 @@ ob_start();
     <!-- List -->
     <div id="appointmentList">
 
-        <div class="appt-card upcoming appointment-card p-4 mb-3"
-            data-status="upcoming" data-doctor="Dr. Sarah Wilson"
-            data-department="Cardiology" data-hospital="CityCare Hospital"
-            data-date="22 Feb 2026" data-time="10:30 AM"
-            data-booking="MQ-1023" data-fee="₹520">
+        <?php if($q_appts && mysqli_num_rows($q_appts) > 0): while($appt = mysqli_fetch_assoc($q_appts)): 
+            $status_class = '';
+            $status_filter = strtolower($appt['status']);
+            $badge = '';
+            $icon_color = 'text-brand';
+            
+            if ($appt['status'] == 'Confirmed' || $appt['status'] == 'Pending') {
+                $status_class = 'upcoming';
+                $status_filter = 'upcoming';
+                if($appt['status'] == 'Confirmed') $badge = '<span class="badge-soft-success">Confirmed</span>';
+                else $badge = '<span class="badge-soft-warning">Pending</span>';
+            } elseif ($appt['status'] == 'Completed') {
+                $status_class = 'completed';
+                $status_filter = 'completed';
+                $badge = '<span class="badge bg-secondary">Completed</span>';
+                $icon_color = 'text-success';
+            } elseif ($appt['status'] == 'Cancelled') {
+                $status_class = 'cancelled';
+                $status_filter = 'cancelled';
+                $badge = '<span class="badge-soft-danger">Cancelled</span>';
+                $icon_color = 'text-danger';
+            }
+            
+            // Total fee calculation (Consultation + 20 Platform fee)
+            $total_fee = (int)$appt['consultation_fee'] + 20;
+        ?>
+
+        <div class="appt-card <?php echo $status_class; ?> appointment-card p-4 mb-3"
+            data-status="<?php echo $status_filter; ?>" 
+            data-doctor="Dr. <?php echo htmlspecialchars($appt['doctor_name']); ?>"
+            data-department="<?php echo htmlspecialchars($appt['specialization'] ?? ''); ?>" 
+            data-hospital="<?php echo htmlspecialchars($appt['clinic_name'] ?? 'Clinic'); ?>"
+            data-date="<?php echo date('d M Y', strtotime($appt['appointment_date'])); ?>" 
+            data-time="<?php echo htmlspecialchars($appt['appointment_time']); ?>"
+            data-booking="MQ-<?php echo str_pad($appt['appointment_id'], 4, '0', STR_PAD_LEFT); ?>" 
+            data-fee="₹<?php echo $total_fee; ?>"
+            data-id="<?php echo $appt['appointment_id']; ?>">
+            
             <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
                 <div>
-                    <p class="fw-bold fs-6 mb-1">Dr. Sarah Wilson</p>
-                    <p class="text-muted mb-1" style="font-size:0.82rem;"><i class="bi bi-heart-pulse me-1 text-brand"></i>Cardiology &nbsp;·&nbsp; CityCare Hospital</p>
-                    <p class="text-muted mb-1" style="font-size:0.84rem;"><i class="bi bi-calendar3 me-1"></i>22 Feb 2026 &nbsp;·&nbsp; 10:30 AM</p>
-                    <p class="text-muted mb-0" style="font-size:0.82rem;"><i class="bi bi-hash me-1"></i>MQ-1023</p>
+                    <p class="fw-bold fs-6 mb-1">Dr. <?php echo htmlspecialchars($appt['doctor_name']); ?></p>
+                    <p class="text-muted mb-1" style="font-size:0.82rem;"><i class="bi bi-heart-pulse me-1 <?php echo $icon_color; ?>"></i><?php echo htmlspecialchars($appt['specialization'] ?? ''); ?> &nbsp;·&nbsp; <?php echo htmlspecialchars($appt['clinic_name'] ?? 'Clinic'); ?></p>
+                    <p class="text-muted mb-1" style="font-size:0.84rem;"><i class="bi bi-calendar3 me-1"></i><?php echo date('d M Y', strtotime($appt['appointment_date'])); ?> &nbsp;·&nbsp; <?php echo htmlspecialchars($appt['appointment_time']); ?></p>
+                    <p class="text-muted mb-0" style="font-size:0.82rem;"><i class="bi bi-hash me-1"></i>MQ-<?php echo str_pad($appt['appointment_id'], 4, '0', STR_PAD_LEFT); ?></p>
                 </div>
-                <span class="badge-soft-success">Confirmed</span>
+                <div class="status-badge-container"><?php echo $badge; ?></div>
             </div>
             <div class="d-flex gap-2 mt-3">
-                <button class="btn btn-brand btn-sm view-btn"><i class="bi bi-eye me-1"></i>View</button>
-                <button class="btn btn-outline-danger btn-sm cancel-btn">Cancel</button>
+                <button class="btn btn-outline-secondary btn-sm view-btn"><i class="bi bi-eye me-1"></i>View</button>
+                <?php if($status_class == 'upcoming'): ?>
+                <button class="btn btn-outline-danger btn-sm cancel-btn" data-id="<?php echo $appt['appointment_id']; ?>">Cancel</button>
+                <?php endif; ?>
             </div>
         </div>
 
-        <div class="appt-card completed appointment-card p-4 mb-3"
-            data-status="completed" data-doctor="Dr. Michael Ray"
-            data-department="Orthopedics" data-hospital="HealthFirst Clinic"
-            data-date="10 Feb 2026" data-time="12:00 PM"
-            data-booking="MQ-1011" data-fee="₹450">
-            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
-                <div>
-                    <p class="fw-bold fs-6 mb-1">Dr. Michael Ray</p>
-                    <p class="text-muted mb-1" style="font-size:0.82rem;"><i class="bi bi-bandaid me-1" style="color:#22c55e"></i>Orthopedics &nbsp;·&nbsp; HealthFirst Clinic</p>
-                    <p class="text-muted mb-1" style="font-size:0.84rem;"><i class="bi bi-calendar3 me-1"></i>10 Feb 2026 &nbsp;·&nbsp; 12:00 PM</p>
-                    <p class="text-muted mb-0" style="font-size:0.82rem;"><i class="bi bi-hash me-1"></i>MQ-1011</p>
-                </div>
-                <span class="badge bg-secondary">Completed</span>
-            </div>
-            <div class="mt-3">
-                <button class="btn btn-outline-secondary btn-sm view-btn"><i class="bi bi-eye me-1"></i>View</button>
-            </div>
+        <?php endwhile; else: ?>
+        <div class="text-center py-5">
+            <i class="bi bi-calendar-x text-muted mb-3" style="font-size:3rem;"></i>
+            <h5 class="text-muted">No appointments found.</h5>
+            <a href="book_appointment.php" class="btn btn-brand mt-2">Book Now</a>
         </div>
-
-        <div class="appt-card cancelled appointment-card p-4 mb-3"
-            data-status="cancelled" data-doctor="Dr. Emily Stone"
-            data-department="Dermatology" data-hospital="SkinCare Center"
-            data-date="05 Feb 2026" data-time="09:00 AM"
-            data-booking="MQ-1004" data-fee="₹350">
-            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
-                <div>
-                    <p class="fw-bold fs-6 mb-1">Dr. Emily Stone</p>
-                    <p class="text-muted mb-1" style="font-size:0.82rem;"><i class="bi bi-droplet me-1" style="color:#ef4444"></i>Dermatology &nbsp;·&nbsp; SkinCare Center</p>
-                    <p class="text-muted mb-1" style="font-size:0.84rem;"><i class="bi bi-calendar3 me-1"></i>05 Feb 2026 &nbsp;·&nbsp; 09:00 AM</p>
-                    <p class="text-muted mb-0" style="font-size:0.82rem;"><i class="bi bi-hash me-1"></i>MQ-1004</p>
-                </div>
-                <span class="badge-soft-danger">Cancelled</span>
-            </div>
-            <div class="mt-3">
-                <button class="btn btn-outline-secondary btn-sm view-btn"><i class="bi bi-eye me-1"></i>View</button>
-            </div>
-        </div>
+        <?php endif; ?>
 
     </div>
 </div>
@@ -103,7 +124,7 @@ ob_start();
                 <p><strong>Date:</strong> <span id="modalDate"></span></p>
                 <p><strong>Time:</strong> <span id="modalTime"></span></p>
                 <p><strong>Booking ID:</strong> <span id="modalBooking"></span></p>
-                <p><strong>Consultation Fee:</strong> <span id="modalFee"></span></p>
+                <p><strong>Total Fee:</strong> <span id="modalFee"></span></p>
                 <p><strong>Status:</strong> <span id="modalStatus" class="text-capitalize"></span></p>
             </div>
             <div class="modal-footer">
@@ -141,18 +162,34 @@ ob_start();
     document.getElementById("searchInput").addEventListener("keyup", function() {
         const val = this.value.toLowerCase();
         document.querySelectorAll(".appointment-card").forEach(c => {
-            c.style.display = c.innerText.toLowerCase().includes(val) ? "block" : "none";
+            const textContent = c.innerText.toLowerCase();
+            c.style.display = textContent.includes(val) ? "block" : "none";
         });
     });
     document.querySelectorAll(".cancel-btn").forEach(btn => {
         btn.addEventListener("click", function() {
-            if (confirm("Cancel this appointment?")) {
+            if (confirm("Are you sure you want to cancel this appointment?")) {
+                const appointmentId = this.dataset.id;
                 const c = this.closest(".appointment-card");
-                c.dataset.status = "cancelled";
-                c.classList.remove("upcoming");
-                c.classList.add("cancelled");
-                c.querySelector(".badge-soft-success, .badge-soft-warning").outerHTML = "<span class='badge-soft-danger'>Cancelled</span>";
-                this.remove();
+                
+                fetch('cancel_appointment.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'id=' + appointmentId
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        c.dataset.status = "cancelled";
+                        c.classList.remove("upcoming");
+                        c.classList.add("cancelled");
+                        c.querySelector(".status-badge-container").innerHTML = "<span class='badge-soft-danger'>Cancelled</span>";
+                        this.remove(); // remove cancel button
+                    } else {
+                        alert(data.error || "Failed to cancel appointment.");
+                    }
+                })
+                .catch(err => alert("Error processing request"));
             }
         });
     });
