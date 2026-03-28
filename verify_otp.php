@@ -187,7 +187,7 @@ $name  = $_SESSION['verify_name'] ?? 'User';
         </form>
 
         <p id="timer" style="margin-top:10px; color:#FF5A5F; font-weight:600;">
-            OTP expires in 30 seconds
+            OTP expires in 60 seconds
         </p>
         <p class="resend">Didn't receive the code? <a href="./resend_otp.php">Resend OTP</a></p>
         <p class="logo">Powered by <span>MediQueue</span> by CliniQ</p>
