@@ -186,6 +186,9 @@ $name  = $_SESSION['verify_name'] ?? 'User';
             <button type="submit" class="btn" name="submit">Verify & Activate Account</button>
         </form>
 
+        <p id="timer" style="margin-top:10px; color:#FF5A5F; font-weight:600;">
+            OTP expires in 30 seconds
+        </p>
         <p class="resend">Didn't receive the code? <a href="./resend_otp.php">Resend OTP</a></p>
         <p class="logo">Powered by <span>MediQueue</span> by CliniQ</p>
     </div>
@@ -210,6 +213,28 @@ $name  = $_SESSION['verify_name'] ?? 'User';
         inputs[0].focus();
     </script>
 
+    <script>
+        let timeLeft = 60;
+        const timer = document.getElementById("timer");
+
+        const countdown = setInterval(() => {
+            timeLeft--;
+
+            timer.textContent = "OTP expires in " + timeLeft + " seconds";
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                timer.textContent = "OTP expired!";
+                timer.style.color = "red";
+            }
+        }, 1000);
+
+        const btn = document.querySelector("button");
+
+        if (timeLeft <= 0) {
+            btn.disabled = true;
+        }
+    </script>
 </body>
 
 </html>
