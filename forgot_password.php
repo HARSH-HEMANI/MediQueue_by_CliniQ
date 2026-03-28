@@ -24,7 +24,7 @@
                     Enter your registered email address and we'll send you instructions to reset your password.
                 </p>
 
-                <form action="" method="post" id="forgotPassword">
+                <form action="forgot-password-action.php" method="post" id="forgotPassword">
                     <div class="mb-3">
                         <label>Email Address</label>
                         <input type="text" class="form-control auth-input" placeholder="Enter your email" data-validation="required|email" name="email" id="email">
@@ -32,7 +32,7 @@
                     </div>
 
                     <button type="submit" class="btn auth-btn w-100">
-                        Send Reset Link
+                        Send verification code
                     </button>
                 </form>
 
