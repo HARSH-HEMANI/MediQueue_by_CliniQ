@@ -1,4 +1,63 @@
-<?php include "doctor-auth.php"; ?>
+<?php
+include "doctor-auth.php";
+include "../db.php";
+
+$doctor_id = (int)$_SESSION['doctor_id'];
+$filter_date = $_GET['date'] ?? date('Y-m-d');
+
+// Total Patients
+$totalQ = mysqli_query($con, "SELECT COUNT(*) as total FROM appointments WHERE doctor_id = $doctor_id AND appointment_date = '$filter_date'");
+$totalPatients = mysqli_fetch_assoc($totalQ)['total'] ?? 0;
+
+// Completed Patients
+$compQ = mysqli_query($con, "SELECT COUNT(*) as count FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$filter_date' AND t.status = 'Completed'");
+$completed = mysqli_fetch_assoc($compQ)['count'] ?? 0;
+
+// Pending / Skipped
+$pendQ = mysqli_query($con, "SELECT COUNT(*) as count FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$filter_date' AND t.status IN ('Waiting', 'Skipped', 'In Progress')");
+$pending = mysqli_fetch_assoc($pendQ)['count'] ?? 0;
+
+// Avg Consultation Time
+$avgTimeQ = mysqli_query($con, "SELECT AVG(TIMESTAMPDIFF(MINUTE, called_at, completed_at)) as avg_min 
+                                FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id 
+                                WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$filter_date' AND t.status = 'Completed'");
+$avgData = mysqli_fetch_assoc($avgTimeQ);
+$avgTime = $avgData['avg_min'] ? round($avgData['avg_min']) : 0;
+
+// Appointment Type Breakdown
+$typeQ = mysqli_query($con, "SELECT appointment_type, COUNT(*) as count FROM appointments WHERE doctor_id = $doctor_id AND appointment_date = '$filter_date' GROUP BY appointment_type");
+$typeData = ['New' => 0, 'Follow Up' => 0, 'Emergency' => 0];
+while ($row = mysqli_fetch_assoc($typeQ)) {
+    if ($row['appointment_type'] === 'Follow-up' || $row['appointment_type'] === 'Follow Up') {
+        $typeData['Follow Up'] = $row['count'];
+    } else if (isset($typeData[$row['appointment_type']])) {
+        $typeData[$row['appointment_type']] = $row['count'];
+    }
+}
+
+// Speed indicator (Fast < 8, Avg 8-15, Slow > 15)
+$speedData = ['fast' => 0, 'average' => 0, 'slow' => 0];
+$timesQ = mysqli_query($con, "SELECT TIMESTAMPDIFF(MINUTE, called_at, completed_at) as duration 
+                              FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id 
+                              WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$filter_date' AND t.status = 'Completed'");
+while ($row = mysqli_fetch_assoc($timesQ)) {
+    $dur = (int)$row['duration'];
+    if ($dur >= 0 && $dur < 8) $speedData['fast']++;
+    elseif ($dur >= 8 && $dur <= 15) $speedData['average']++;
+    elseif ($dur > 15) $speedData['slow']++;
+}
+
+// Peak hours 
+$peakQ = mysqli_query($con, "SELECT HOUR(appointment_time) as h, COUNT(*) as c FROM appointments WHERE doctor_id = $doctor_id AND appointment_date = '$filter_date' GROUP BY HOUR(appointment_time) ORDER BY h");
+$peakChartData = array_fill(9, 9, 0); // 9 AM to 5 PM
+while ($r = mysqli_fetch_assoc($peakQ)) {
+    $h = (int)$r['h'];
+    if ($h >= 9 && $h <= 17) {
+        $peakChartData[$h] = (int)$r['c'];
+    }
+}
+$hoursValues = array_values($peakChartData);
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +81,7 @@
 
         <section class="features-header my-1">
             <!-- FIX: wrapped session output in htmlspecialchars to prevent XSS -->
-            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($_SESSION['doctor_name']); ?></span></h2>
+            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($doc['full_name']); ?></span></h2>
         </section>
 
         <!-- HEADER -->
@@ -37,13 +96,9 @@
                 </button>
             </div>
             <!-- Date Filter -->
-            <div class="d-flex gap-2">
-                <select class="form-select form-select-sm">
-                    <option selected>Today</option>
-                    <option>Yesterday</option>
-                </select>
-                <input type="date" class="form-control form-control-sm">
-            </div>
+            <form class="d-flex gap-2" method="GET" action="analytics.php">
+                <input type="date" name="date" class="form-control form-control-sm" value="<?php echo htmlspecialchars($filter_date); ?>" onchange="this.form.submit();">
+            </form>
         </section>
 
         <!-- KEY METRICS -->
@@ -53,28 +108,28 @@
                 <div class="col-md-3">
                     <div class="dstat-card highlight">
                         <h6>Avg Consultation Time</h6>
-                        <h2>12 min</h2>
+                        <h2><?php echo $avgTime ?: "--"; ?> min</h2>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <div class="dstat-card">
                         <h6>Total Patients</h6>
-                        <h2>38</h2>
+                        <h2><?php echo $totalPatients; ?></h2>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <div class="dstat-card">
                         <h6>Completed</h6>
-                        <h2>31</h2>
+                        <h2><?php echo $completed; ?></h2>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <div class="dstat-card danger">
                         <h6>Pending / Skipped</h6>
-                        <h2>7</h2>
+                        <h2><?php echo $pending; ?></h2>
                     </div>
                 </div>
 
@@ -146,15 +201,15 @@
                     <div class="card-body">
                         <div class="analytics-row">
                             <span>New Patients</span>
-                            <span>14</span>
+                            <span><?php echo $typeData['New']; ?></span>
                         </div>
                         <div class="analytics-row">
                             <span>Follow-ups</span>
-                            <span>18</span>
+                            <span><?php echo $typeData['Follow Up']; ?></span>
                         </div>
                         <div class="analytics-row emergency-visit">
                             <span>Emergency Visits</span>
-                            <span>6</span>
+                            <span><?php echo $typeData['Emergency']; ?></span>
                         </div>
                     </div>
                 </div>
@@ -171,15 +226,15 @@
                     <div class="card-body">
                         <div class="speed-indicator fast">
                             <span>Fast (&lt; 8 min)</span>
-                            <span>10</span>
+                            <span><?php echo $speedData['fast']; ?></span>
                         </div>
                         <div class="speed-indicator average">
                             <span>Average (8–15 min)</span>
-                            <span>17</span>
+                            <span><?php echo $speedData['average']; ?></span>
                         </div>
                         <div class="speed-indicator slow">
                             <span>Slow (&gt; 15 min)</span>
-                            <span>11</span>
+                            <span><?php echo $speedData['slow']; ?></span>
                         </div>
                     </div>
                 </div>
@@ -219,7 +274,7 @@
 
             // Draw white background first, then the chart on top
             var offscreen = document.createElement('canvas');
-            offscreen.width  = canvas.width;
+            offscreen.width = canvas.width;
             offscreen.height = canvas.height;
             var ctx = offscreen.getContext('2d');
             ctx.fillStyle = '#ffffff';
@@ -241,7 +296,9 @@
         function makeOptions(extra) {
             return Object.assign({
                 animation: {
-                    onComplete: function() { snapshotChart(this); }
+                    onComplete: function() {
+                        snapshotChart(this);
+                    }
                 }
             }, extra);
         }
@@ -249,10 +306,10 @@
         new Chart(document.getElementById('peakHoursChart'), {
             type: 'line',
             data: {
-                labels: ['9–10', '10–11', '11–12', '12–1', '1–2', '2–3'],
+                labels: ['9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM'],
                 datasets: [{
                     label: 'Patients',
-                    data: [4, 9, 7, 5, 3, 2],
+                    data: <?php echo json_encode($hoursValues); ?>,
                     borderColor: '#FF5A5F',
                     backgroundColor: 'rgba(255,90,95,0.15)',
                     tension: 0.3,
@@ -260,8 +317,19 @@
                 }]
             },
             options: makeOptions({
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
             })
         });
 
@@ -270,28 +338,47 @@
             data: {
                 labels: ['New', 'Follow-up', 'Emergency'],
                 datasets: [{
-                    data: [14, 18, 6],
+                    data: [<?php echo $typeData['New']; ?>, <?php echo $typeData['Follow Up']; ?>, <?php echo $typeData['Emergency']; ?>],
                     backgroundColor: ['#3b82f6', '#22c55e', '#dc3545']
                 }]
             },
             options: makeOptions({
-                plugins: { legend: { position: 'bottom' } }
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
             })
         });
 
         new Chart(document.getElementById('dailyStatusChart'), {
             type: 'bar',
             data: {
-                labels: ['Today'],
-                datasets: [
-                    { label: 'Completed', data: [31], backgroundColor: '#22c55e' },
-                    { label: 'Pending',   data: [7],  backgroundColor: '#fbbf24' }
+                labels: ['<?php echo date("d M", strtotime($filter_date)); ?>'],
+                datasets: [{
+                        label: 'Completed',
+                        data: [<?php echo $completed; ?>],
+                        backgroundColor: '#22c55e'
+                    },
+                    {
+                        label: 'Pending',
+                        data: [<?php echo $pending; ?>],
+                        backgroundColor: '#fbbf24'
+                    }
                 ]
             },
             options: makeOptions({
                 scales: {
-                    x: { stacked: true },
-                    y: { stacked: true, beginAtZero: true }
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
                 }
             })
         });
@@ -301,13 +388,24 @@
             data: {
                 labels: ['Fast', 'Average', 'Slow'],
                 datasets: [{
-                    data: [10, 17, 11],
+                    data: [<?php echo $speedData['fast']; ?>, <?php echo $speedData['average']; ?>, <?php echo $speedData['slow']; ?>],
                     backgroundColor: ['#16a34a', '#f59e0b', '#dc3545']
                 }]
             },
             options: makeOptions({
-                plugins: { legend: { display: false } },
-                indexAxis: 'y'
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
             })
         });
 
