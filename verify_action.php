@@ -4,7 +4,6 @@ include_once "db.php";
 
 if (isset($_POST['submit'])) {
 
-    // If no email in session, redirect
     if (!isset($_SESSION['verify_email'])) {
         header("Location: ./login.php");
         exit();
@@ -12,7 +11,7 @@ if (isset($_POST['submit'])) {
 
     $email = mysqli_real_escape_string($con, $_SESSION['verify_email']);
 
-    // Combine 6 OTP inputs into one code
+    // Combine OTP
     $otp = trim($_POST['otp1']) . trim($_POST['otp2']) . trim($_POST['otp3']) .
         trim($_POST['otp4']) . trim($_POST['otp5']) . trim($_POST['otp6']);
 
@@ -22,27 +21,29 @@ if (isset($_POST['submit'])) {
         exit();
     }
 
-    // Check OTP matches token in DB for this email
-    $query  = "SELECT patient_id, full_name FROM patients WHERE email = '$email' AND token = '$otp' AND is_active = 0";
-    $result = mysqli_query($con, $query);
+    // Check OTP
+    $query = mysqli_query($con, "SELECT otp, otp_expiry FROM patients WHERE email='$email'");
+    $data = mysqli_fetch_assoc($query);
 
-    if (mysqli_num_rows($result) == 1) {
-        $row = mysqli_fetch_assoc($result);
+    $current_time = date("Y-m-d H:i:s");
 
-        // Activate account and clear token
-        mysqli_query($con, "UPDATE patients SET is_active = 1, token = NULL WHERE email = '$email'");
+    if ($data) {
 
-        // Clear session verify data
-        unset($_SESSION['verify_email']);
-        unset($_SESSION['verify_name']);
+        if ($current_time > $data['otp_expiry']) {
+            $_SESSION['otp_error'] = "OTP expired! Please request a new one.";
+            header("Location: verify_otp.php");
+            exit();
+        }
 
-        // Show success on login page
-        $_SESSION['success'] = "Email verified successfully! You can now login.";
-        header("Location: ./login.php");
-        exit();
-    } else {
-        $_SESSION['otp_error'] = "Invalid OTP. Please check your email and try again.";
-        header("Location: ./verify_otp.php");
-        exit();
+        if ($otp == $data['otp']) {
+
+            $_SESSION['reset_email'] = $email;
+
+            header("Location: new-password.php");
+            exit();
+        }
     }
+
+    $_SESSION['otp_error'] = "Invalid OTP!";
+    header("Location: verify_otp.php");
 }
