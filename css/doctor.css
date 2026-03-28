@@ -529,6 +529,23 @@ input[readonly] {
 }
 
 
+.btn-brand {
+    background-color: var(--brand) !important;
+    border-color: var(--brand) !important;
+    color: #fff !important;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-brand:hover,
+.btn-brand:focus {
+    background-color: var(--brand-dark) !important;
+    border-color: var(--brand-dark) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255, 90, 95, 0.3) !important;
+}
+
 /* ------- DASHBOARD FOOTER ------- */
 
 .dashboard-footer {
