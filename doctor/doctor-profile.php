@@ -6,9 +6,9 @@ $doctor_id = (int) $_SESSION['doctor_id'];
 
 // Fetch doctor + clinic data
 $query = "SELECT d.*, c.clinic_name, c.address AS clinic_address, c.phone AS clinic_phone
-          FROM doctors d
-          LEFT JOIN clinics c ON d.clinic_id = c.clinic_id
-          WHERE d.doctor_id = $doctor_id";
+        FROM doctors d
+        LEFT JOIN clinics c ON d.clinic_id = c.clinic_id
+        WHERE d.doctor_id = $doctor_id";
 $result = mysqli_query($con, $query);
 $doc = mysqli_fetch_assoc($result);
 
@@ -201,23 +201,7 @@ unset($_SESSION['profile_success'], $_SESSION['profile_error']);
                     </div>
                 </div>
 
-                <!-- Profile Status -->
-                <div class="col-lg-6">
-                    <div class="dcard">
-                        <div class="card-header">Profile Status</div>
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                            <span><?php echo $doc['is_active'] ? 'Active' : 'Inactive'; ?></span>
-                            <span class="badge <?php echo $doc['is_active'] ? 'bg-success' : 'bg-secondary'; ?>">
-                                <?php echo $doc['is_active'] ? 'Active' : 'Inactive'; ?>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-            </section>
-
-            <!-- Schedule & Appointment Preferences -->
-            <section class="row g-4 mb-4">
+                <!-- Schedule & Appointment Preferences -->
 
                 <div class="col-lg-6">
                     <div class="dcard">
@@ -235,19 +219,15 @@ unset($_SESSION['profile_success'], $_SESSION['profile_error']);
                                 <input type="time" name="end_time" class="form-control"
                                     value="<?php echo htmlspecialchars($doc['end_time'] ?? ''); ?>">
                             </div>
-
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Break (mins)</label>
                                 <input type="number" name="break_time" class="form-control" min="0"
                                     value="<?php echo (int)($doc['break_time'] ?? 0); ?>">
                             </div>
-
                         </div>
                     </div>
-                </div>
 
-                <div class="col-lg-6">
-                    <div class="dcard">
+                    <div class="dcard mt-4">
                         <div class="card-header">Appointment Preferences</div>
                         <div class="card-body">
 
@@ -287,12 +267,36 @@ unset($_SESSION['profile_success'], $_SESSION['profile_error']);
 
                         </div>
                     </div>
-                </div>
 
+                </div>
+            </section>
+
+            <section class="row g-4 mb-4">
+
+                <!-- Profile Status -->
+                <div class="col-lg-6">
+                    <div class="dcard">
+                        <div class="card-header">Profile Status</div>
+                        <div class="card-body d-flex justify-content-between align-items-center">
+
+                            <span id="statusText">
+                                <?php echo $doc['is_active'] ? 'Active' : 'Inactive'; ?>
+                            </span>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"
+                                    type="checkbox"
+                                    id="statusToggle"
+                                    <?php echo $doc['is_active'] ? 'checked' : ''; ?>>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- Save -->
-            <section class="mb-5 text-end">
+            <section class="mb-5 text-center">
                 <button type="submit" class="btn btn-brand px-4">
                     <i class="bi bi-save"></i> Save Changes
                 </button>
@@ -307,7 +311,28 @@ unset($_SESSION['profile_success'], $_SESSION['profile_error']);
     <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/validation.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#statusToggle').change(function() {
+                let status = $(this).is(':checked') ? 1 : 0;
 
+                $.ajax({
+                    url: 'toggle-status.php',
+                    method: 'POST',
+                    data: {
+                        status: status
+                    },
+                    success: function(response) {
+                        if (status == 1) {
+                            $('#statusText').text('Active');
+                        } else {
+                            $('#statusText').text('Inactive');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
