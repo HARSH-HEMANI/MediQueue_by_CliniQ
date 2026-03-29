@@ -1,112 +1,256 @@
 <?php
 session_start();
-include_once "../db.php";
-include_once "../mailer.php";
+include "../db.php";
 
-// Ensure doctors table has token column
-$col_check = mysqli_query($con, "SHOW COLUMNS FROM doctors LIKE 'token'");
-if (mysqli_num_rows($col_check) == 0) {
-    mysqli_query($con, "ALTER TABLE doctors ADD COLUMN token VARCHAR(10) DEFAULT NULL");
-}
+// Ensure Admin is logged in 
+// if (!isset($_SESSION['admin_id'])) {
+//     header("Location: admin-login.php");
+//     exit();
+// }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+$content_page = 'doctor-management';
+ob_start();
 
-    $full_name      = mysqli_real_escape_string($con, trim($_POST['name']));
-    $email          = mysqli_real_escape_string($con, trim($_POST['email']));
-    $phone          = mysqli_real_escape_string($con, trim($_POST['phone']));
-    $specialization = mysqli_real_escape_string($con, trim($_POST['specialization']));
-    $qualification  = mysqli_real_escape_string($con, trim($_POST['qualification']));
-    $experience     = (int) $_POST['experience_years'];
-    $clinic_name    = mysqli_real_escape_string($con, trim($_POST['clinic']));
-    $password       = $_POST['password'];
-    $confirm        = $_POST['confirm_password'];
+// Fetch all doctors with their clinic names
+$query = "SELECT d.*, c.clinic_name 
+          FROM doctors d 
+          LEFT JOIN clinics c ON d.clinic_id = c.clinic_id 
+          ORDER BY d.doctor_id DESC";
+$doctors_result = mysqli_query($con, $query);
+?>
 
-    // Validation
-    if (empty($full_name) || empty($email) || empty($phone) || empty($specialization) || empty($qualification) || empty($clinic_name) || empty($password)) {
-        $_SESSION['reg_error'] = "All fields are required.";
-        header("Location: register.php");
-        exit();
-    }
+<main class="admin-dashboard" style="margin-top:20px;">
+    <div class="container">
 
-    if ($password !== $confirm) {
-        $_SESSION['reg_error'] = "Passwords do not match.";
-        header("Location: register.php");
-        exit();
-    }
-
-    // Check duplicate email
-    $check = mysqli_query($con, "SELECT doctor_id FROM doctors WHERE email = '$email'");
-    if (mysqli_num_rows($check) > 0) {
-        $_SESSION['reg_error'] = "Email already registered. Please login.";
-        header("Location: login.php");
-        exit();
-    }
-
-    // Create clinic first
-    $clinic_query = "INSERT INTO clinics (clinic_name) VALUES ('$clinic_name')";
-    if (!mysqli_query($con, $clinic_query)) {
-        $_SESSION['reg_error'] = "Failed to create clinic: " . mysqli_error($con);
-        header("Location: register.php");
-        exit();
-    }
-    $clinic_id = mysqli_insert_id($con);
-
-    // Hash password
-    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-    // Generate 6-digit OTP
-    $otp = rand(100000, 999999);
-
-    // Insert doctor as inactive, store OTP in token column
-    $query = "INSERT INTO doctors (clinic_id, full_name, specialization, qualification, experience_years, email, password, phone, is_active, token)
-              VALUES ($clinic_id, '$full_name', '$specialization', '$qualification', $experience, '$email', '$hashed_password', '$phone', 0, '$otp')";
-
-    if (mysqli_query($con, $query)) {
-
-        // Send OTP email
-        $body = "
-        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
-            <div style='background: linear-gradient(135deg, #FF5A5F, #ff7a7f); padding: 30px; text-align: center; border-radius: 12px 12px 0 0;'>
-                <h1 style='color: white; margin: 0; font-size: 28px;'>MediQueue</h1>
-                <p style='color: rgba(255,255,255,0.85); margin: 5px 0 0;'>by CliniQ</p>
+        <?php if (isset($_SESSION['admin_success'])): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <?= $_SESSION['admin_success'];
+                unset($_SESSION['admin_success']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div style='background: #ffffff; padding: 35px 30px; border: 1px solid #f0f0f0;'>
-                <h2 style='color: #1a1a2e;'>Welcome, Dr. $full_name! 👋</h2>
-                <p style='color: #555; line-height: 1.7;'>Thank you for registering with MediQueue. Use the OTP below to verify your email address.</p>
-                <div style='text-align: center; margin: 30px 0;'>
-                    <div style='display: inline-block; background: #fff5f5; border: 2px dashed #FF5A5F; border-radius: 12px; padding: 20px 40px;'>
-                        <p style='color: #888; font-size: 13px; margin: 0 0 8px;'>Your Verification Code</p>
-                        <h1 style='color: #FF5A5F; font-size: 42px; letter-spacing: 10px; margin: 0; font-family: monospace;'>$otp</h1>
+        <?php endif; ?>
+        <?php if (isset($_SESSION['admin_error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?= $_SESSION['admin_error'];
+                unset($_SESSION['admin_error']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="features-header text-start mb-0">
+                <h2>Doctor <span>Management</span></h2>
+                <div class="section-divider" style="margin-left:0;"></div>
+            </div>
+
+            <button class="hero-btn" data-bs-toggle="modal" data-bs-target="#addDoctorModal">
+                + Add Doctor
+            </button>
+        </div>
+
+        <div class="feature-acard">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Specialization</th>
+                        <th>Clinic</th>
+                        <th>Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php if (mysqli_num_rows($doctors_result) > 0): ?>
+                        <?php while ($row = mysqli_fetch_assoc($doctors_result)): ?>
+                            <tr>
+                                <td>
+                                    <strong><?= htmlspecialchars($row['full_name']) ?></strong><br>
+                                    <small class="text-muted"><?= htmlspecialchars($row['email']) ?></small>
+                                </td>
+                                <td><?= htmlspecialchars($row['specialization']) ?></td>
+                                <td><?= htmlspecialchars($row['clinic_name'] ?? 'No Clinic') ?></td>
+                                <td>
+                                    <?php if ($row['is_active']): ?>
+                                        <span class="badge bg-success">Active</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center">
+
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editDoctorModal_<?= $row['doctor_id'] ?>">
+                                        Edit
+                                    </button>
+
+                                    <form action="manage-doctor-action.php" method="POST" class="d-inline">
+                                        <input type="hidden" name="action" value="toggle">
+                                        <input type="hidden" name="doctor_id" value="<?= $row['doctor_id'] ?>">
+                                        <button type="submit" class="btn btn-sm <?= $row['is_active'] ? 'btn-outline-warning' : 'btn-outline-success' ?>">
+                                            <?= $row['is_active'] ? 'Deactivate' : 'Activate' ?>
+                                        </button>
+                                    </form>
+
+                                    <form action="manage-doctor-action.php" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this doctor?');">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="doctor_id" value="<?= $row['doctor_id'] ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            Delete
+                                        </button>
+                                    </form>
+
+                                </td>
+                            </tr>
+
+                            <div class="modal fade" id="editDoctorModal_<?= $row['doctor_id'] ?>" tabindex="-1">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <form action="manage-doctor-action.php" method="POST">
+                                            <input type="hidden" name="action" value="edit">
+                                            <input type="hidden" name="doctor_id" value="<?= $row['doctor_id'] ?>">
+
+                                            <div class="modal-header">
+                                                <h5>Edit Doctor Information</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <div class="modal-body text-start">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label>Doctor Name <span class="text-danger">*</span></label>
+                                                        <input type="text" name="full_name" class="form-control" value="<?= htmlspecialchars($row['full_name']) ?>" required>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label>Specialization <span class="text-danger">*</span></label>
+                                                        <input type="text" name="specialization" class="form-control" value="<?= htmlspecialchars($row['specialization']) ?>" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label>Email <span class="text-danger">*</span></label>
+                                                        <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($row['email']) ?>" required>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label>Phone <span class="text-danger">*</span></label>
+                                                        <input type="text" name="phone" class="form-control" value="<?= htmlspecialchars($row['phone']) ?>" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label>Qualification</label>
+                                                        <input type="text" name="qualification" class="form-control" value="<?= htmlspecialchars($row['qualification']) ?>">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label>Experience (Years)</label>
+                                                        <input type="number" name="experience_years" class="form-control" value="<?= $row['experience_years'] ?>" min="0">
+                                                    </div>
+                                                </div>
+
+                                                <hr>
+                                                <p class="text-muted small mb-2">Leave password blank if you do not wish to change it.</p>
+                                                <div class="mb-3">
+                                                    <label>Reset Password</label>
+                                                    <input type="password" name="new_password" class="form-control" placeholder="New Password">
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="hero-btn">Save Changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">No doctors found in the system.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</main>
+
+<div class="modal fade" id="addDoctorModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="manage-doctor-action.php" method="POST">
+                <input type="hidden" name="action" value="add">
+
+                <div class="modal-header">
+                    <h5>Add New Doctor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Doctor Name <span class="text-danger">*</span></label>
+                            <input type="text" name="full_name" class="form-control" placeholder="Dr. John Doe" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Specialization <span class="text-danger">*</span></label>
+                            <input type="text" name="specialization" class="form-control" placeholder="Cardiology" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Email <span class="text-danger">*</span></label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Phone <span class="text-danger">*</span></label>
+                            <input type="text" name="phone" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Qualification</label>
+                            <input type="text" name="qualification" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Experience (Years)</label>
+                            <input type="number" name="experience_years" class="form-control" value="0" min="0">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Clinic Name (Will create a new clinic) <span class="text-danger">*</span></label>
+                        <input type="text" name="clinic_name" class="form-control" placeholder="City Care Clinic" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Password <span class="text-danger">*</span></label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Confirm Password <span class="text-danger">*</span></label>
+                            <input type="password" name="confirm_password" class="form-control" required>
+                        </div>
                     </div>
                 </div>
-                <p style='color: #888; font-size: 13px; text-align: center;'>This code expires in <strong>10 minutes</strong>. Do not share it with anyone.</p>
-                <p style='color: #888; font-size: 13px;'>If you did not create this account, you can safely ignore this email.</p>
-            </div>
-            <div style='background: #f8f8f8; padding: 15px; text-align: center; border-radius: 0 0 12px 12px;'>
-                <p style='color: #aaa; font-size: 12px; margin: 0;'>2025 MediQueue by CliniQ. All rights reserved.</p>
-            </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="hero-btn">Add Doctor</button>
+                </div>
+            </form>
         </div>
-        ";
+    </div>
+</div>
 
-        $mail_result = sendEmail($email, "Your Verification Code - MediQueue", $body);
-
-        // Store email in session for OTP verify page
-        $_SESSION['doc_verify_email'] = $email;
-        $_SESSION['doc_verify_name']  = $full_name;
-
-        if ($mail_result === true) {
-            $_SESSION['reg_success'] = "OTP sent to $email. Please verify to complete registration.";
-        } else {
-            $_SESSION['reg_success'] = "Registered! OTP could not be sent — please contact support.";
-        }
-
-        header("Location: verify_otp.php");
-        exit();
-    } else {
-        // If doctor insert failed, clean up the clinic we just created
-        mysqli_query($con, "DELETE FROM clinics WHERE clinic_id = $clinic_id");
-        $_SESSION['reg_error'] = "Registration failed: " . mysqli_error($con);
-        header("Location: register.php");
-        exit();
-    }
-}
+<?php
+$content = ob_get_clean();
+include './admin-layout.php';
+?>
