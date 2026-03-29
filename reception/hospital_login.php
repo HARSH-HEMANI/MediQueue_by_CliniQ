@@ -56,7 +56,7 @@ unset($_SESSION['login_error']);
                                 <label class="form-label fw-semibold">Password</label>
                                 <input type="password" class="form-control" name="password" id="password"
                                     placeholder="Enter password"
-                                    data-validation="required">
+                                    data-validation="required|strongPassword">
                                 <small id="password_error" class="text-danger"></small>
                             </div>
 
