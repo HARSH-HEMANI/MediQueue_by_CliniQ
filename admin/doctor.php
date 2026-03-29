@@ -35,7 +35,7 @@ $doctors_result = mysqli_query($con, $query);
                 <div class="section-divider" style="margin-left:0;"></div>
             </div>
 
-            <button class="hero-btn" data-bs-toggle="modal" data-bs-target="#addDoctorModal">
+            <button class="btn btn-brand w-30 mb-3 py-2" data-bs-toggle="modal" data-bs-target="#addDoctorModal">
                 + Add Doctor
             </button>
         </div>
@@ -241,7 +241,7 @@ $doctors_result = mysqli_query($con, $query);
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="hero-btn">Save Changes</button>
+                    <button type="submit" class="btn btn-brand w-30 mb-2 py-2">Save Changes</button>
                 </div>
             </form>
         </div>
