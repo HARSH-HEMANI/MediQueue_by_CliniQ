@@ -49,7 +49,7 @@ ob_start();
             <div class="col-lg-3">
                 <div class="p-card text-center">
                     <div class="profile-avatar-wrap mb-3">
-                        <img src="https://i.pravatar.cc/150?u=<?php echo $patient_id; ?>" id="profileImage" alt="Profile Photo">
+                        <!-- <img src="https://i.pravatar.cc/150?u=<?php echo $patient_id; ?>" id="profileImage" alt="Profile Photo"> -->
                         <label class="upload-overlay" for="imageUpload" title="Change photo">
                             <i class="bi bi-camera-fill"></i>
                         </label>
