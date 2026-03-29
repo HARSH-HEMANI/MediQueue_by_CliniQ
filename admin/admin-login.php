@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+// If the admin is already logged in, redirect them straight to the dashboard
+if (isset($_SESSION['admin_id'])) {
+    header("Location: index.php"); // Adjust to your actual admin dashboard filename
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,24 +37,32 @@
 
                 <div class="col-lg-5 col-md-7">
 
+                    <?php if (isset($_SESSION['login_error'])): ?>
+                        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                            <?php echo $_SESSION['login_error'];
+                            unset($_SESSION['login_error']); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
+
                     <div class="feature-card">
                         <h5 class="text-center mb-4">Sign In</h5>
 
-                        <form action="./doctor-login-action.php" method="post" id="adminLoginForm">
+                        <form action="admin-login-action.php" method="post" id="adminLoginForm">
                             <div class="mb-3">
                                 <label class="form-label">Email Address</label>
                                 <input type="email"
                                     name="email"
                                     class="form-control"
                                     data-validation="required|email"
-                                    placeholder="Enter Admin Email">
-                                <small id="email_error"></small>
+                                    placeholder="Enter Admin Email" required>
+                                <small id="email_error" class="text-danger"></small>
                             </div>
 
                             <div class="mb-4">
                                 <label class="form-label">Password</label>
-                                <input type="password" class="form-control" name="password" id="password" data-validation="required|strongPassword" placeholder="******">
-                                <small id="password_error"></small>
+                                <input type="password" class="form-control" name="password" id="password" data-validation="required" placeholder="******" required>
+                                <small id="password_error" class="text-danger"></small>
                             </div>
 
                             <button type="submit" class="hero-btn w-100 mb-3">
@@ -54,7 +71,7 @@
 
                             <p class="text-center mb-0">
                                 <a href="./forgot_password.php" class="text-brand fw-semibold">
-                                Forgot Password?
+                                    Forgot Password?
                                 </a>
                             </p>
                         </form>
