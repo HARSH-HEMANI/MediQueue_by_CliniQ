@@ -1,4 +1,11 @@
 <?php
+session_start();
+require_once '../db.php';
+
+if (!isset($_SESSION['patient_id'])) {
+    header("Location: ../login.php");
+    exit();
+}
 $content_page = 'Book Appointment | MediQueue';
 ob_start();
 ?>
