@@ -62,25 +62,6 @@ ob_start();
                         <small id="address_error" class="text-danger"></small>
                     </div>
                 </div>
-
-                <p class="profile-section-title">Account Setup</p>
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Password</label>
-                        <input type="password" name="password" id="password" class="form-control"
-                            placeholder="Create password"
-                            data-validation="required|strongPassword">
-                        <small id="password_error" class="text-danger"></small>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Confirm Password</label>
-                        <input type="password" name="confirm_password" class="form-control"
-                            placeholder="Confirm password"
-                            data-validation="required|confirmPassword" data-match="password">
-                        <small id="confirm_password_error" class="text-danger"></small>
-                    </div>
-                </div>
-
                 <div class="d-flex gap-3">
                     <button type="submit" class="btn btn-brand rounded-pill px-4">
                         <i class="bi bi-person-plus me-1"></i>Register Patient
