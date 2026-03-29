@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css?v=vibrant" rel="stylesheet">
     <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
     <link rel="stylesheet" href="../css/style.css?v=vibrant">
+    <link rel="stylesheet" href="../css/reception.css?v=vibrant">
     <link rel="stylesheet" href="../css/admin.css?v=vibrant_admin3">
 </head>
 
