@@ -78,6 +78,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <span>Live Queues</span>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a href="./admin-messages.php" class="nav-link <?= ($content_page == 'admin-messages') ? 'active' : '' ?>">
+                        <i class="bi bi-envelope"></i>
+                        <span>Contact Messages</span>
+                    </a>
+                </li>
             </ul>
 
             <div class="menu-label mt-3">SYSTEM</div>
@@ -88,12 +95,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <span>Analytics</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="./settings.php" class="nav-link <?= ($current_page == 'settings.php') ? 'active' : '' ?>">
                         <i class="bi bi-gear-fill"></i>
                         <span>System Settings</span>
                     </a>
-                </li>
+                </li> -->
             </ul>
         </div>
     </div>
@@ -102,7 +109,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="menu-label text-uppercase mb-2">USER ACCOUNT</div>
         <div class="d-flex justify-content-between align-items-center">
             <div class="user-profile">
-                <img src="https://i.pravatar.cc/150?u=admin" alt="Admin">
                 <div class="user-info">
                     <span class="name">System Admin</span>
                     <span class="tag">#admin-001</span>
