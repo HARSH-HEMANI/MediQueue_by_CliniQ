@@ -97,7 +97,7 @@ $sidebar_display_id = str_pad($patient_id, 4, '0', STR_PAD_LEFT);
         <div class="d-flex justify-content-between align-items-center">
             <div class="user-profile">
                 <!-- Use actual generic UI faces avatar with deterministic ID based seed -->
-                <img src="https://i.pravatar.cc/150?u=patient<?php echo $patient_id; ?>" alt="Patient">
+                <!-- <img src="https://i.pravatar.cc/150?u=patient<?php echo $patient_id; ?>" alt="Patient"> -->
                 <div class="user-info">
                     <span class="name"><?php echo htmlspecialchars($sidebar_patient_name); ?></span>
                     <span class="tag">#P-<?php echo $sidebar_display_id; ?></span>
