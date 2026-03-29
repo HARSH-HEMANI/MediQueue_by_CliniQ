@@ -1,75 +1,76 @@
 <?php
 include "doctor-auth.php";
 include "../db.php";
-require_once __DIR__ . '/doctor-helpers.inc.php';
 
-$doctor_id = (int) $_SESSION['doctor_id'];
+$doctor_id = (int)$_SESSION['doctor_id'];
+$patientId = isset($_GET['patient']) ? (int)$_GET['patient'] : 0;
 
-$listq = mysqli_query($con, "SELECT DISTINCT p.patient_id, p.full_name, p.gender, p.date_of_birth, p.phone, p.address,
-    (SELECT MAX(a2.appointment_date) FROM appointments a2 WHERE a2.patient_id = p.patient_id AND a2.doctor_id = $doctor_id) AS last_visit,
-    (SELECT COUNT(*) FROM appointments a3 WHERE a3.patient_id = p.patient_id AND a3.doctor_id = $doctor_id) AS visit_count
-FROM patients p
-INNER JOIN appointments a ON a.patient_id = p.patient_id AND a.doctor_id = $doctor_id
-ORDER BY last_visit DESC");
+// Fetch all unique patients for this doctor
+$patientsListQ = mysqli_query($con, "
+    SELECT p.patient_id, p.full_name, p.gender, p.date_of_birth, p.phone,
+           COUNT(a.appointment_id) as total_visits,
+           MAX(a.appointment_date) as last_visit
+    FROM patients p
+    JOIN appointments a ON p.patient_id = a.patient_id
+    WHERE a.doctor_id = $doctor_id
+    GROUP BY p.patient_id
+    ORDER BY last_visit DESC
+");
 
-$patient_order = [];
-if ($listq) {
-    while ($row = mysqli_fetch_assoc($listq)) {
-        $patient_order[] = $row;
+$patientsList = [];
+$firstPatientId = 0;
+while ($row = mysqli_fetch_assoc($patientsListQ)) {
+    if ($firstPatientId === 0) $firstPatientId = $row['patient_id'];
+    
+    $age = "N/A";
+    if ($row['date_of_birth']) {
+        $dob = new DateTime($row['date_of_birth']);
+        $now = new DateTime();
+        $age = $now->diff($dob)->y;
     }
+    $row['age'] = $age;
+    $patientsList[] = $row;
 }
 
-$patient_id = isset($_GET['patient']) ? (int) $_GET['patient'] : 0;
-if ($patient_id <= 0 && count($patient_order)) {
-    $patient_id = (int) $patient_order[0]['patient_id'];
+$isValid = false;
+foreach ($patientsList as $p) {
+    if ($p['patient_id'] == $patientId) { $isValid = true; break; }
 }
+if (!$isValid) $patientId = $firstPatientId;
 
+// Fetch current patient details
 $current = null;
-foreach ($patient_order as $p) {
-    if ((int) $p['patient_id'] === $patient_id) {
-        $current = $p;
-        break;
+$historyList = [];
+if ($patientId > 0) {
+    $currQ = mysqli_query($con, "SELECT * FROM patients WHERE patient_id = $patientId");
+    $current = mysqli_fetch_assoc($currQ);
+    
+    if ($current['date_of_birth']) {
+        $current['age'] = (new DateTime())->diff(new DateTime($current['date_of_birth']))->y;
+    } else {
+        $current['age'] = "N/A";
     }
-}
 
-$history = [];
-if ($patient_id > 0) {
-    $hq = mysqli_query($con, "SELECT a.*, t.token_no, t.status AS token_status,
-        cn.diagnosis, cn.note_text, cn.medicines, cn.follow_up_date
-        FROM appointments a
-        LEFT JOIN tokens t ON t.appointment_id = a.appointment_id
-        LEFT JOIN consultation_notes cn ON cn.appointment_id = a.appointment_id
-        WHERE a.patient_id = $patient_id AND a.doctor_id = $doctor_id
-        ORDER BY a.appointment_date DESC, a.appointment_time DESC");
-    if ($hq) {
-        while ($h = mysqli_fetch_assoc($hq)) {
-            $history[] = $h;
+    foreach($patientsList as $p) {
+        if ($p['patient_id'] == $patientId) {
+            $current['total_visits'] = $p['total_visits'];
+            $current['last_visit'] = $p['last_visit'];
+            break;
         }
     }
-}
 
-$last_notes = '';
-foreach ($history as $h) {
-    if (!empty($h['note_text'])) {
-        $last_notes = $h['note_text'];
-        break;
+    // Fetch visit history with consultation notes
+    $histQ = mysqli_query($con, "
+        SELECT a.appointment_date, a.appointment_type, t.token_no, cn.note_text, cn.diagnosis 
+        FROM appointments a 
+        LEFT JOIN tokens t ON a.appointment_id = t.appointment_id 
+        LEFT JOIN consultation_notes cn ON a.appointment_id = cn.appointment_id 
+        WHERE a.patient_id = $patientId AND a.doctor_id = $doctor_id AND a.status IN ('Completed', 'Confirmed', 'Pending')
+        ORDER BY a.appointment_date DESC, a.appointment_time DESC
+    ");
+    while ($h = mysqli_fetch_assoc($histQ)) {
+        $historyList[] = $h;
     }
-}
-if ($last_notes === '' && count($history)) {
-    $last_notes = $history[0]['visit_reason'] ?? '';
-}
-
-$fmt_date = function ($d) {
-    if (empty($d)) {
-        return '—';
-    }
-    $ts = strtotime($d);
-    return $ts ? date('d M Y', $ts) : '—';
-};
-
-$freq_label = '—';
-if ($current && (int) ($current['visit_count'] ?? 0) > 1 && !empty($current['last_visit'])) {
-    $freq_label = 'Multiple visits with you';
 }
 ?>
 
@@ -103,138 +104,127 @@ if ($current && (int) ($current['visit_count'] ?? 0) > 1 && !empty($current['las
 
             <section class="row g-4">
 
-                <div class="col-lg-7">
-                    <div class="dcard">
-                        <div class="card-header">Patient List</div>
-                        <div class="card-body p-0">
-                            <table class="table mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Patient</th>
-                                        <th>Last Visit</th>
-                                        <th>Visits</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($patient_order as $p): ?>
-                                        <?php $pid = (int) $p['patient_id']; ?>
-                                        <tr class="<?php echo $pid === $patient_id ? 'table-active' : ''; ?>">
+            <div class="col-lg-7">
+                <div class="dcard">
+                    <div class="card-header">Patient List</div>
+                    <div class="card-body p-0">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Patient</th>
+                                    <th>Last Visit</th>
+                                    <th>Total Visits</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($patientsList)): ?>
+                                    <?php foreach ($patientsList as $pData): ?>
+                                        <tr class="<?php echo ($pData['patient_id'] == $patientId) ? 'table-active' : ''; ?>">
                                             <td>
-                                                <a href="?patient=<?php echo $pid; ?>">
-                                                    <?php echo $pid; ?>
+                                                <a href="?patient=<?php echo $pData['patient_id']; ?>">
+                                                    #P<?php echo str_pad($pData['patient_id'], 4, '0', STR_PAD_LEFT); ?>
                                                 </a>
                                             </td>
                                             <td>
-                                                <?php echo htmlspecialchars($p['full_name']); ?><br>
+                                                <?php echo htmlspecialchars($pData['full_name']); ?><br>
                                                 <small class="text-muted">
-                                                    <?php
-                                                    $a = doctor_patient_age($p['date_of_birth'] ?? '');
-                                                    echo $a !== null ? (int) $a : '—';
-                                                    ?> / <?php echo htmlspecialchars($p['gender'] ?? '—'); ?>
+                                                    <?php echo $pData['age']; ?> yrs / <?php echo htmlspecialchars($pData['gender'] ?? 'N/A'); ?>
                                                 </small>
                                             </td>
-                                            <td><?php echo htmlspecialchars($fmt_date($p['last_visit'] ?? '')); ?></td>
-                                            <td><?php echo (int) ($p['visit_count'] ?? 0); ?></td>
+                                            <td><?php echo date('d M Y', strtotime($pData['last_visit'])); ?></td>
+                                            <td><?php echo (int)$pData['total_visits']; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                <?php else: ?>
+                                    <tr><td colspan="4" class="text-center text-muted">No patient records found.</td></tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+            </div>
 
                 <div class="col-lg-5">
 
-                    <?php if ($current): ?>
-                        <div class="dcard mb-3">
-                            <div class="card-header">Patient Profile</div>
-                            <div class="card-body">
-                                <p><strong>Name:</strong> <?php echo htmlspecialchars($current['full_name']); ?></p>
-                                <p><strong>Age / Gender:</strong>
-                                    <?php
-                                    $a = doctor_patient_age($current['date_of_birth'] ?? '');
-                                    echo $a !== null ? (int) $a : '—';
-                                    ?> / <?php echo htmlspecialchars($current['gender'] ?? '—'); ?>
-                                </p>
-                                <p><strong>Phone:</strong> <?php echo htmlspecialchars($current['phone'] ?? '—'); ?></p>
-                                <p><strong>Date of birth:</strong> <?php echo htmlspecialchars($fmt_date($current['date_of_birth'] ?? '')); ?></p>
-                                <hr>
-                                <p class="mb-1"><strong>Recent notes</strong></p>
-                                <p class="text-muted mb-0"><?php echo htmlspecialchars($last_notes !== '' ? $last_notes : 'No notes yet.'); ?></p>
-                            </div>
-                        </div>
+                <?php if ($current): ?>
+                <div class="dcard mb-3">
+                    <div class="card-header">Patient Profile</div>
+                    <div class="card-body">
+                        <p><strong>Name:</strong> <?php echo htmlspecialchars($current['full_name']); ?></p>
+                        <p><strong>Age / Gender:</strong> <?php echo $current['age']; ?> / <?php echo htmlspecialchars($current['gender'] ?? 'N/A'); ?></p>
+                        <p><strong>Phone:</strong> <?php echo htmlspecialchars($current['phone']); ?></p>
+                        <hr>
+                        <p class="mb-1"><strong>Medical Summary</strong></p>
+                        <p class="text-muted mb-0">No generalized medical notes available. Refer to visit history for specific consultation notes.</p>
+                    </div>
+                </div>
 
-                        <div class="dcard mb-3">
-                            <div class="card-header">Visit Summary</div>
-                            <div class="card-body">
-                                <p><strong>Total visits (with you):</strong> <?php echo (int) ($current['visit_count'] ?? 0); ?></p>
-                                <p><strong>Last visit:</strong> <?php echo htmlspecialchars($fmt_date($current['last_visit'] ?? '')); ?></p>
-                                <p class="mb-0"><strong>Visit pattern:</strong> <?php echo htmlspecialchars($freq_label); ?></p>
-                            </div>
-                        </div>
+                <div class="dcard mb-3">
+                    <div class="card-header">Visit Summary</div>
+                    <div class="card-body">
+                        <p><strong>Total Visits:</strong> <?php echo (int)$current['total_visits']; ?></p>
+                        <p><strong>Last Visit:</strong> <?php echo date('d M Y', strtotime($current['last_visit'])); ?></p>
+                    </div>
+                </div>
 
-                        <div class="dcard">
-                            <div class="card-body">
-                                <button class="btn btn-outline-secondary w-100" type="button" onclick="window.print()">
-                                    <i class="bi bi-printer"></i> Print Patient History
-                                </button>
-                            </div>
-                        </div>
-                    <?php elseif ($patient_id > 0): ?>
-                        <div class="alert alert-warning mb-0">This patient is not in your records or has no appointments with you.</div>
-                    <?php endif; ?>
+                <div class="dcard">
+                    <div class="card-body">
+                        <button class="btn btn-outline-secondary w-100" onclick="window.print()">
+                            <i class="bi bi-printer"></i> Print Patient History
+                        </button>
+                    </div>
+                </div>
+                <?php else: ?>
+                    <div class="dcard p-4 text-center">
+                        <p class="text-muted mb-0">Select a patient to view details.</p>
+                    </div>
+                <?php endif; ?>
 
                 </div>
 
             </section>
 
-            <?php if ($current && count($history)): ?>
-                <section class="mt-4">
-                    <div class="dcard">
-                        <div class="card-header">Visit History</div>
-                        <div class="card-body">
-                            <ul class="visit-timeline">
-                                <?php foreach ($history as $visit): ?>
-                                    <?php
-                                    $vtype = doctor_appt_type_label($visit['appointment_type'] ?? '');
-                                    $isEm = ($visit['appointment_type'] ?? '') === 'Emergency';
-                                    $dt = $fmt_date($visit['appointment_date'] ?? '');
-                                    $tok = isset($visit['token_no']) ? (string) (int) $visit['token_no'] : '—';
-                                    $note = trim($visit['note_text'] ?? '');
-                                    if ($note === '' && !empty($visit['diagnosis'])) {
-                                        $note = $visit['diagnosis'];
-                                    }
-                                    if ($note === '') {
-                                        $note = $visit['visit_reason'] ?? '—';
-                                    }
-                                    ?>
-                                    <li class="<?php echo $isEm ? 'emergency-visit' : ''; ?>">
+        <!-- VISIT HISTORY -->
+        <section class="mt-4">
+            <div class="dcard">
+                <div class="card-header">Visit History</div>
+                <div class="card-body">
+                    <?php if (!empty($historyList)): ?>
+                    <ul class="visit-timeline">
+                        <?php foreach ($historyList as $visit): ?>
+                            <li class="<?php echo ($visit['appointment_type'] === 'Emergency') ? 'emergency-visit' : ''; ?>">
 
-                                        <span class="visit-date"><?php echo htmlspecialchars($dt); ?></span>
+                                <span class="visit-date"><?php echo date('d M Y', strtotime($visit['appointment_date'])); ?></span>
 
-                                        <?php if ($isEm): ?>
-                                            <span class="badge type-emergency">
-                                                <i class="bi bi-exclamation-triangle-fill"></i> Emergency
-                                            </span>
-                                        <?php else: ?>
-                                            <span class="badge type-follow"><?php echo htmlspecialchars($vtype); ?></span>
-                                        <?php endif; ?>
+                                <?php if ($visit['appointment_type'] === 'Emergency'): ?>
+                                    <span class="badge type-emergency">
+                                        <i class="bi bi-exclamation-triangle-fill"></i> Emergency
+                                    </span>
+                                <?php else: ?>
+                                    <span class="badge type-<?php echo strtolower(str_replace(' ', '-', $visit['appointment_type'])); ?>">
+                                        <?php echo htmlspecialchars($visit['appointment_type']); ?>
+                                    </span>
+                                <?php endif; ?>
 
-                                        <span class="badge status-completed"><?php echo htmlspecialchars($visit['token_status'] ?? $visit['status'] ?? '—'); ?></span>
-
-                                        <p class="mt-1 mb-0">Token #<?php echo htmlspecialchars($tok); ?></p>
-                                        <small class="text-muted">Notes: <?php echo htmlspecialchars($note); ?></small>
-
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-            <?php endif; ?>
-
-        <?php endif; ?>
+                                <?php if($visit['diagnosis']): ?>
+                                    <p class="mt-1 mb-1 fw-bold"><?php echo htmlspecialchars($visit['diagnosis']); ?></p>
+                                <?php endif; ?>
+                                <?php if($visit['note_text']): ?>
+                                    <p class="mb-0 text-muted">Notes: <?php echo htmlspecialchars($visit['note_text']); ?></p>
+                                <?php endif; ?>
+                                <?php if(!$visit['diagnosis'] && !$visit['note_text']): ?>
+                                    <p class="mt-1 mb-0 text-muted fst-italic">No consultation notes recorded.</p>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <?php else: ?>
+                        <p class="text-muted text-center mb-0">No past visits recorded.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </section>
 
     </main>
 

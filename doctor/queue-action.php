@@ -22,9 +22,9 @@ if ($action === 'complete' && $token_id) {
     
     // 2. Find next waiting token. Prioritize emergencies if any.
     $findNextQ = mysqli_query($con, "SELECT t.token_id FROM tokens t 
-                                    JOIN appointments a ON t.appointment_id = a.appointment_id 
-                                    WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$today' AND t.status = 'Waiting' 
-                                    ORDER BY (a.appointment_type = 'Emergency') DESC, t.queue_position ASC LIMIT 1");
+                                     JOIN appointments a ON t.appointment_id = a.appointment_id 
+                                     WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$today' AND t.status = 'Waiting' 
+                                     ORDER BY (a.appointment_type = 'Emergency') DESC, t.queue_position ASC LIMIT 1");
     if ($next = mysqli_fetch_assoc($findNextQ)) {
         mysqli_query($con, "UPDATE tokens SET status = 'In Progress', called_at = NOW() WHERE token_id = " . $next['token_id']);
     }
