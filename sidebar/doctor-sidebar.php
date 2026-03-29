@@ -81,7 +81,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="menu-label text-uppercase mb-2">USER ACCOUNT</div>
         <div class="d-flex justify-content-between align-items-center">
             <div class="user-profile">
-                <img src="https://i.pravatar.cc/150?u=doc" alt="Doctor">
                 <div class="user-info">
                     <span class="name"><?php echo isset($_SESSION['doctor_name']) ? htmlspecialchars($_SESSION['doctor_name']) : 'Doctor'; ?></span>
                     <span class="tag">#DOC-<?php echo isset($_SESSION['doctor_id']) ? str_pad($_SESSION['doctor_id'], 4, '0', STR_PAD_LEFT) : '0000'; ?></span>
