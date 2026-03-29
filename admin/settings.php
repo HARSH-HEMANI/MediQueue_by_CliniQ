@@ -1,4 +1,5 @@
 <?php
+require_once "admin-init.php";
 $content_page = 'appointment';
 ob_start();
 ?>
