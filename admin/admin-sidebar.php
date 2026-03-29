@@ -24,8 +24,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     <div class="d-none d-lg-block">
         <div class="sidebar-logo">
-            <img src="../img/mediq.png" alt="Logo">
-            <span>MediQueue Admin</span>
+            <!-- <img src="../img/mediq.png" alt="Logo"> -->
         </div>
     </div>
 
