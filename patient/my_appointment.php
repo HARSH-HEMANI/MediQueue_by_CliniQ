@@ -83,7 +83,7 @@ ob_start();
             
             <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
                 <div>
-                    <p class="fw-bold fs-6 mb-1">Dr. <?php echo htmlspecialchars($appt['doctor_name']); ?></p>
+                    <p class="fw-bold fs-6 mb-1"><?php echo htmlspecialchars($appt['doctor_name']); ?></p>
                     <p class="text-muted mb-1" style="font-size:0.82rem;"><i class="bi bi-heart-pulse me-1 <?php echo $icon_color; ?>"></i><?php echo htmlspecialchars($appt['specialization'] ?? ''); ?> &nbsp;·&nbsp; <?php echo htmlspecialchars($appt['clinic_name'] ?? 'Clinic'); ?></p>
                     <p class="text-muted mb-1" style="font-size:0.84rem;"><i class="bi bi-calendar3 me-1"></i><?php echo date('d M Y', strtotime($appt['appointment_date'])); ?> &nbsp;·&nbsp; <?php echo htmlspecialchars($appt['appointment_time']); ?></p>
                     <p class="text-muted mb-0" style="font-size:0.82rem;"><i class="bi bi-hash me-1"></i>MQ-<?php echo str_pad($appt['appointment_id'], 4, '0', STR_PAD_LEFT); ?></p>
