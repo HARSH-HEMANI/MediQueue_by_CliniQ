@@ -14,7 +14,7 @@
 
 <body class="layout-without-sidebar">
 
-    <main class="features auth-page">
+    <main class="explore-hero">
         <div class="container">
 
             <section class="features-header text-center mb-3">
@@ -29,7 +29,8 @@
 
                         <?php if (isset($_SESSION['reg_error'])): ?>
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>Error:</strong> <?php echo htmlspecialchars($_SESSION['reg_error']); unset($_SESSION['reg_error']); ?>
+                                <strong>Error:</strong> <?php echo htmlspecialchars($_SESSION['reg_error']);
+                                                        unset($_SESSION['reg_error']); ?>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
                         <?php endif; ?>
@@ -149,8 +150,8 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="hero-btn w-100 mb-3">
-                                Register
+                            <button type="submit" class="btn btn-brand w-100 mb-3 py-2">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Register
                             </button>
 
                             <p class="text-center mb-0">
@@ -158,7 +159,10 @@
                                 <!-- FIX: was pointing to "doctor-login.php" which doesn't exist -->
                                 <a href="login.php" class="text-brand fw-semibold">Login here</a>
                             </p>
-
+                            <p class="text-center mb-0">
+                                Want to go home?
+                                <a href="../index.php" class="text-brand fw-semibold">Go to home</a>
+                            </p>
                         </form>
                     </div>
                 </div>
