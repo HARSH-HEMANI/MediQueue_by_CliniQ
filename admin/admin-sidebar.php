@@ -61,7 +61,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <div class="menu-label mt-3">OPERATIONS</div>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="./patients.php" class="nav-link <?= ($current_page == 'patients.php') ? 'active' : '' ?>">
+                    <a href="./patient-management.php" class="nav-link <?= ($current_page == 'patient-management.php') ? 'active' : '' ?>">
                         <i class="bi bi-people-fill"></i>
                         <span>Patients</span>
                     </a>
