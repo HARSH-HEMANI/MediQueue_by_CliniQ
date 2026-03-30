@@ -178,7 +178,7 @@ $doctors_result = mysqli_query($con, $query);
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="hero-btn">Add Doctor</button>
+                    <button type="submit" class="btn btn-brand w-30 mb-3 py-2">Add Doctor</button>
                 </div>
             </form>
         </div>

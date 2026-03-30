@@ -43,7 +43,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="../reception/register_patient.php" class="nav-link <?= ($current_page == 'register_patient.php') ? 'active' : '' ?>">
+                    <a href="../reception/register-patient.php" class="nav-link <?= ($current_page == 'register-patient.php') ? 'active' : '' ?>">
                         <i class="bi bi-person-plus-fill"></i><span>Register Patient</span>
                     </a>
                 </li>

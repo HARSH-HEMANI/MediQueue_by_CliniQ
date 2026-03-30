@@ -231,7 +231,6 @@ $appointmentsQ = mysqli_query($con, $queryStr);
                 </form>
             </div>
         </div>
-    <?php endforeach; ?>
 
     <?php include './doctor-footer.php'; ?>
 

@@ -90,7 +90,7 @@ $emerAlertQ = mysqli_query($con, "SELECT t.token_no, a.visit_reason
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
 
         <section class="features-header my-1">
-            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($_SESSION['doctor_name'] ?? 'Doctor'); ?></span></h2>
+            <h2>Welcome, <span><?php echo htmlspecialchars($_SESSION['doctor_name'] ?? 'Doctor'); ?></span></h2>
         </section>
 
         <section class="mb-4">

@@ -3,31 +3,31 @@ include "doctor-auth.php";
 include "../db.php";
 
 $doctor_id = (int)$_SESSION['doctor_id'];
-$today = date('Y-m-d');
 
-// Total Tokens
-$totalQ = mysqli_query($con, "SELECT COUNT(*) as total FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$today'");
+// FIX: Define $queue_date based on GET parameter or default to today
+$queue_date = $_GET['date'] ?? date('Y-m-d');
+
+// Total Tokens for the selected date
+$totalQ = mysqli_query($con, "SELECT COUNT(*) as total FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$queue_date'");
 $totalTokens = mysqli_fetch_assoc($totalQ)['total'] ?? 0;
 
 // Completed
-$compQ = mysqli_query($con, "SELECT COUNT(*) as count FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$today' AND t.status = 'Completed'");
+$compQ = mysqli_query($con, "SELECT COUNT(*) as count FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$queue_date' AND t.status = 'Completed'");
 $completed = mysqli_fetch_assoc($compQ)['count'] ?? 0;
 
 // Pending
-$pendQ = mysqli_query($con, "SELECT COUNT(*) as count FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$today' AND t.status IN ('Waiting', 'Skipped')");
+$pendQ = mysqli_query($con, "SELECT COUNT(*) as count FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$queue_date' AND t.status IN ('Waiting', 'Skipped')");
 $pending = mysqli_fetch_assoc($pendQ)['count'] ?? 0;
 
-// Current Token
+// Current Token (In Progress)
 $currentQ = mysqli_query($con, "SELECT t.token_id, t.token_no, p.full_name, p.date_of_birth, a.appointment_type 
                                 FROM tokens t 
                                 JOIN appointments a ON t.appointment_id = a.appointment_id 
                                 JOIN patients p ON a.patient_id = p.patient_id 
-                                WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$today' AND t.status = 'In Progress' 
+                                WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$queue_date' AND t.status = 'In Progress' 
                                 ORDER BY t.called_at DESC LIMIT 1");
 $currentTokenData = mysqli_fetch_assoc($currentQ);
 
-$statusBadge = 'bg-secondary';
-$statusText = 'Idle';
 $currentToken = null;
 $currentName  = null;
 $currentAge   = null;
@@ -41,13 +41,13 @@ if ($currentTokenData) {
     $currentTokenId = $currentTokenData['token_id'];
     $currentName  = $currentTokenData['full_name'];
     $currentType  = $currentTokenData['appointment_type'];
-    
+
     if ($currentTokenData['date_of_birth']) {
         $dob = new DateTime($currentTokenData['date_of_birth']);
         $now = new DateTime();
         $currentAge = $now->diff($dob)->y;
     }
-    
+
     if ($currentType === 'Emergency') {
         $statusBadge = "bg-danger";
         $statusText  = "Emergency Active";
@@ -62,7 +62,7 @@ $queueQ = mysqli_query($con, "SELECT t.token_no, p.full_name, a.appointment_type
                               FROM tokens t 
                               JOIN appointments a ON t.appointment_id = a.appointment_id 
                               JOIN patients p ON a.patient_id = p.patient_id 
-                              WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$today' AND t.status IN ('Waiting', 'Skipped') 
+                              WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$queue_date' AND t.status IN ('Waiting', 'Skipped') 
                               ORDER BY (a.appointment_type = 'Emergency') DESC, t.queue_position ASC");
 
 ?>
@@ -89,7 +89,7 @@ $queueQ = mysqli_query($con, "SELECT t.token_no, p.full_name, a.appointment_type
         <section class="mb-4 d-flex justify-content-between align-items-center features-header my-1 flex-wrap gap-2">
             <div>
                 <h2>Live <span>Queue</span></h2>
-                <p class="text-muted mb-0">Real-time patient queue · <?php echo htmlspecialchars($queue_date); ?></p>
+                <p class="text-muted mb-0">Real-time patient queue · <?php echo date('d M Y', strtotime($queue_date)); ?></p>
             </div>
             <div class="d-flex gap-2 align-items-center flex-wrap">
                 <form method="get" action="live-queue.php" class="d-flex gap-2 align-items-center">
@@ -103,154 +103,136 @@ $queueQ = mysqli_query($con, "SELECT t.token_no, p.full_name, a.appointment_type
         </section>
 
         <section class="mb-4">
-            <div class="dcard text-center p-4 current-token-card">
-
+            <div class="dcard text-center p-4 current-token-card shadow-sm">
                 <div class="mb-2">
                     <span class="badge <?php echo htmlspecialchars($statusBadge); ?>"><?php echo htmlspecialchars($statusText); ?></span>
                     <?php if ($currentType): ?>
-                        <span class="badge ms-1 <?php echo (($current_token['appointment_type'] ?? '') === 'Emergency') ? 'type-emergency' : 'type-follow'; ?>">
+                        <span class="badge ms-1 <?php echo ($currentType === 'Emergency') ? 'bg-danger' : 'bg-info text-dark'; ?>">
                             <?php echo htmlspecialchars($currentType); ?>
                         </span>
                     <?php endif; ?>
                 </div>
 
-                <div class="current-token-number">
-                    <?php echo $currentToken !== null ? 'Token #' . htmlspecialchars($currentToken) : 'No Active Token'; ?>
+                <div class="current-token-number" style="font-size: 3rem; font-weight: 800; color: var(--brand-color);">
+                    <?php echo $currentToken !== null ? 'Token #' . htmlspecialchars($currentToken) : 'No Active Patient'; ?>
                 </div>
 
-                <div class="patient-name mt-2">
+                <div class="patient-name mt-2 h4">
                     <?php
                     if ($currentName) {
                         $ageStr = $currentAge !== null ? $currentAge . ' yrs' : '—';
                         echo htmlspecialchars($currentName) . ' (' . htmlspecialchars($ageStr) . ')';
                     } else {
-                        echo 'Waiting to start';
+                        echo '<span class="text-muted">Waiting to start session</span>';
                     }
                     ?>
                 </div>
 
-                <!-- CONTROLS -->
                 <div class="d-flex justify-content-center gap-3 mt-4">
                     <a href="queue-action.php?action=next" class="btn btn-brand">
                         <i class="bi bi-arrow-right-circle"></i> Call Next
                     </a>
                     <?php if ($currentTokenId): ?>
-                    <a href="queue-action.php?action=complete&token_id=<?php echo $currentTokenId; ?>" class="btn btn-outline-success">
-                        <i class="bi bi-check-circle"></i> Complete
-                    </a>
-                    <a href="queue-action.php?action=skip&token_id=<?php echo $currentTokenId; ?>" class="btn btn-outline-warning">
-                        <i class="bi bi-pause-circle"></i> Hold
-                    </a>
+                        <a href="queue-action.php?action=complete&token_id=<?php echo $currentTokenId; ?>" class="btn btn-outline-success">
+                            <i class="bi bi-check-circle"></i> Complete
+                        </a>
+                        <a href="queue-action.php?action=skip&token_id=<?php echo $currentTokenId; ?>" class="btn btn-outline-warning">
+                            <i class="bi bi-pause-circle"></i> Hold
+                        </a>
                     <?php endif; ?>
                 </div>
-
             </div>
         </section>
 
         <section class="mb-4">
             <div class="row g-3">
                 <div class="col-md-4">
-                    <div class="dstat-card">
-                        <h6>Total Tokens</h6>
-                        <h2><?php echo (int) $totalTokens; ?></h2>
+                    <div class="dstat-card text-center p-3 border rounded bg-white">
+                        <h6 class="text-muted">Total Patients</h6>
+                        <h2 class="fw-bold"><?php echo (int) $totalTokens; ?></h2>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="dstat-card highlight">
-                        <h6>Completed</h6>
-                        <h2><?php echo (int) $completed; ?></h2>
+                    <div class="dstat-card text-center p-3 border rounded bg-white" style="border-bottom: 4px solid #22c55e !important;">
+                        <h6 class="text-muted">Completed</h6>
+                        <h2 class="text-success fw-bold"><?php echo (int) $completed; ?></h2>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="dstat-card danger">
-                        <h6>Waiting</h6>
-                        <h2><?php echo (int) $pending; ?></h2>
+                    <div class="dstat-card text-center p-3 border rounded bg-white" style="border-bottom: 4px solid #ef4444 !important;">
+                        <h6 class="text-muted">Waiting</h6>
+                        <h2 class="text-danger fw-bold"><?php echo (int) $pending; ?></h2>
                     </div>
                 </div>
             </div>
         </section>
 
         <section class="row g-4">
-
             <div class="col-lg-8">
-                <div class="dcard">
-                    <div class="card-header">Upcoming Tokens</div>
+                <div class="dcard shadow-sm">
+                    <div class="card-header bg-white fw-bold py-3 border-bottom">Upcoming Patients</div>
                     <div class="card-body p-0">
-                        <table class="table mb-0 queue-table">
-                            <thead>
-                                <tr>
-                                    <th>Token</th>
-                                    <th>Patient</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (mysqli_num_rows($queueQ) > 0): ?>
-                                    <?php while($q = mysqli_fetch_assoc($queueQ)): ?>
-                                    <tr class="<?php echo $q['appointment_type'] === 'Emergency' ? 'priority-row' : ''; ?>">
-                                        <td>#<?php echo $q['token_no']; ?></td>
-                                        <td>
-                                            <?php echo htmlspecialchars($q['full_name']); ?><br>
-                                            <?php if ($q['appointment_type'] === 'Emergency'): ?>
-                                                <small class="text-muted">Emergency</small>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <?php if ($q['appointment_type'] === 'Emergency'): ?>
-                                                <span class="badge type-emergency">
-                                                    <i class="bi bi-exclamation-triangle-fill"></i> Priority
-                                                </span>
-                                            <?php else: ?>
-                                                <span class="badge type-<?php echo strtolower(str_replace(' ', '-', $q['appointment_type'])); ?>">
-                                                    <?php echo htmlspecialchars($q['appointment_type']); ?>
-                                                </span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <?php if ($q['appointment_type'] === 'Emergency'): ?>
-                                                <a href="queue-action.php?action=call_emergency&token_no=<?php echo $q['token_no']; ?>" class="badge bg-danger text-decoration-none">Call Now</a>
-                                            <?php else: ?>
-                                                <span class="badge status-waiting"><?php echo htmlspecialchars($q['status']); ?></span>
-                                            <?php endif; ?>
-                                        </td>
+                        <div class="table-responsive">
+                            <table class="table mb-0 align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Token</th>
+                                        <th>Patient</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
                                     </tr>
-                                    <?php endwhile; ?>
-                                <?php else: ?>
-                                    <tr><td colspan="4" class="text-center py-3 text-muted">No upcoming tokens.</td></tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php if (mysqli_num_rows($queueQ) > 0): ?>
+                                        <?php while ($q = mysqli_fetch_assoc($queueQ)): ?>
+                                            <tr class="<?php echo $q['appointment_type'] === 'Emergency' ? 'table-danger' : ''; ?>">
+                                                <td class="fw-bold">#<?php echo $q['token_no']; ?></td>
+                                                <td><?php echo htmlspecialchars($q['full_name']); ?></td>
+                                                <td>
+                                                    <span class="badge <?php echo ($q['appointment_type'] === 'Emergency') ? 'bg-danger' : 'bg-info text-dark'; ?>">
+                                                        <?php echo htmlspecialchars($q['appointment_type']); ?>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-warning text-dark"><?php echo htmlspecialchars($q['status']); ?></span>
+                                                </td>
+                                            </tr>
+                                        <?php endwhile; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="4" class="text-center py-4 text-muted">No pending patients in queue.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-4">
-
-                <div class="dcard mb-3">
-                    <div class="card-header emergency-header">Emergency Actions</div>
+                <div class="dcard mb-3 shadow-sm">
+                    <div class="card-header bg-white fw-bold py-3 border-bottom">Queue Actions</div>
                     <div class="card-body d-grid gap-2">
-                        <a href="appointment.php" class="btn btn-outline-danger">
-                            <i class="bi bi-calendar-event"></i> Manage Appointments
+                        <a href="appointment.php" class="btn btn-outline-primary">
+                            <i class="bi bi-calendar-event"></i> All Appointments
                         </a>
                     </div>
                 </div>
 
-                <div class="dcard">
-                    <div class="card-header">Selected Token Info</div>
+                <div class="dcard shadow-sm border-primary">
+                    <div class="card-header bg-primary text-white fw-bold py-3">Patient Details</div>
                     <div class="card-body">
                         <?php if ($currentName): ?>
-                            <p class="mb-1"><strong>Name:</strong> <?php echo htmlspecialchars($currentName); ?></p>
-                            <p class="mb-1"><strong>Age:</strong> <?php echo $currentAge !== null ? (int) $currentAge : '—'; ?></p>
-                            <p class="mb-0"><strong>Visit Type:</strong> <?php echo htmlspecialchars($currentType ?? ''); ?></p>
+                            <div class="mb-2"><strong>Name:</strong> <?php echo htmlspecialchars($currentName); ?></div>
+                            <div class="mb-2"><strong>Age:</strong> <?php echo $currentAge !== null ? (int) $currentAge : '—'; ?></div>
+                            <div><strong>Visit Reason:</strong> <span class="text-muted">Standard Consultation</span></div>
                         <?php else: ?>
-                            <p class="text-muted mb-0">No patient selected</p>
+                            <p class="text-muted mb-0 italic">Call a patient to view details here.</p>
                         <?php endif; ?>
                     </div>
                 </div>
-
             </div>
-
         </section>
 
     </main>
@@ -258,7 +240,6 @@ $queueQ = mysqli_query($con, "SELECT t.token_no, p.full_name, a.appointment_type
     <?php include './doctor-footer.php'; ?>
 
     <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
-
 </body>
 
 </html>

@@ -121,9 +121,7 @@ ob_start();
 
 </div>
 
-?>clude './reception-layout.php';
 <?php
 $content = ob_get_clean();
 include './reception-layout.php';
-?>clude './reception-layout.php';
 ?>
