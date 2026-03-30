@@ -1,6 +1,40 @@
 <?php
+require_once "reception-init.php";
 $content_page = 'Manage Appointments | Reception | MediQueue';
 ob_start();
+
+$clinic_id = $_SESSION['clinic_id'];
+$today = date('Y-m-d');
+
+// --- 1. HANDLE FILTERS ---
+$search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
+$filter_date = isset($_GET['date']) ? mysqli_real_escape_string($con, $_GET['date']) : $today;
+$filter_doctor = isset($_GET['doctor_id']) ? (int)$_GET['doctor_id'] : 0;
+
+// --- 2. STAT CARD COUNTERS ---
+$stats_query = mysqli_query($con, "SELECT 
+    COUNT(*) as total,
+    SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) as waiting,
+    SUM(CASE WHEN status = 'Confirmed' THEN 1 ELSE 0 END) as progress,
+    SUM(CASE WHEN status = 'Completed' THEN 1 ELSE 0 END) as completed
+    FROM appointments WHERE appointment_date = '$filter_date' AND clinic_id = $clinic_id");
+$stats = mysqli_fetch_assoc($stats_query);
+
+// --- 3. CURRENTLY CONSULTING SPOTLIGHT ---
+// Fetches the first 'Confirmed' patient for today
+$current_query = mysqli_query($con, "SELECT a.*, p.full_name, p.gender, p.date_of_birth, d.full_name as doctor_name 
+    FROM appointments a 
+    JOIN patients p ON a.patient_id = p.patient_id 
+    JOIN doctors d ON a.doctor_id = d.doctor_id 
+    WHERE a.status = 'Confirmed' AND a.appointment_date = '$today' AND a.clinic_id = $clinic_id 
+    ORDER BY a.appointment_time ASC LIMIT 1");
+$current = mysqli_fetch_assoc($current_query);
+
+// Helper function for Age
+function getAge($dob) {
+    if(!$dob) return "—";
+    return date_diff(date_create($dob), date_create('today'))->y;
+}
 ?>
 
 <div class="reception-dashboard">
@@ -11,87 +45,77 @@ ob_start();
             <h1 class="dashboard-title mt-1">Manage <span>Appointments</span></h1>
             <p class="dashboard-subtitle">Update status, manage walk-ins and patient flow</p>
         </div>
-        <button class="btn btn-brand rounded-pill" data-bs-toggle="modal" data-bs-target="#walkinModal">
+        <a href="register-patient.php" class="btn btn-brand rounded-pill">
             <i class="bi bi-person-plus me-1"></i>Walk-In Patient
-        </button>
+        </a>
     </div>
 
-    <!-- Stat Cards -->
     <div class="stats-row mb-4">
-        <div class="rstat-card">
-            <h6>Total Today</h6>
-            <h2>18</h2>
-        </div>
-        <div class="rstat-card">
-            <h6>Waiting</h6>
-            <h2>10</h2>
-        </div>
-        <div class="rstat-card">
-            <h6>In Progress</h6>
-            <h2>1</h2>
-        </div>
-        <div class="rstat-card">
-            <h6>Completed</h6>
-            <h2>7</h2>
-        </div>
+        <div class="rstat-card"><h6>Total Today</h6><h2><?= $stats['total'] ?? 0 ?></h2></div>
+        <div class="rstat-card"><h6>Pending</h6><h2><?= $stats['waiting'] ?? 0 ?></h2></div>
+        <div class="rstat-card"><h6>Confirmed</h6><h2><?= $stats['progress'] ?? 0 ?></h2></div>
+        <div class="rstat-card"><h6>Completed</h6><h2><?= $stats['completed'] ?? 0 ?></h2></div>
     </div>
 
-    <!-- Current Token -->
-    <div class="dcard current-token-card p-4 mb-4">
+    <?php if ($current): ?>
+    <div class="dcard current-token-card p-4 mb-4" style="border-left: 5px solid #28a745;">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
                 <div class="d-flex gap-2 mb-2">
                     <span class="badge bg-success">Currently Consulting</span>
-                    <span class="badge-soft-primary">Follow-up</span>
+                    <span class="badge-soft-primary"><?= $current['appointment_type'] ?></span>
                 </div>
-                <div class="current-token-number mt-1">Token <span>#12</span></div>
+                <div class="current-token-number mt-1">Token <span>#<?= $current['appointment_id'] ?></span></div>
                 <div class="r-patient-name mt-1">
-                    Rahul Patel
-                    <span class="text-muted fw-normal" style="font-size:0.9rem;">(32 / Male)</span>
+                    <?= htmlspecialchars($current['full_name']) ?>
+                    <span class="text-muted fw-normal" style="font-size:0.9rem;">(<?= getAge($current['date_of_birth']) ?> / <?= $current['gender'] ?>)</span>
                 </div>
-                <small class="text-muted d-block mt-1">
-                    <i class="bi bi-person-badge me-1"></i>Dr. Mehta
-                </small>
+                <small class="text-muted d-block mt-1"><i class="bi bi-person-badge me-1"></i>Dr. <?= htmlspecialchars($current['doctor_name']) ?></small>
             </div>
             <div class="d-flex flex-column gap-2">
-                <button class="btn btn-brand rounded-pill"><i class="bi bi-arrow-right-circle me-1"></i>Call Next</button>
-                <button class="btn btn-outline-success rounded-pill"><i class="bi bi-check-circle me-1"></i>Complete</button>
-                <button class="btn btn-outline-warning rounded-pill"><i class="bi bi-pause-circle me-1"></i>Hold</button>
+                <form action="appointment_status_action.php" method="POST">
+                    <input type="hidden" name="appointment_id" value="<?= $current['appointment_id'] ?>">
+                    <button name="status" value="Completed" class="btn btn-brand rounded-pill w-100 mb-2"><i class="bi bi-check-circle me-1"></i>Complete Visit</button>
+                    <button name="status" value="Pending" class="btn btn-outline-warning rounded-pill w-100"><i class="bi bi-pause-circle me-1"></i>Put on Hold</button>
+                </form>
             </div>
         </div>
     </div>
+    <?php else: ?>
+        <div class="alert alert-light border text-center p-4 mb-4">No patient is currently in consultation.</div>
+    <?php endif; ?>
 
-    <!-- Filter Bar -->
     <div class="rcard mb-4">
         <div class="rcard-body">
-            <div class="row g-3 align-items-end">
+            <form method="GET" action="manage_patient.php" class="row g-3 align-items-end">
                 <div class="col-md-4">
                     <label class="form-label fw-semibold" style="font-size:0.82rem;">Search</label>
-                    <input type="text" class="form-control rounded-pill" placeholder="Patient name or phone...">
+                    <input type="text" name="search" class="form-control rounded-pill" placeholder="Name or phone..." value="<?= htmlspecialchars($search) ?>">
                 </div>
                 <div class="col-md-3">
                     <label class="form-label fw-semibold" style="font-size:0.82rem;">Date</label>
-                    <input type="date" class="form-control rounded-3">
+                    <input type="date" name="date" class="form-control rounded-3" value="<?= $filter_date ?>">
                 </div>
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                     <label class="form-label fw-semibold" style="font-size:0.82rem;">Doctor</label>
-                    <select class="form-select rounded-3">
-                        <option>All Doctors</option>
-                        <option>Dr. Mehta</option>
-                        <option>Dr. Shah</option>
+                    <select name="doctor_id" class="form-select rounded-3">
+                        <option value="0">All Doctors</option>
+                        <?php 
+                        $docs = mysqli_query($con, "SELECT doctor_id, full_name FROM doctors WHERE clinic_id = $clinic_id");
+                        while($d = mysqli_fetch_assoc($docs)): ?>
+                            <option value="<?= $d['doctor_id'] ?>" <?= $filter_doctor == $d['doctor_id'] ? 'selected' : '' ?>>Dr. <?= $d['full_name'] ?></option>
+                        <?php endwhile; ?>
                     </select>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-outline-secondary rounded-pill w-100"
-                        data-bs-toggle="modal" data-bs-target="#filterModal">
-                        <i class="bi bi-funnel me-1"></i>Filter
+                </div> -->
+                <div class="col-md-5 text-end">
+                    <button type="submit" class="btn btn-brand rounded-pill w-50 mb-2">
+                        <i class="bi bi-search me-1"></i>Search
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
-    <!-- Appointments Table -->
     <div class="rcard">
         <div class="rcard-body">
             <h5 class="mb-3">Appointment List</h5>
@@ -109,139 +133,50 @@ ob_start();
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><strong>#13</strong></td>
-                            <td>
-                                <a href="#" class="fw-semibold text-brand text-decoration-none"
-                                    data-bs-toggle="modal" data-bs-target="#patientModal">Rahul Sharma</a>
-                                <div class="text-muted small">9876543210</div>
-                            </td>
-                            <td>Dr. Shah</td>
-                            <td class="text-muted" style="font-size:0.88rem;">10:30 AM</td>
-                            <td><span class="badge-soft-primary">Follow-up</span></td>
-                            <td>
-                                <select class="form-select form-select-sm rounded-pill" style="min-width:120px;">
-                                    <option selected>Waiting</option>
-                                    <option>Consulting</option>
-                                    <option>Completed</option>
-                                    <option>Cancelled</option>
-                                </select>
-                            </td>
-                            <td><input class="form-control form-control-sm rounded-pill" placeholder="Add note..."></td>
-                        </tr>
-                        <tr>
-                            <td><strong>#14</strong></td>
-                            <td>
-                                <strong>Anita Patel</strong>
-                                <div class="text-muted small">9123456780</div>
-                            </td>
-                            <td>Dr. Mehta</td>
-                            <td class="text-muted" style="font-size:0.88rem;">11:00 AM</td>
-                            <td><span class="badge-soft-danger">Emergency</span></td>
-                            <td>
-                                <select class="form-select form-select-sm rounded-pill" style="min-width:120px;">
-                                    <option>Waiting</option>
-                                    <option selected>Consulting</option>
-                                    <option>Completed</option>
-                                    <option>Cancelled</option>
-                                </select>
-                            </td>
-                            <td><input class="form-control form-control-sm rounded-pill" placeholder="Add note..."></td>
-                        </tr>
+                        <?php
+                        $list_query = "SELECT a.*, p.full_name, p.phone, d.full_name as doctor_name 
+                                       FROM appointments a 
+                                       JOIN patients p ON a.patient_id = p.patient_id 
+                                       JOIN doctors d ON a.doctor_id = d.doctor_id 
+                                       WHERE a.clinic_id = $clinic_id AND a.appointment_date = '$filter_date'";
+
+                        if (!empty($search)) $list_query .= " AND (p.full_name LIKE '%$search%' OR p.phone LIKE '%$search%')";
+                        if ($filter_doctor) $list_query .= " AND a.doctor_id = $filter_doctor";
+
+                        $list_query .= " ORDER BY a.appointment_time ASC";
+                        $appointments = mysqli_query($con, $list_query);
+
+                        if (mysqli_num_rows($appointments) > 0):
+                            while ($row = mysqli_fetch_assoc($appointments)):
+                        ?>
+                                <tr>
+                                    <td><strong>#<?= $row['appointment_id'] ?></strong></td>
+                                    <td>
+                                        <div class="fw-semibold text-brand"><?= htmlspecialchars($row['full_name']) ?></div>
+                                        <div class="text-muted small"><?= htmlspecialchars($row['phone']) ?></div>
+                                    </td>
+                                    <td><?= htmlspecialchars($row['doctor_name']) ?></td>
+                                    <td class="text-muted"><?= date('h:i A', strtotime($row['appointment_time'])) ?></td>
+                                    <td><span class="badge-soft-primary"><?= $row['appointment_type'] ?></span></td>
+                                    <td>
+                                        <form action="appointment_status_action.php" method="POST">
+                                            <input type="hidden" name="appointment_id" value="<?= $row['appointment_id'] ?>">
+                                            <select name="status" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()">
+                                                <option value="Pending" <?= $row['status'] == 'Pending' ? 'selected' : '' ?>>Pending</option>
+                                                <option value="Confirmed" <?= $row['status'] == 'Confirmed' ? 'selected' : '' ?>>Confirmed</option>
+                                                <option value="Completed" <?= $row['status'] == 'Completed' ? 'selected' : '' ?>>Completed</option>
+                                                <option value="Cancelled" <?= $row['status'] == 'Cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                                            </select>
+                                        </form>
+                                    </td>
+                                    <td><input class="form-control form-control-sm rounded-pill" placeholder="Add note..."></td>
+                                </tr>
+                            <?php endwhile;
+                        else: ?>
+                            <tr><td colspan="7" class="text-center py-4 text-muted">No appointments found.</td></tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- Filter Modal -->
-<div class="modal fade" id="filterModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold"><i class="bi bi-funnel text-brand me-2"></i>Filter Appointments</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Doctor</label>
-                        <select class="form-select">
-                            <option value="">All Doctors</option>
-                            <option>Dr. Mehta</option>
-                            <option>Dr. Shah</option>
-                            <option>Dr. Patel</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Status</label>
-                        <select class="form-select">
-                            <option value="">All Status</option>
-                            <option>Waiting</option>
-                            <option>Consulting</option>
-                            <option>Completed</option>
-                            <option>Cancelled</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Reset</button>
-                <button class="btn btn-brand">Apply Filter</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Walk-In Modal -->
-<div class="modal fade" id="walkinModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold"><i class="bi bi-person-plus text-brand me-2"></i>Register Walk-In Patient</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Patient Name</label>
-                    <input type="text" class="form-control" placeholder="Enter full name">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Phone Number</label>
-                    <input type="text" class="form-control" placeholder="Enter phone number">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Doctor</label>
-                    <select class="form-select">
-                        <option>Select Doctor</option>
-                        <option>Dr. Mehta</option>
-                        <option>Dr. Shah</option>
-                    </select>
-                </div>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Date</label>
-                        <input type="date" class="form-control">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Time</label>
-                        <input type="time" class="form-control">
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Case Type</label>
-                    <select class="form-select">
-                        <option>Regular</option>
-                        <option>Emergency</option>
-                        <option>Follow-up</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button class="btn btn-brand">Register Patient</button>
             </div>
         </div>
     </div>
