@@ -63,6 +63,62 @@ function get_content($key, $default, $cms_array)
                 </div>
             </div>
         </section>
+
+        <section class="features py-5 bg-white">
+            <div class="container">
+
+                <div class="features-header text-center mb-5">
+                    <h2>
+                        What Our <span>Patients Say</span>
+                    </h2>
+                    <div class="section-divider"></div>
+                    <p>
+                        Real feedback from patients and clinics using the MediQueue platform.
+                    </p>
+                </div>
+
+                <div class="row justify-content-center">
+                    <?php
+                    // Fetch visible testimonials from the database
+                    $test_res = mysqli_query($con, "SELECT * FROM testimonials WHERE is_visible = 1 ORDER BY id DESC LIMIT 3");
+
+                    if (mysqli_num_rows($test_res) > 0):
+                        while ($t = mysqli_fetch_assoc($test_res)):
+                    ?>
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="feature-card animated-card h-100 shadow-sm">
+                                    <div class="mb-3">
+                                        <?php
+                                        $rating = (int)$t['rating'];
+                                        for ($i = 1; $i <= 5; $i++) {
+                                            echo ($i <= $rating)
+                                                ? '<i class="bi bi-star-fill text-warning"></i> '
+                                                : '<i class="bi bi-star text-muted"></i> ';
+                                        }
+                                        ?>
+                                    </div>
+
+                                    <p class="fst-italic text-muted mb-4">
+                                        "<?= htmlspecialchars($t['feedback']) ?>"
+                                    </p>
+
+                                    <div class="mt-auto">
+                                        <h6 class="mb-0 fw-bold"><?= htmlspecialchars($t['patient_name']) ?></h6>
+                                        <small class="text-brand"><?= htmlspecialchars($t['location']) ?></small>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php
+                        endwhile;
+                    else:
+                        ?>
+                        <div class="text-center text-muted">
+                            <p>No testimonials shared yet.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </section>
     </main>
 
     <?php include "./footer.php"; ?>
