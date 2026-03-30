@@ -95,6 +95,66 @@ while ($row = mysqli_fetch_assoc($res)) {
                 </div>
             </div>
 
+            <div class="feature-acard mb-4">
+                <h5 class="text-primary mb-3 border-bottom pb-2"><i class="bi bi-info-circle me-2"></i>About Us Page Content</h5>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Main Page Title (HTML allowed)</label>
+                        <input type="text" name="about_title_main" class="form-control" value="<?= htmlspecialchars($settings['about_title_main'] ?? '') ?>">
+                        <small class="text-muted">Use &lt;span&gt;Text&lt;/span&gt; to highlight in red.</small>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Hero Subtitle</label>
+                        <input type="text" name="about_hero_subtitle" class="form-control" value="<?= htmlspecialchars($settings['about_hero_subtitle'] ?? '') ?>">
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-light mb-3">
+                            <label class="form-label fw-bold">"Who We Are" Title</label>
+                            <input type="text" name="about_title_who" class="form-control mb-2" value="<?= htmlspecialchars($settings['about_title_who'] ?? '') ?>">
+                            <label class="form-label">Description</label>
+                            <textarea name="about_who_we_are" class="form-control" rows="3"><?= htmlspecialchars($settings['about_who_we_are'] ?? '') ?></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-light mb-3">
+                            <label class="form-label fw-bold">"Our Mission" Title</label>
+                            <input type="text" name="about_title_mission" class="form-control mb-2" value="<?= htmlspecialchars($settings['about_title_mission'] ?? '') ?>">
+                            <label class="form-label">Description</label>
+                            <textarea name="about_mission" class="form-control" rows="3"><?= htmlspecialchars($settings['about_mission'] ?? '') ?></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">"Why MediQueue?" Section Title</label>
+                    <input type="text" name="about_title_why" class="form-control" value="<?= htmlspecialchars($settings['about_title_why'] ?? '') ?>">
+                </div>
+
+                <h6 class="mb-3 fw-bold text-secondary">Benefit Cards (Why MediQueue?)</h6>
+                <div class="row">
+                    <?php
+                    // We use a loop for the 3 cards to keep the code clean
+                    for ($i = 1; $i <= 3; $i++):
+                    ?>
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded bg-white shadow-sm">
+                                <label class="form-label fw-bold text-brand small">Card <?= $i ?> Title</label>
+                                <input type="text" name="about_why_card<?= $i ?>_title" class="form-control form-control-sm mb-2"
+                                    value="<?= htmlspecialchars($settings["about_why_card{$i}_title"] ?? '') ?>">
+
+                                <label class="form-label fw-bold text-brand small">Card <?= $i ?> Description</label>
+                                <textarea name="about_why_card<?= $i ?>_desc" class="form-control form-control-sm" rows="3"><?= htmlspecialchars($settings["about_why_card{$i}_desc"] ?? '') ?></textarea>
+                            </div>
+                        </div>
+                    <?php endfor; ?>
+                </div>
+
+            </div>
+
             <div class="text-center ">
                 <button type="submit" class="btn btn-brand w-30 mb-3 py-2">Save All Changes</button>
             </div>
