@@ -103,6 +103,20 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="./manage-testimonials.php" class="nav-link <?= ($current_page == 'manage-testimonials.php') ? 'active' : '' ?>">
+                        <i class="bi bi-gear-fill"></i>
+                        <span>Testimonials</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="./manage-faqs.php" class="nav-link <?= ($current_page == 'manage-faqs.php') ? 'active' : '' ?>">
+                        <i class="bi bi-gear-fill"></i>
+                        <span>FAQs</span>
+                    </a>
+                </li>
+
                 <!-- <li class="nav-item">
                     <a href="./settings.php" class="nav-link <?= ($current_page == 'settings.php') ? 'active' : '' ?>">
                         <i class="bi bi-gear-fill"></i>
