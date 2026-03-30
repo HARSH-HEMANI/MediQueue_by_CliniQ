@@ -1,3 +1,16 @@
+<?php
+require_once "./db.php";
+$settings_result = mysqli_query($con, "SELECT section_key, content_value FROM site_settings");
+$cms = [];
+while ($row = mysqli_fetch_assoc($settings_result)) {
+    $cms[$row['section_key']] = $row['content_value'];
+}
+
+function get_content($key, $default, $cms_array)
+{
+    return isset($cms_array[$key]) && !empty($cms_array[$key]) ? $cms_array[$key] : $default;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,144 +18,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | MediQueue</title>
-
     <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.css?v=vibrant">
-    <script src="./css/bootstrap/js/bootstrap.bundle.js"></script>
     <link rel="stylesheet" href="./css/style.css?v=vibrant">
 </head>
 
 <body>
-
-    <!-- ------------- NAVBAR ---------------- -->
     <header>
         <?php include "./header.php"; ?>
-
         <div style="background: linear-gradient(90deg, #fd686d, #ff8a8f);color:#fff;text-align:center;padding:10px;margin-top:88px;">
-            <h2>SMART CLINIC MANAGEMENT SYSTEM</h2>
+            <h2><?= get_content('banner_text', 'SMART CLINIC MANAGEMENT SYSTEM', $cms) ?></h2>
         </div>
     </header>
 
-    <!-- ------------------ MAIN ----------------- -->
     <main>
-
         <section class="hero">
             <div class="hero-content">
-                <h1>
-                    Optimize Patient Flow.<br>
-                    Reduce Waiting Time.<br>
-                    <span>Improve Care.</span>
-                </h1>
-
-                <p>
-                    MediQueue by CliniQ is a smart clinic management platform
-                    that combines appointment scheduling with real-time
-                    queue monitoring and workload analysis, helping clinics
-                    run smoothly and efficiently every day.
-                </p>
-
+                <h1><?= get_content('hero_title', 'Optimize Patient Flow.<br>Reduce Waiting Time.<br><span>Improve Care.</span>', $cms) ?></h1>
+                <p><?= get_content('hero_desc', 'MediQueue description...', $cms) ?></p>
                 <a href="./explore.php" class="hero-btn">Explore MediQueue</a>
             </div>
         </section>
 
-        <!-- FEATURES SECTION -->
         <section class="features">
             <div class="container">
-
-                <!-- Section Heading -->
                 <div class="features-header text-center">
-                    <h2>
-                        Smart Patient Flow <span>&</span> Clinic Analytics
-                    </h2>
+                    <h2><?= get_content('features_main_title', 'Smart Patient Flow & Clinic Analytics', $cms) ?></h2>
                     <div class="section-divider"></div>
-                    <p>
-                        A comprehensive clinic management system designed to monitor appointments,
-                        analyze patient flow, and optimize daily clinic workload for better efficiency
-                        and reduced waiting time.
-                    </p>
+                    <p><?= get_content('features_main_desc', 'Description...', $cms) ?></p>
                 </div>
 
-                <!-- Features Grid -->
                 <div class="row justify-content-center">
-
-                    <!-- Feature Card -->
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="feature-card animated-card">
-                            <img src="./img/appointment.png" alt="">
-                            <h5>Smart Appointment Management</h5>
-                            <p>
-                                Patients and reception staff can register appointments digitally,
-                                enabling structured scheduling and accurate data collection.
-                            </p>
+                    <?php
+                    $icons = ['./img/appointment.png', './img/bar-graph.png', './img/time-tracking.png', './img/analytic.png', './img/receptionist.png', './img/patient-flow.png'];
+                    for ($i = 1; $i <= 6; $i++):
+                    ?>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="feature-card animated-card">
+                                <img src="<?= $icons[$i - 1] ?>" alt="">
+                                <h5><?= get_content("card{$i}_title", "Feature $i", $cms) ?></h5>
+                                <p><?= get_content("card{$i}_desc", "Description for card $i", $cms) ?></p>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="feature-card animated-card">
-                            <img src="./img/bar-graph.png" alt="">
-                            <h5>Clinic Load Monitoring</h5>
-                            <p>
-                                Track daily clinic workload, patient volume, and consultation
-                                patterns to plan operations more efficiently.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="feature-card animated-card">
-                            <img src="./img/time-tracking.png" alt="">
-                            <h5>Consultation Time Tracking</h5>
-                            <p>
-                                Monitor actual consultation start and end times to analyze delays
-                                and overall clinic efficiency.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="feature-card animated-card">
-                            <img src="./img/analytic.png" alt="">
-                            <h5>Doctor Analytics Dashboard</h5>
-                            <p>
-                                Doctors can view performance insights including patient flow,
-                                workload distribution, and time utilization.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="feature-card animated-card">
-                            <img src="./img/receptionist.png" alt="">
-                            <h5>Reception Desk Management</h5>
-                            <p>
-                                Reception staff can manage walk-ins, offline bookings, and
-                                real-time queue updates efficiently.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="feature-card animated-card">
-                            <img src="./img/patient-flow.png" alt="">
-                            <h5>Patient Flow Analytics</h5>
-                            <p>
-                                Analyze patient movement, queue behavior, and delay patterns
-                                to reduce overcrowding and improve planning.
-                            </p>
-                        </div>
-                    </div>
-
+                    <?php endfor; ?>
                 </div>
             </div>
         </section>
-
     </main>
 
-    <section class="py-5 bg-white features">
-        <?php include './testimonial.php'; ?>
-    </section>
-
     <?php include "./footer.php"; ?>
-
 </body>
 
 </html>
