@@ -1,7 +1,20 @@
 <?php
-// Assuming you have a connection file. Adjust the path if necessary.
 require_once "db.php";
 
+// --- FETCH CMS CONTENT ---
+$settings_result = mysqli_query($con, "SELECT section_key, content_value FROM site_settings");
+$cms = [];
+while ($row = mysqli_fetch_assoc($settings_result)) {
+    $cms[$row['section_key']] = $row['content_value'];
+}
+
+// Fallback Helper
+function get_content($key, $default, $cms_array)
+{
+    return isset($cms_array[$key]) && !empty($cms_array[$key]) ? $cms_array[$key] : $default;
+}
+
+// --- FORM SUBMISSION LOGIC ---
 $success_msg = "";
 $error_msg = "";
 
@@ -67,30 +80,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_contact'])) {
                                     <input type="text" class="form-control" name="name" id="name" placeholder="Your Name" required data-validation="required|min|max" data-min="3" data-max="20">
                                     <small id="name_error" class="text-danger"></small>
                                 </div>
-
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Email Address</label>
                                     <input type="email" name="email" id="email" class="form-control" placeholder="your@email.com" required data-validation="required|email">
                                     <small id="email_error" class="text-danger"></small>
                                 </div>
                             </div>
-
                             <div class="mb-3">
                                 <label class="form-label">Subject</label>
                                 <input type="text" name="sub" id="sub" class="form-control" placeholder="Subject" required data-validation="required">
                                 <small id="sub_error" class="text-danger"></small>
                             </div>
-
                             <div class="mb-4">
                                 <label class="form-label">Message</label>
                                 <textarea class="form-control" name="message" id="message" rows="5" placeholder="Write your message..." required data-validation="required"></textarea>
                                 <small id="message_error" class="text-danger"></small>
                             </div>
-
                             <div class="text-center">
-                                <button type="submit" name="submit_contact" class="hero-btn me-3">
-                                    Send Message
-                                </button>
+                                <button type="submit" name="submit_contact" class="hero-btn me-3">Send Message</button>
                             </div>
                         </form>
                     </div>
@@ -99,11 +106,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_contact'])) {
                 <div class="col-lg-5 mb-4">
                     <div class="feature-card animated-card">
                         <h5 class="mb-3">Get in Touch</h5>
-                        <p>Reach out to MediQueue for product inquiries, onboarding support, or technical assistance.</p>
+                        <p><?= get_content('contact_desc', 'Reach out to MediQueue for product inquiries...', $cms) ?></p>
+
                         <ul class="list-unstyled mt-4">
-                            <li class="mb-3"><strong>Email:</strong><br>support@mediqueue.com</li>
-                            <li class="mb-3"><strong>Phone:</strong><br>+91 123456789</li>
-                            <li class="mb-3"><strong>Office:</strong><br>India</li>
+                            <li class="mb-3">
+                                <strong>Email:</strong><br>
+                                <?= get_content('contact_email', 'support@mediqueue.com', $cms) ?>
+                            </li>
+                            <li class="mb-3">
+                                <strong>Phone:</strong><br>
+                                <?= get_content('contact_phone', '+91 123456789', $cms) ?>
+                            </li>
+                            <li class="mb-3">
+                                <strong>Office:</strong><br>
+                                <?= get_content('contact_office', 'India', $cms) ?>
+                            </li>
                         </ul>
                     </div>
                 </div>
