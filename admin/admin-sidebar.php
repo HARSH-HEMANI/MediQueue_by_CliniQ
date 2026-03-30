@@ -95,6 +95,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <span>Analytics</span>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a href="./manage-site-content.php" class="nav-link <?= ($current_page == 'manage-site-content.php') ? 'active' : '' ?>">
+                        <i class="bi bi-gear-fill"></i>
+                        <span>Site Content</span>
+                    </a>
+                </li>
+
                 <!-- <li class="nav-item">
                     <a href="./settings.php" class="nav-link <?= ($current_page == 'settings.php') ? 'active' : '' ?>">
                         <i class="bi bi-gear-fill"></i>
