@@ -73,6 +73,28 @@ while ($row = mysqli_fetch_assoc($res)) {
                 </div>
             </div>
 
+            <div class="feature-acard mb-4">
+                <h5 class="text-primary mb-3 border-bottom pb-2"><i class="bi bi-telephone me-2"></i>Contact Us Page Details</h5>
+                <div class="mb-3">
+                    <label class="form-label">Contact Description</label>
+                    <textarea name="contact_desc" class="form-control" rows="2"><?= htmlspecialchars($settings['contact_desc'] ?? '') ?></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Support Email</label>
+                        <input type="email" name="contact_email" class="form-control" value="<?= htmlspecialchars($settings['contact_email'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Support Phone</label>
+                        <input type="text" name="contact_phone" class="form-control" value="<?= htmlspecialchars($settings['contact_phone'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Office Address</label>
+                        <input type="text" name="contact_office" class="form-control" value="<?= htmlspecialchars($settings['contact_office'] ?? '') ?>">
+                    </div>
+                </div>
+            </div>
+
             <div class="text-center ">
                 <button type="submit" class="btn btn-brand w-30 mb-3 py-2">Save All Changes</button>
             </div>
