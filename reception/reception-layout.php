@@ -17,6 +17,7 @@ if (!isset($_SESSION['receptionist_id'])) {
     <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css?v=vibrant">
     <link rel="stylesheet" href="../css/style.css?v=vibrant">
     <link rel="stylesheet" href="../css/reception.css?v=vibrant">
+    <link rel="stylesheet" href="../css/doctor.css?v=vibrant">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
