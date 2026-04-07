@@ -114,6 +114,23 @@ body {
     margin: 0;
 }
 
+/* ── Stat card colour variants ── */
+.lq-stat-amber {
+    border-right-color: #f59e0b !important;
+}
+
+.lq-stat-amber h2 {
+    color: #f59e0b !important;
+}
+
+.lq-stat-green {
+    border-right-color: #22c55e !important;
+}
+
+.lq-stat-green h2 {
+    color: #22c55e !important;
+}
+
 /* ── Current token card ── */
 .dcard {
     background: var(--glass-bg);
@@ -125,7 +142,8 @@ body {
 }
 
 .current-token-card {
-    border-left: 6px solid var(--brand) !important;
+    border-left: 5px solid var(--brand) !important;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 245, 245, 0.7)) !important;
 }
 
 .current-token-number {
@@ -137,7 +155,7 @@ body {
 }
 
 .r-patient-name {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: #111827;
 }
@@ -272,6 +290,9 @@ body {
     font-weight: 600;
     border-radius: 20px;
     padding: 4px 11px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
 }
 
 .badge-soft-warning {
@@ -280,6 +301,9 @@ body {
     font-weight: 600;
     border-radius: 20px;
     padding: 4px 11px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
 }
 
 .badge-soft-danger {
@@ -288,6 +312,9 @@ body {
     font-weight: 600;
     border-radius: 20px;
     padding: 4px 11px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
 }
 
 .badge-soft-primary {
@@ -296,6 +323,9 @@ body {
     font-weight: 600;
     border-radius: 20px;
     padding: 4px 11px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
 }
 
 /* ── Dashboard footer ── */
@@ -385,4 +415,234 @@ body {
 
 .border-brand {
     border-color: var(--brand) !important;
+}
+
+
+/* ============================================================
+   LIVE QUEUE — Additional Component Styles
+   ============================================================ */
+
+/* ── Pulse dot (animated green indicator) ── */
+.lq-pulse-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+    animation: lq-pulse 1.8s infinite;
+    flex-shrink: 0;
+}
+
+.lq-pulse-dot--sm {
+    width: 7px;
+    height: 7px;
+}
+
+@keyframes lq-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
+
+/* ── "LIVE" pill in monitor header ── */
+.lq-live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+/* ── Refresh badge in page header ── */
+.lq-refresh-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    color: #15803d;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+/* ── "NOW SERVING" label ── */
+.lq-now-serving-label {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--brand);
+    background: var(--brand-soft);
+    border: 1px solid rgba(255, 90, 95, 0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+/* ── Big token number badge in monitor ── */
+.lq-token-badge {
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: var(--brand);
+    letter-spacing: -4px;
+    line-height: 1;
+    display: inline-block;
+    text-shadow: 0 4px 20px rgba(255, 90, 95, 0.25);
+}
+
+/* ── Patient card inside monitor ── */
+.lq-patient-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 90, 95, 0.12);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+}
+
+/* ── Large avatar inside monitor ── */
+.lq-patient-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+}
+
+/* ── Small avatar in table rows ── */
+.lq-avatar-sm {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-soft), var(--brand-mid));
+    color: var(--brand);
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(255, 90, 95, 0.2);
+}
+
+/* ── Patient name+avatar cell ── */
+.lq-patient-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ── Token chip in table ── */
+.lq-token-chip {
+    display: inline-block;
+    background: var(--brand-soft);
+    color: var(--brand);
+    font-size: 0.82rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 90, 95, 0.15);
+    white-space: nowrap;
+}
+
+/* ── Highlight active (In Progress) row ── */
+.lq-row-active>td {
+    background: rgba(255, 90, 95, 0.05) !important;
+}
+
+.lq-row-active>td:first-child {
+    border-left: 3px solid var(--brand);
+}
+
+/* ── Progress bar ── */
+.lq-progress {
+    height: 7px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.lq-progress-bar {
+    background: linear-gradient(90deg, var(--brand), #ff8a8d);
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+.lq-progress-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #9ca3af;
+}
+
+.lq-progress-pct {
+    font-size: 0.72rem;
+    color: var(--brand);
+    font-weight: 700;
+    text-align: right;
+    margin-top: 3px;
+}
+
+/* ── Empty state (no queue / no active patient) ── */
+.lq-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 32px 16px;
+    flex: 1;
+}
+
+.lq-empty-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--brand-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: var(--brand);
+    margin-bottom: 14px;
+    border: 1.5px dashed rgba(255, 90, 95, 0.3);
+}
+
+.lq-empty-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 4px;
+}
+
+.lq-empty-sub {
+    font-size: 0.82rem;
+    color: #9ca3af;
+    margin: 0;
 }
