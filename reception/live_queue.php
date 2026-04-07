@@ -1,125 +1,301 @@
 <?php
-$content_page = 'Live Queue | Reception | MediQueue';
-ob_start();
-?>
+require_once "reception-init.php";
 
+$content_page = 'Live Queue | Reception';
+ob_start();
+
+$today = date('Y-m-d');
+
+/* ========================
+   FETCH DATA (FIXED)
+======================== */
+
+// Fetch ALL today's tokens (more reliable)
+$query = mysqli_query($con, "
+    SELECT 
+        t.*, 
+        p.full_name AS patient_name,
+        d.full_name AS doctor_name,
+        a.appointment_time,
+        a.appointment_date
+    FROM tokens t
+    JOIN appointments a ON t.appointment_id = a.appointment_id
+    JOIN patients p ON a.patient_id = p.patient_id
+    JOIN doctors d ON a.doctor_id = d.doctor_id
+    WHERE DATE(a.appointment_date) = CURDATE()
+    ORDER BY t.token_no ASC
+");
+
+// Fallback (IMPORTANT for testing)
+if (!$query || mysqli_num_rows($query) == 0) {
+    $query = mysqli_query($con, "
+        SELECT 
+            t.*, 
+            p.full_name AS patient_name,
+            d.full_name AS doctor_name,
+            a.appointment_time,
+            a.appointment_date
+        FROM tokens t
+        JOIN appointments a ON t.appointment_id = a.appointment_id
+        JOIN patients p ON a.patient_id = p.patient_id
+        JOIN doctors d ON a.doctor_id = d.doctor_id
+        ORDER BY t.token_no ASC
+    ");
+}
+
+$queue = [];
+$current = null;
+
+$waiting = 0;
+$in_progress = 0;
+$completed = 0;
+
+while ($row = mysqli_fetch_assoc($query)) {
+    $queue[] = $row;
+
+    switch ($row['status']) {
+        case 'Waiting':
+            $waiting++;
+            break;
+        case 'In Progress':
+        case 'Consulting': // support both
+            $in_progress++;
+            if (!$current) $current = $row;
+            break;
+        case 'Completed':
+            $completed++;
+            break;
+    }
+}
+
+$total = count($queue);
+
+// If no "In Progress", fallback to first waiting
+if (!$current && $total > 0) {
+    foreach ($queue as $row) {
+        if ($row['status'] == 'Waiting') {
+            $current = $row;
+            break;
+        }
+    }
+}
+?>
 <div class="reception-dashboard">
 
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <!-- ===== PAGE HEADER ===== -->
+    <div class="mb-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
         <div>
-            <small class="text-uppercase fw-semibold text-brand" style="font-size:0.76rem;letter-spacing:1px;">Real-time management</small>
-            <h1 class="dashboard-title mt-1">Live <span>Queue</span></h1>
-            <p class="dashboard-subtitle">Track and manage patient queue in real time</p>
+            <h1 class="dashboard-title"><span>Live</span> Queue Monitor</h1>
+            <p class="dashboard-subtitle">
+                <i class="bi bi-calendar3 me-1"></i>
+                <?= date('l, d F Y') ?> &nbsp;·&nbsp;
+                <i class="bi bi-clock me-1"></i>
+                <span id="live-clock"></span>
+            </p>
         </div>
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary rounded-pill" onclick="location.reload()">
-                <i class="bi bi-arrow-clockwise me-1"></i>Refresh
-            </button>
-            <button class="btn btn-brand rounded-pill">
-                <i class="bi bi-pause-circle me-1"></i>Pause Queue
-            </button>
+        <div class="lq-refresh-badge">
+            <span class="lq-pulse-dot"></span>
+            Auto-refreshing live
         </div>
     </div>
 
-    <!-- Stat Cards -->
+    <!-- ===== STATS ROW ===== -->
     <div class="stats-row mb-4">
         <div class="rstat-card">
-            <h6>Total Tokens</h6>
-            <h2>25</h2>
+            <h6><i class="bi bi-people me-1"></i>Total</h6>
+            <h2><?= $total ?></h2>
         </div>
         <div class="rstat-card">
-            <h6>Waiting</h6>
-            <h2>12</h2>
+            <h6><i class="bi bi-hourglass-split me-1"></i>Waiting</h6>
+            <h2><?= $waiting ?></h2>
         </div>
-        <div class="rstat-card">
-            <h6>In Progress</h6>
-            <h2>2</h2>
+        <div class="rstat-card lq-stat-amber">
+            <h6><i class="bi bi-activity me-1"></i>In Progress</h6>
+            <h2><?= $in_progress ?></h2>
         </div>
-        <div class="rstat-card">
-            <h6>Completed</h6>
-            <h2>11</h2>
+        <div class="rstat-card lq-stat-green">
+            <h6><i class="bi bi-check2-circle me-1"></i>Completed</h6>
+            <h2><?= $completed ?></h2>
         </div>
     </div>
 
-    <!-- Current Token -->
-    <div class="dcard current-token-card p-4 mb-4">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div>
-                <span class="badge bg-success mb-2">Now Consulting</span>
-                <div class="current-token-number mt-1">Token <span>#21</span></div>
-                <div class="r-patient-name mt-1">
-                    Rahul Patel
-                    <span class="text-muted fw-normal" style="font-size:0.9rem;">(32 / Male)</span>
+    <!-- ===== MAIN CONTENT GRID ===== -->
+    <div class="row g-4">
+
+        <!-- LEFT COLUMN: Live Monitor -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="rcard current-token-card h-100">
+                <div class="rcard-body d-flex flex-column gap-3">
+
+                    <!-- Header -->
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0">
+                            <i class="bi bi-broadcast me-2 text-brand"></i>Live Monitor
+                        </h5>
+                        <span class="lq-live-pill">
+                            <span class="lq-pulse-dot lq-pulse-dot--sm"></span> LIVE
+                        </span>
+                    </div>
+
+                    <?php if ($current): ?>
+
+                        <!-- Now Serving -->
+                        <div class="lq-now-serving-label">NOW SERVING</div>
+
+                        <!-- Big Token -->
+                        <div class="text-center py-2">
+                            <div class="lq-token-badge"><?= str_pad($current['token_no'], 3, '0', STR_PAD_LEFT) ?></div>
+                        </div>
+
+                        <!-- Patient Details -->
+                        <div class="lq-patient-card">
+                            <div class="lq-patient-avatar"><?= strtoupper(substr($current['patient_name'], 0, 1)) ?></div>
+                            <div>
+                                <div class="r-patient-name"><?= htmlspecialchars($current['patient_name']) ?></div>
+                                <div style="font-size:.82rem; color:#6b7280; margin-top:2px;">
+                                    <i class="bi bi-person-badge me-1 text-brand"></i><?= htmlspecialchars($current['doctor_name']) ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Meta Row -->
+                        <div class="d-flex gap-2 flex-wrap">
+                            <span class="badge-soft-warning">
+                                <i class="bi bi-clock me-1"></i><?= date('h:i A', strtotime($current['appointment_time'])) ?>
+                            </span>
+                            <span class="badge-soft-success">
+                                <i class="bi bi-activity me-1"></i><?= $current['status'] ?>
+                            </span>
+                        </div>
+
+                        <!-- Progress -->
+                        <?php if ($total > 0): ?>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between mb-1 lq-progress-label">
+                                    <span>Queue Progress</span>
+                                    <span><?= $completed ?> / <?= $total ?> completed</span>
+                                </div>
+                                <div class="progress lq-progress">
+                                    <div class="progress-bar lq-progress-bar"
+                                        style="width:<?= round(($completed / $total) * 100) ?>%">
+                                    </div>
+                                </div>
+                                <div class="lq-progress-pct"><?= round(($completed / $total) * 100) ?>%</div>
+                            </div>
+                        <?php endif; ?>
+
+                    <?php else: ?>
+                        <div class="lq-empty-state flex-grow-1">
+                            <div class="lq-empty-icon"><i class="bi bi-person-slash"></i></div>
+                            <p class="lq-empty-title">No Active Patient</p>
+                            <p class="lq-empty-sub">Queue is idle for today</p>
+                        </div>
+                    <?php endif; ?>
+
                 </div>
-                <small class="text-muted mt-1 d-block">
-                    <i class="bi bi-person-badge me-1"></i>Dr. Mehta &nbsp;·&nbsp; Room 2
-                </small>
-            </div>
-            <div class="d-flex flex-column gap-2">
-                <button class="btn btn-brand rounded-pill"><i class="bi bi-arrow-right-circle me-1"></i>Call Next</button>
-                <button class="btn btn-outline-success rounded-pill"><i class="bi bi-check-circle me-1"></i>Complete</button>
-                <button class="btn btn-outline-warning rounded-pill"><i class="bi bi-skip-forward-circle me-1"></i>Skip</button>
             </div>
         </div>
-    </div>
 
-    <!-- Queue Table -->
-    <div class="rcard mb-4">
-        <div class="rcard-body">
-            <h5 class="mb-3">Queue List</h5>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead>
-                        <tr class="r-thead">
-                            <th>Token</th>
-                            <th>Patient</th>
-                            <th>Doctor</th>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>#13</strong></td>
-                            <td><strong>Rahul Sharma</strong>
-                                <div class="text-muted small">9876543210</div>
-                            </td>
-                            <td>Dr. Mehta</td>
-                            <td class="text-muted" style="font-size:0.88rem;">10:30 AM</td>
-                            <td><span class="badge-soft-primary">Follow-up</span></td>
-                            <td><span class="badge-soft-warning">Waiting</span></td>
-                            <td><button class="btn btn-brand btn-sm rounded-pill px-3">Call</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>#14</strong></td>
-                            <td><strong>Anita Patel</strong>
-                                <div class="text-muted small">9123456780</div>
-                            </td>
-                            <td>Dr. Shah</td>
-                            <td class="text-muted" style="font-size:0.88rem;">11:00 AM</td>
-                            <td><span class="badge-soft-danger">Emergency</span></td>
-                            <td><span class="badge-soft-warning">Waiting</span></td>
-                            <td><button class="btn btn-brand btn-sm rounded-pill px-3">Call</button></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <!-- RIGHT COLUMN: Queue Table -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="rcard h-100">
+                <div class="rcard-body d-flex flex-column gap-3">
+
+                    <!-- Header -->
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0">
+                            <i class="bi bi-list-ol me-2 text-brand"></i>Queue List
+                        </h5>
+                        <span class="badge-soft-primary"><?= $total ?> Patient<?= $total != 1 ? 's' : '' ?></span>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table class="table table-borderless align-middle mb-0">
+                            <thead class="r-thead">
+                                <tr>
+                                    <th>Token</th>
+                                    <th>Patient</th>
+                                    <th>Doctor</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($queue as $row): ?>
+                                    <tr class="<?= $row['status'] === 'In Progress' ? 'lq-row-active' : '' ?>">
+                                        <td>
+                                            <span class="lq-token-chip">#<?= str_pad($row['token_no'], 3, '0', STR_PAD_LEFT) ?></span>
+                                        </td>
+                                        <td>
+                                            <div class="lq-patient-cell">
+                                                <div class="lq-avatar-sm"><?= strtoupper(substr($row['patient_name'], 0, 1)) ?></div>
+                                                <span style="font-weight:600; font-size:.9rem; color:#111827;">
+                                                    <?= htmlspecialchars($row['patient_name']) ?>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td style="font-size:.85rem; color:#374151;">
+                                            <i class="bi bi-person-badge me-1 text-brand" style="font-size:.8rem;"></i>
+                                            <?= htmlspecialchars($row['doctor_name']) ?>
+                                        </td>
+                                        <td style="font-size:.83rem; color:#6b7280; white-space:nowrap;">
+                                            <i class="bi bi-clock me-1"></i><?= date('h:i A', strtotime($row['appointment_time'])) ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            [$badge, $icon] = match ($row['status']) {
+                                                'In Progress' => ['badge-soft-warning', 'bi-activity'],
+                                                'Completed'   => ['badge-soft-success', 'bi-check2-circle'],
+                                                default       => ['badge-soft-primary', 'bi-hourglass-split'],
+                                            };
+                                            ?>
+                                            <span class="<?= $badge ?>">
+                                                <i class="bi <?= $icon ?> me-1"></i><?= $row['status'] ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+
+                                <?php if (empty($queue)): ?>
+                                    <tr>
+                                        <td colspan="5">
+                                            <div class="lq-empty-state" style="padding:40px 0;">
+                                                <div class="lq-empty-icon"><i class="bi bi-calendar-x"></i></div>
+                                                <p class="lq-empty-title">No Queue for Today</p>
+                                                <p class="lq-empty-sub">Appointments will appear here once registered</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Controls -->
-    <div class="d-flex gap-3 flex-wrap">
-        <button class="btn btn-brand rounded-pill px-4">
-            <i class="bi bi-arrow-right me-1"></i>Call Next Patient
-        </button>
-        <button class="btn btn-outline-secondary rounded-pill px-4">
-            <i class="bi bi-trash me-1"></i>Clear Completed
-        </button>
-    </div>
+    </div><!-- /row -->
 
-</div>
+</div><!-- /reception-dashboard -->
+
+<script>
+    // Live clock
+    function updateClock() {
+        const el = document.getElementById('live-clock');
+        if (el) el.textContent = new Date().toLocaleTimeString('en-IN', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Auto-refresh page every 30 seconds
+    setTimeout(() => location.reload(), 30000);
+</script>
 
 <?php
 $content = ob_get_clean();
