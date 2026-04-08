@@ -185,7 +185,7 @@ if ($patientId > 0) {
 
                 <div class="col-lg-5">
                     <?php if ($current): ?>
-                        <div class="dcard mb-3">
+                        <div class="dcard mb-3" id="printSection">
                             <div class="card-header">Patient Profile</div>
                             <div class="card-body" id="patientProfile">
                                 <p class="mb-2"><strong>Name:</strong> <?php echo htmlspecialchars($current['full_name']); ?></p>
