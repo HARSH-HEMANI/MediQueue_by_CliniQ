@@ -3,29 +3,42 @@ include "doctor-auth.php";
 include "../db.php";
 
 $doctor_id = (int)$_SESSION['doctor_id'];
-
-// FIX: Define $queue_date based on GET parameter or default to today
 $queue_date = $_GET['date'] ?? date('Y-m-d');
 
-// Total Tokens for the selected date
-$totalQ = mysqli_query($con, "SELECT COUNT(*) as total FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$queue_date'");
-$totalTokens = mysqli_fetch_assoc($totalQ)['total'] ?? 0;
+/* ================================
+   ⚡ OPTIMIZED STATS QUERY (1 QUERY INSTEAD OF 3)
+================================ */
+$statsQ = mysqli_query($con, "
+SELECT 
+    COUNT(*) as total,
+    SUM(CASE WHEN t.status = 'Completed' THEN 1 ELSE 0 END) as completed,
+    SUM(CASE WHEN t.status IN ('Waiting','Skipped') THEN 1 ELSE 0 END) as pending
+FROM tokens t
+JOIN appointments a ON t.appointment_id = a.appointment_id
+WHERE a.doctor_id = $doctor_id 
+AND a.appointment_date = '$queue_date'
+");
 
-// Completed
-$compQ = mysqli_query($con, "SELECT COUNT(*) as count FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$queue_date' AND t.status = 'Completed'");
-$completed = mysqli_fetch_assoc($compQ)['count'] ?? 0;
+$stats = mysqli_fetch_assoc($statsQ);
 
-// Pending
-$pendQ = mysqli_query($con, "SELECT COUNT(*) as count FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$queue_date' AND t.status IN ('Waiting', 'Skipped')");
-$pending = mysqli_fetch_assoc($pendQ)['count'] ?? 0;
+$totalTokens = (int)($stats['total'] ?? 0);
+$completed   = (int)($stats['completed'] ?? 0);
+$pending     = (int)($stats['pending'] ?? 0);
 
-// Current Token (In Progress)
-$currentQ = mysqli_query($con, "SELECT t.token_id, t.token_no, p.full_name, p.date_of_birth, a.appointment_type 
-                                FROM tokens t 
-                                JOIN appointments a ON t.appointment_id = a.appointment_id 
-                                JOIN patients p ON a.patient_id = p.patient_id 
-                                WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$queue_date' AND t.status = 'In Progress' 
-                                ORDER BY t.called_at DESC LIMIT 1");
+/* ================================
+   🧠 CURRENT TOKEN (NO CHANGE, JUST SAFE)
+================================ */
+$currentQ = mysqli_query($con, "
+SELECT t.token_id, t.token_no, p.full_name, p.date_of_birth, a.appointment_type 
+FROM tokens t 
+JOIN appointments a ON t.appointment_id = a.appointment_id 
+JOIN patients p ON a.patient_id = p.patient_id 
+WHERE a.doctor_id = $doctor_id 
+AND a.appointment_date = '$queue_date' 
+AND t.status = 'In Progress' 
+ORDER BY t.called_at DESC LIMIT 1
+");
+
 $currentTokenData = mysqli_fetch_assoc($currentQ);
 
 $currentToken = null;
@@ -44,8 +57,7 @@ if ($currentTokenData) {
 
     if ($currentTokenData['date_of_birth']) {
         $dob = new DateTime($currentTokenData['date_of_birth']);
-        $now = new DateTime();
-        $currentAge = $now->diff($dob)->y;
+        $currentAge = (new DateTime())->diff($dob)->y;
     }
 
     if ($currentType === 'Emergency') {
@@ -57,14 +69,63 @@ if ($currentTokenData) {
     }
 }
 
-// Queue Table
-$queueQ = mysqli_query($con, "SELECT t.token_no, p.full_name, a.appointment_type, t.status 
-                              FROM tokens t 
-                              JOIN appointments a ON t.appointment_id = a.appointment_id 
-                              JOIN patients p ON a.patient_id = p.patient_id 
-                              WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$queue_date' AND t.status IN ('Waiting', 'Skipped') 
-                              ORDER BY (a.appointment_type = 'Emergency') DESC, t.queue_position ASC");
+/* ================================
+   ⚡ AVG CONSULTATION TIME (NEW)
+================================ */
+$avgQ = mysqli_query($con, "
+SELECT AVG(TIMESTAMPDIFF(MINUTE, called_at, completed_at)) as avg_time
+FROM tokens t
+JOIN appointments a ON t.appointment_id = a.appointment_id
+WHERE a.doctor_id = $doctor_id 
+AND a.appointment_date = '$queue_date'
+AND t.status = 'Completed'
+");
 
+$avgTime = round(mysqli_fetch_assoc($avgQ)['avg_time'] ?? 5);
+
+/* ================================
+   🚨 OVERLOAD PREDICTION (NEW)
+================================ */
+$estimatedTimeLeft = $pending * max($avgTime, 1);
+$isOverloaded = $estimatedTimeLeft > 120;
+
+/* ================================
+   🏥 CAPACITY CALCULATION (NEW)
+================================ */
+$workingHours = 8;
+$totalCapacity = ($workingHours * 60) / max($avgTime, 1);
+$utilization = ($totalTokens / max($totalCapacity, 1)) * 100;
+
+/* ================================
+   📋 QUEUE (IMPROVED ORDER)
+================================ */
+$queueQ = mysqli_query($con, "
+SELECT t.token_no, p.full_name, a.appointment_type, t.status 
+FROM tokens t 
+JOIN appointments a ON t.appointment_id = a.appointment_id 
+JOIN patients p ON a.patient_id = p.patient_id 
+WHERE a.doctor_id = $doctor_id 
+AND a.appointment_date = '$queue_date' 
+AND t.status IN ('Waiting', 'Skipped') 
+ORDER BY 
+    (a.appointment_type = 'Emergency') DESC, 
+    t.queue_position ASC,
+    t.token_no ASC
+");
+
+/* ================================
+   🎯 OPTIONAL: ESTIMATED WAIT PER PATIENT (ADVANCED)
+================================ */
+$position = 0;
+$estimatedWaitMap = [];
+
+while ($row = mysqli_fetch_assoc($queueQ)) {
+    $position++;
+    $estimatedWaitMap[$row['token_no']] = $position * $avgTime;
+}
+
+// Reset pointer (important)
+mysqli_data_seek($queueQ, 0);
 ?>
 
 <!DOCTYPE html>
@@ -182,11 +243,17 @@ $queueQ = mysqli_query($con, "SELECT t.token_no, p.full_name, a.appointment_type
                                         <th>Status</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="queue-body">
                                     <?php if (mysqli_num_rows($queueQ) > 0): ?>
                                         <?php while ($q = mysqli_fetch_assoc($queueQ)): ?>
                                             <tr class="<?php echo $q['appointment_type'] === 'Emergency' ? 'table-danger' : ''; ?>">
-                                                <td class="fw-bold">#<?php echo $q['token_no']; ?></td>
+                                                <td class="fw-bold">
+                                                    #<?php echo $q['token_no']; ?>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        ~<?php echo $estimatedWaitMap[$q['token_no']] ?? 0; ?> min
+                                                    </small>
+                                                </td>
                                                 <td><?php echo htmlspecialchars($q['full_name']); ?></td>
                                                 <td>
                                                     <span class="badge <?php echo ($q['appointment_type'] === 'Emergency') ? 'bg-danger' : 'bg-info text-dark'; ?>">
@@ -240,6 +307,61 @@ $queueQ = mysqli_query($con, "SELECT t.token_no, p.full_name, a.appointment_type
     <?php include './doctor-footer.php'; ?>
 
     <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
+
+    <script>
+        setInterval(() => {
+            fetch('live-queue-data.php')
+                .then(res => res.json())
+                .then(data => {
+
+                    // CURRENT TOKEN UPDATE
+                    if (data.current) {
+                        document.querySelector('.current-token-number').innerText =
+                            "Token #" + data.current.token_no;
+
+                        document.querySelector('.patient-name').innerText =
+                            data.current.full_name;
+                    }
+
+                    // TABLE UPDATE
+                    let tbody = document.getElementById("queue-body");
+                    tbody.innerHTML = "";
+
+                    data.queue.forEach((p, i) => {
+                        tbody.innerHTML += `
+                            <tr class="${p.appointment_type === 'Emergency' ? 'table-danger' : ''}">
+    
+                                <td class="fw-bold">
+                                    #${p.token_no}
+                                    <br>
+                                    <small class="text-muted">~${p.wait_time ?? 0} min</small>
+                                </td>
+
+                                <td>${p.full_name}</td>
+
+                                    <td>
+                                        <span class="badge ${
+                                            p.appointment_type === 'Emergency' 
+                                                ? 'bg-danger' 
+                                                : 'bg-info text-dark'
+                                                }">
+                                            ${p.appointment_type}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-warning text-dark">Waiting</span>
+                                    </td>
+
+                            </tr>
+                            `;
+                    });
+
+                })
+                .catch(err => console.error("Fetch error:", err));
+        }, 3000);
+    </script>
+
 </body>
 
 </html>
