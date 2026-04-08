@@ -89,6 +89,44 @@ if ($patientId > 0) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css?v=vibrant" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css?v=vibrant">
     <link rel="stylesheet" href="../css/doctor.css?v=vibrant">
+
+    <style>
+        @media print {
+
+            body * {
+                visibility: hidden;
+            }
+
+            #printSection,
+            #printSection * {
+                visibility: visible;
+            }
+
+            #printSection {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                background: #fff;
+                padding: 20px;
+            }
+
+            /* Hide unwanted UI */
+            .doctor-sidebar,
+            .card-header,
+            button {
+                display: none !important;
+            }
+
+        }
+
+        @media print {
+            .visit-timeline>div {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+
 </head>
 
 <body class="layout-with-sidebar">
@@ -124,7 +162,7 @@ if ($patientId > 0) {
                                     <tbody>
                                         <?php foreach ($patientsList as $pData): ?>
                                             <tr class="<?php echo ($pData['patient_id'] == $patientId) ? 'table-active' : ''; ?>"
-                                                onclick="window.location='?patient=<?php echo $pData['patient_id']; ?>'" style="cursor:pointer;">
+                                                onclick="loadPatient(<?php echo $pData['patient_id']; ?>)" style="cursor:pointer;">
                                                 <td>
                                                     <span class="text-primary fw-bold">#P<?php echo str_pad($pData['patient_id'], 4, '0', STR_PAD_LEFT); ?></span>
                                                 </td>
@@ -149,7 +187,7 @@ if ($patientId > 0) {
                     <?php if ($current): ?>
                         <div class="dcard mb-3">
                             <div class="card-header">Patient Profile</div>
-                            <div class="card-body">
+                            <div class="card-body" id="patientProfile">
                                 <p class="mb-2"><strong>Name:</strong> <?php echo htmlspecialchars($current['full_name']); ?></p>
                                 <p class="mb-2"><strong>Age / Gender:</strong> <?php echo $current['age']; ?> / <?php echo htmlspecialchars($current['gender'] ?? 'N/A'); ?></p>
                                 <p class="mb-2"><strong>Phone:</strong> <?php echo htmlspecialchars($current['phone']); ?></p>
@@ -182,10 +220,17 @@ if ($patientId > 0) {
                 </div>
             </section>
 
-            <section class="mt-4">
+            <section class="mt-4" id="printSection">
                 <div class="dcard">
                     <div class="card-header">Visit History</div>
-                    <div class="card-body">
+                    <div class="card-body" id="patientHistory">
+                        <h3 class="text-center mb-3">Patient History</h3>
+
+                        <p><strong>Name:</strong> <?php echo htmlspecialchars($current['full_name']); ?></p>
+                        <p><strong>Age / Gender:</strong> <?php echo $current['age']; ?> / <?php echo htmlspecialchars($current['gender']); ?></p>
+                        <p><strong>Phone:</strong> <?php echo htmlspecialchars($current['phone']); ?></p>
+
+                        <hr>
                         <?php if (!empty($historyList)): ?>
                             <div class="visit-timeline">
                                 <?php foreach ($historyList as $visit): ?>
@@ -230,6 +275,45 @@ if ($patientId > 0) {
     <?php include './doctor-footer.php'; ?>
 
     <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
+
+    <script>
+        function loadPatient(patientId) {
+            fetch("get-patient.php?patient=" + patientId)
+                .then(res => res.json())
+                .then(data => {
+
+                    /* -------- UPDATE PROFILE -------- */
+                    document.getElementById("patientProfile").innerHTML = `
+                <p><strong>Name:</strong> ${data.profile.name}</p>
+                <p><strong>Age / Gender:</strong> ${data.profile.age} / ${data.profile.gender}</p>
+                <p><strong>Phone:</strong> ${data.profile.phone}</p>
+            `;
+
+                    /* -------- UPDATE HISTORY -------- */
+                    let html = "";
+
+                    if (data.history.length > 0) {
+                        data.history.forEach(v => {
+                            html += `
+                        <div class="mb-3 border-bottom pb-2">
+                            <strong>${v.appointment_date}</strong>
+                            <span class="badge bg-info">${v.appointment_type}</span>
+                            ${v.diagnosis ? `<p>Diagnosis: ${v.diagnosis}</p>` : ""}
+                            ${v.note_text ? `<p>Notes: ${v.note_text}</p>` : ""}
+                        </div>
+                    `;
+                        });
+                    } else {
+                        html = `<p class="text-muted">No history found</p>`;
+                    }
+
+                    document.getElementById("patientHistory").innerHTML = html;
+
+                });
+            document.querySelectorAll("tbody tr").forEach(tr => tr.classList.remove("table-active"));
+            event.currentTarget.classList.add("table-active");
+        }
+    </script>
 
 </body>
 
