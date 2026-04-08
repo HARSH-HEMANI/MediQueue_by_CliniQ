@@ -3,86 +3,293 @@ include "doctor-auth.php";
 include "../db.php";
 
 $doctor_id = (int)$_SESSION['doctor_id'];
-$doctor_name = $_SESSION['doctor_name'] ?? "Doctor"; // Using session name directly
+$doctor_name = $_SESSION['doctor_name'] ?? "Doctor";
+
+/* ================================
+   📅 DATE HANDLING
+================================ */
 $filter_date = $_GET['date'] ?? date('Y-m-d');
 
-// --- Define Time Window Variables (7-day window) ---
+$checkQ = mysqli_query($con, "
+SELECT COUNT(*) as count 
+FROM appointments 
+WHERE doctor_id = $doctor_id 
+AND appointment_date = '$filter_date'
+");
+
+$hasData = mysqli_fetch_assoc($checkQ)['count'] ?? 0;
+
+if (!$hasData) {
+    $latestQ = mysqli_query($con, "
+    SELECT MAX(appointment_date) as latest_date 
+    FROM appointments 
+    WHERE doctor_id = $doctor_id
+    ");
+    $latestDate = mysqli_fetch_assoc($latestQ)['latest_date'];
+    if ($latestDate) $filter_date = $latestDate;
+}
+
+/* ================================
+   📅 WEEK WINDOW
+================================ */
 $ref_date = $filter_date;
 $week_start = date('Y-m-d', strtotime('-6 days', strtotime($filter_date)));
 
-// --- Total Patients (Filtered Day) ---
-$totalQ = mysqli_query($con, "SELECT COUNT(*) as total FROM appointments WHERE doctor_id = $doctor_id AND appointment_date = '$filter_date'");
-$totalPatients = mysqli_fetch_assoc($totalQ)['total'] ?? 0;
+/* ================================
+   📊 BASIC STATS
+================================ */
+$totalPatients = 0;
+$completed = 0;
+$pending = 0;
 
-// --- Completed Patients (Filtered Day) ---
-$compQ = mysqli_query($con, "SELECT COUNT(*) as count FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$filter_date' AND t.status = 'Completed'");
-$completed = mysqli_fetch_assoc($compQ)['count'] ?? 0;
+$res = mysqli_query($con, "
+SELECT COUNT(*) as total 
+FROM appointments 
+WHERE doctor_id = $doctor_id 
+AND appointment_date = '$filter_date'
+");
+if ($res) $totalPatients = mysqli_fetch_assoc($res)['total'] ?? 0;
 
-// --- Pending / Skipped (Filtered Day) ---
-$pendQ = mysqli_query($con, "SELECT COUNT(*) as count FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$filter_date' AND t.status IN ('Waiting', 'Skipped', 'In Progress')");
-$pending = mysqli_fetch_assoc($pendQ)['count'] ?? 0;
+$res = mysqli_query($con, "
+SELECT COUNT(*) as count 
+FROM tokens t 
+JOIN appointments a ON t.appointment_id = a.appointment_id 
+WHERE a.doctor_id = $doctor_id 
+AND a.appointment_date = '$filter_date' 
+AND t.status = 'Completed'
+");
+if ($res) $completed = mysqli_fetch_assoc($res)['count'] ?? 0;
 
-// --- Avg Consultation Time (Filtered Day) ---
-$avgTimeQ = mysqli_query($con, "SELECT AVG(TIMESTAMPDIFF(MINUTE, called_at, completed_at)) as avg_min 
-                                FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id 
-                                WHERE a.doctor_id = $doctor_id AND a.appointment_date = '$filter_date' AND t.status = 'Completed'");
-$avgData = mysqli_fetch_assoc($avgTimeQ);
-$avgTime = $avgData['avg_min'] ? round($avgData['avg_min']) : 0;
+$res = mysqli_query($con, "
+SELECT COUNT(*) as count 
+FROM tokens t 
+JOIN appointments a ON t.appointment_id = a.appointment_id 
+WHERE a.doctor_id = $doctor_id 
+AND a.appointment_date = '$filter_date' 
+AND t.status IN ('Waiting','Skipped','In Progress')
+");
+if ($res) $pending = mysqli_fetch_assoc($res)['count'] ?? 0;
 
-// --- Appointment Type Breakdown (Filtered Day) ---
-$typeQ = mysqli_query($con, "SELECT appointment_type, COUNT(*) as count FROM appointments WHERE doctor_id = $doctor_id AND appointment_date = '$filter_date' GROUP BY appointment_type");
+/* ================================
+   ⏱ CONSULT TIME
+================================ */
+$avgTime = 0;
+$total_consult_mins = 0;
+
+$res = mysqli_query($con, "
+SELECT 
+AVG(TIMESTAMPDIFF(MINUTE, called_at, completed_at)) as avg_min,
+SUM(TIMESTAMPDIFF(MINUTE, called_at, completed_at)) as total_min
+FROM tokens t 
+JOIN appointments a ON t.appointment_id = a.appointment_id 
+WHERE a.doctor_id = $doctor_id 
+AND a.appointment_date = '$filter_date'
+AND t.status = 'Completed'
+");
+
+if ($res && mysqli_num_rows($res)) {
+    $row = mysqli_fetch_assoc($res);
+    $avgTime = round($row['avg_min'] ?? 0);
+    $total_consult_mins = (int)($row['total_min'] ?? 0);
+}
+
+/* ================================
+   🧠 FORMAT FUNCTION
+================================ */
+function fmt_dur($mins)
+{
+    return ($mins && $mins > 0) ? round($mins) . " min" : "--";
+}
+
+/* ================================
+   📊 PEAK HOURS
+================================ */
+$hoursValues = array_fill(0, 9, 0);
+
+$res = mysqli_query($con, "
+SELECT HOUR(appointment_time) as h, COUNT(*) as c 
+FROM appointments 
+WHERE doctor_id = $doctor_id 
+AND appointment_date = '$filter_date' 
+GROUP BY h
+");
+
+if ($res) {
+    while ($r = mysqli_fetch_assoc($res)) {
+        $h = (int)$r['h'];
+        if ($h >= 9 && $h <= 17) {
+            $hoursValues[$h - 9] = (int)$r['c'];
+        }
+    }
+}
+
+/* ================================
+   🧠 PEAK LABELS (FIXED)
+================================ */
+$peak_hour_label = "--";
+$slow_hour_label = "--";
+
+if (array_sum($hoursValues) > 0) {
+    $maxIndex = array_search(max($hoursValues), $hoursValues);
+    $minIndex = array_search(min($hoursValues), $hoursValues);
+
+    if ($maxIndex !== false) {
+        $peak_hour_label = date("g A", strtotime((9 + $maxIndex) . ":00"));
+    }
+    if ($minIndex !== false) {
+        $slow_hour_label = date("g A", strtotime((9 + $minIndex) . ":00"));
+    }
+}
+
+/* ================================
+   📊 TYPE DATA
+================================ */
 $typeData = ['New' => 0, 'Follow Up' => 0, 'Emergency' => 0];
-while ($row = mysqli_fetch_assoc($typeQ)) {
-    $type = $row['appointment_type'];
-    if ($type === 'Follow-up') $type = 'Follow Up';
-    if (isset($typeData[$type])) $typeData[$type] = $row['count'];
+
+$res = mysqli_query($con, "
+SELECT appointment_type, COUNT(*) as count 
+FROM appointments 
+WHERE doctor_id = $doctor_id 
+AND appointment_date = '$filter_date' 
+GROUP BY appointment_type
+");
+
+if ($res) {
+    while ($row = mysqli_fetch_assoc($res)) {
+        $type = $row['appointment_type'];
+        if ($type === 'Follow-up') $type = 'Follow Up';
+        if (isset($typeData[$type])) {
+            $typeData[$type] = (int)$row['count'];
+        }
+    }
 }
 
-// --- Speed indicator (7-day Window) ---
+/* ================================
+   📊 SPEED DATA
+================================ */
 $speedData = ['fast' => 0, 'average' => 0, 'slow' => 0];
-$timesQ = mysqli_query($con, "SELECT TIMESTAMPDIFF(MINUTE, called_at, completed_at) as duration 
-                            FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id 
-                            WHERE a.doctor_id = $doctor_id AND a.appointment_date BETWEEN '$week_start' AND '$ref_date' AND t.status = 'Completed'");
-while ($row = mysqli_fetch_assoc($timesQ)) {
-    $dur = (int)$row['duration'];
-    if ($dur >= 0 && $dur < 8) $speedData['fast']++;
-    elseif ($dur >= 8 && $dur <= 15) $speedData['average']++;
-    elseif ($dur > 15) $speedData['slow']++;
+
+$res = mysqli_query($con, "
+SELECT TIMESTAMPDIFF(MINUTE, called_at, completed_at) as duration 
+FROM tokens t 
+JOIN appointments a ON t.appointment_id = a.appointment_id 
+WHERE a.doctor_id = $doctor_id 
+AND a.appointment_date BETWEEN '$week_start' AND '$ref_date' 
+AND t.status = 'Completed'
+");
+
+if ($res) {
+    while ($row = mysqli_fetch_assoc($res)) {
+        $dur = (int)$row['duration'];
+
+        if ($dur < 8) $speedData['fast']++;
+        elseif ($dur <= 15) $speedData['average']++;
+        else $speedData['slow']++;
+    }
 }
 
-// --- Peak hours (Filtered Day) ---
-$peakQ = mysqli_query($con, "SELECT HOUR(appointment_time) as h, COUNT(*) as c FROM appointments WHERE doctor_id = $doctor_id AND appointment_date = '$filter_date' GROUP BY HOUR(appointment_time) ORDER BY h");
-$peakChartData = array_fill(9, 9, 0); // 9 AM to 5 PM
-while ($r = mysqli_fetch_assoc($peakQ)) {
-    $h = (int)$r['h'];
-    if ($h >= 9 && $h <= 17) $peakChartData[$h] = (int)$r['c'];
+/* ================================
+   ⏱ DELAY
+================================ */
+$avgDelay = 0;
+$maxDelay = 0;
+
+$res = mysqli_query($con, "
+SELECT 
+AVG(TIMESTAMPDIFF(MINUTE, a.appointment_time, t.called_at)) as avg_delay,
+MAX(TIMESTAMPDIFF(MINUTE, a.appointment_time, t.called_at)) as max_delay
+FROM tokens t
+JOIN appointments a ON t.appointment_id = a.appointment_id
+WHERE a.doctor_id = $doctor_id
+AND a.appointment_date = '$filter_date'
+AND t.called_at IS NOT NULL
+");
+
+if ($res && mysqli_num_rows($res)) {
+    $row = mysqli_fetch_assoc($res);
+    $avgDelay = round($row['avg_delay'] ?? 0);
+    $maxDelay = round($row['max_delay'] ?? 0);
 }
-$hoursValues = array_values($peakChartData);
 
-// --- Weekly Snapshot Logic ---
-$weekStatsQ = mysqli_query($con, "SELECT 
-    COUNT(*) as total_appts, 
-    COUNT(DISTINCT appointment_date) as active_days,
-    AVG(TIMESTAMPDIFF(MINUTE, called_at, completed_at)) as week_avg_time
-    FROM tokens t JOIN appointments a ON t.appointment_id = a.appointment_id 
-    WHERE a.doctor_id = $doctor_id AND a.appointment_date BETWEEN '$week_start' AND '$ref_date' AND t.status = 'Completed'");
-$weekStats = mysqli_fetch_assoc($weekStatsQ);
+/* ================================
+   📊 WEEKLY SNAPSHOT (FIXED)
+================================ */
+$week_total_appts = 0;
+$week_days = 0;
+$week_avg = 0;
+$res = mysqli_query($con, "
+SELECT 
+AVG(
+    GREATEST(
+        0,
+        TIMESTAMPDIFF(MINUTE, 
+            CONCAT(a.appointment_date, ' ', a.appointment_time), 
+            t.called_at
+        )
+        -
+        IF(
+            t.called_at > CONCAT(a.appointment_date, ' ', d.break_start_time)
+            AND CONCAT(a.appointment_date, ' ', a.appointment_time) < CONCAT(a.appointment_date, ' ', d.break_end_time),
 
-$week_total_appts = $weekStats['total_appts'] ?? 0;
-$week_days = $weekStats['active_days'] ?? 0;
-$week_avg = $weekStats['week_avg_time'] ? round($weekStats['week_avg_time']) : 0;
+            TIMESTAMPDIFF(
+                MINUTE,
+                GREATEST(
+                    CONCAT(a.appointment_date, ' ', a.appointment_time),
+                    CONCAT(a.appointment_date, ' ', d.break_start_time)
+                ),
+                LEAST(
+                    t.called_at,
+                    CONCAT(a.appointment_date, ' ', d.break_end_time)
+                )
+            ),
+            0
+        )
+    )
+) as avg_delay,
 
-// --- Helper for Duration Formatting ---
-$total_consult_mins = $completed * $avgTime;
-$fmt_dur = function ($mins) {
-    $h = floor($mins / 60);
-    $m = $mins % 60;
-    return ($h > 0 ? "{$h}h " : "") . "{$m}m";
-};
+MAX(
+    GREATEST(
+        0,
+        TIMESTAMPDIFF(MINUTE, 
+            CONCAT(a.appointment_date, ' ', a.appointment_time), 
+            t.called_at
+        )
+        -
+        IF(
+            t.called_at > CONCAT(a.appointment_date, ' ', d.break_start_time)
+            AND CONCAT(a.appointment_date, ' ', a.appointment_time) < CONCAT(a.appointment_date, ' ', d.break_end_time),
 
-// --- Busiest/Quietest labels (Placeholder logic) ---
-$peak_hour_label = "11:00 AM - 12:00 PM";
-$slow_hour_label = "04:00 PM - 05:00 PM";
+            TIMESTAMPDIFF(
+                MINUTE,
+                GREATEST(
+                    CONCAT(a.appointment_date, ' ', a.appointment_time),
+                    CONCAT(a.appointment_date, ' ', d.break_start_time)
+                ),
+                LEAST(
+                    t.called_at,
+                    CONCAT(a.appointment_date, ' ', d.break_end_time)
+                )
+            ),
+            0
+        )
+    )
+) as max_delay
+
+FROM tokens t
+JOIN appointments a ON t.appointment_id = a.appointment_id
+JOIN doctors d ON a.doctor_id = d.doctor_id
+
+WHERE a.doctor_id = $doctor_id
+AND a.appointment_date = '$filter_date'
+AND t.called_at IS NOT NULL
+");
+
+if ($res && mysqli_num_rows($res)) {
+    $row = mysqli_fetch_assoc($res);
+    $week_total_appts = (int)($row['total'] ?? 0);
+    $week_days = (int)($row['days'] ?? 0);
+    $week_avg = round($row['avg_time'] ?? 0);
+}
 ?>
 
 <!DOCTYPE html>
@@ -180,6 +387,14 @@ $slow_hour_label = "04:00 PM - 05:00 PM";
                     <div class="card-body"><canvas id="speedChart"></canvas></div>
                 </div>
             </div>
+
+            <div class="dcard">
+                <div class="card-header">Delay Impact</div>
+                <div class="card-body">
+                    <p><strong>Average Delay:</strong> <?php echo $avgDelay; ?> min</p>
+                    <p><strong>Max Delay:</strong> <?php echo $maxDelay; ?> min</p>
+                </div>
+            </div>
         </section>
 
         <section class="row g-4 mb-4">
@@ -187,7 +402,7 @@ $slow_hour_label = "04:00 PM - 05:00 PM";
                 <div class="dcard">
                     <div class="card-header">Daily Consultation Summary</div>
                     <div class="card-body">
-                        <p><strong>Estimated total time:</strong> <?php echo $fmt_dur($total_consult_mins); ?></p>
+                        <p><strong>Estimated total time:</strong> <?php echo fmt_dur($total_consult_mins); ?></p>
                         <p><strong>Busiest slot:</strong> <?php echo $peak_hour_label; ?></p>
                         <p class="mb-0"><strong>Quietest slot:</strong> <?php echo $slow_hour_label; ?></p>
                     </div>
@@ -218,7 +433,7 @@ $slow_hour_label = "04:00 PM - 05:00 PM";
                 labels: ['9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM'],
                 datasets: [{
                     label: 'Patients',
-                    data: <?php echo json_encode($hoursValues); ?>,
+                    data: <?php echo json_encode($hoursValues ?? [0, 0, 0, 0, 0, 0, 0, 0, 0]); ?>,
                     borderColor: '#FF5A5F',
                     backgroundColor: 'rgba(255,90,95,0.15)',
                     tension: 0.3,
