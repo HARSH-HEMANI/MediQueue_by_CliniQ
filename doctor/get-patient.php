@@ -26,16 +26,33 @@ if ($current) {
 
     /* -------- FETCH HISTORY -------- */
     $histQ = mysqli_query($con, "
-        SELECT a.appointment_date, a.appointment_type, cn.note_text, cn.diagnosis 
+        SELECT 
+            a.appointment_date, 
+            a.appointment_type, 
+            cn.note_text, 
+            cn.diagnosis,
+            cn.medicines,
+            cn.follow_up_date
         FROM appointments a 
-        LEFT JOIN consultation_notes cn ON a.appointment_id = cn.appointment_id 
-        WHERE a.patient_id = $patientId AND a.doctor_id = $doctor_id
+        LEFT JOIN consultation_notes cn 
+            ON a.appointment_id = cn.appointment_id 
+        WHERE a.patient_id = $patientId 
+        AND a.doctor_id = $doctor_id
         ORDER BY a.appointment_date DESC
     ");
 
     $history = [];
     while ($row = mysqli_fetch_assoc($histQ)) {
-        $history[] = $row;
+        $history[] = [
+            "appointment_date" => date('d M Y', strtotime($row['appointment_date'])),
+            "appointment_type" => $row['appointment_type'],
+            "diagnosis" => $row['diagnosis'],
+            "note_text" => $row['note_text'],
+            "medicines" => $row['medicines'],
+            "follow_up_date" => $row['follow_up_date']
+                ? date('d M Y', strtotime($row['follow_up_date']))
+                : null
+        ];
     }
 
     $response['history'] = $history;
