@@ -1,6 +1,73 @@
 <?php
 include_once "reception-auth.php";
+include_once "../db.php"; // DB connection
+
+date_default_timezone_set('Asia/Kolkata');
+
 $content_page = 'Reception Dashboard | MediQueue';
+
+/* =========================
+   FETCH DYNAMIC DATA
+========================= */
+
+// Today's date
+$today = date('Y-m-d');
+
+// 1. Total Appointments Today
+$todayAppointmentsQuery = mysqli_query($con, "
+    SELECT COUNT(*) as total 
+    FROM appointments 
+    WHERE appointment_date = '$today'
+");
+$todayAppointments = mysqli_fetch_assoc($todayAppointmentsQuery)['total'] ?? 0;
+
+// 2. Patients in Queue (Not Completed)
+$queueQuery = mysqli_query($con, "
+    SELECT COUNT(*) as total 
+    FROM tokens 
+    WHERE status != 'Completed'
+");
+$queueCount = mysqli_fetch_assoc($queueQuery)['total'] ?? 0;
+
+// 3. Available Doctors
+$doctorQuery = mysqli_query($con, "
+    SELECT COUNT(*) as total 
+    FROM doctors 
+    WHERE is_active = 1
+");
+$doctorCount = mysqli_fetch_assoc($doctorQuery)['total'] ?? 0;
+
+// 4. Completed Appointments Today
+$completedQuery = mysqli_query($con, "
+    SELECT COUNT(*) as total 
+    FROM appointments 
+    WHERE appointment_date = '$today' 
+    AND status = 'Completed'
+");
+$completedCount = mysqli_fetch_assoc($completedQuery)['total'] ?? 0;
+
+// 5. Today's Appointment List
+$appointmentsQuery = mysqli_query($con, "
+    SELECT a.*, d.full_name as doctor_name, p.full_name as patient_name
+    FROM appointments a
+    LEFT JOIN doctors d ON a.doctor_id = d.doctor_id
+    LEFT JOIN patients p ON a.patient_id = p.patient_id
+    WHERE a.appointment_date = '$today'
+    ORDER BY a.appointment_time ASC
+    LIMIT 5
+");
+
+// 6. Live Queue
+$queueListQuery = mysqli_query($con, "
+    SELECT t.*, p.full_name 
+    FROM tokens t
+    LEFT JOIN appointments a ON t.appointment_id = a.appointment_id
+    LEFT JOIN patients p ON a.patient_id = p.patient_id
+    WHERE t.status != 'Completed'
+    ORDER BY t.queue_position ASC
+    LIMIT 3
+");
+
 ob_start();
 ?>
 
@@ -9,15 +76,13 @@ ob_start();
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
-            <small class="text-uppercase fw-semibold text-brand" style="font-size:0.76rem;letter-spacing:1px;">Overview</small>
+            <small class="text-uppercase fw-semibold text-brand">Overview</small>
             <h1 class="dashboard-title mt-1">Reception <span>Dashboard</span></h1>
             <p class="dashboard-subtitle">Today's clinic activity at a glance</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <span class="badge bg-success py-2 px-3">
-                <i class="bi bi-circle-fill me-1" style="font-size:0.5rem;"></i>Live
-            </span>
-            <span class="text-muted" style="font-size:0.85rem;"><?php echo date('D, d M Y'); ?></span>
+            <span class="badge bg-success py-2 px-3">Live</span>
+            <span class="text-muted"><?php echo date('D, d M Y'); ?></span>
         </div>
     </div>
 
@@ -25,19 +90,19 @@ ob_start();
     <div class="stats-row mb-4">
         <div class="rstat-card">
             <h6>Today's Appointments</h6>
-            <h2>12</h2>
+            <h2><?php echo $todayAppointments; ?></h2>
         </div>
         <div class="rstat-card">
             <h6>Patients in Queue</h6>
-            <h2>5</h2>
+            <h2><?php echo $queueCount; ?></h2>
         </div>
         <div class="rstat-card">
             <h6>Doctors Available</h6>
-            <h2>3</h2>
+            <h2><?php echo $doctorCount; ?></h2>
         </div>
         <div class="rstat-card">
             <h6>Completed Today</h6>
-            <h2>48</h2>
+            <h2><?php echo $completedCount; ?></h2>
         </div>
     </div>
 
@@ -48,11 +113,12 @@ ob_start();
             <div class="rcard h-100">
                 <div class="rcard-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0">Today's Appointments</h5>
-                        <a href="manage_appointment.php" class="btn btn-sm btn-outline-secondary rounded-pill">View All</a>
+                        <h5>Today's Appointments</h5>
+                        <a href="manage_appointment.php" class="btn btn-sm btn-outline-secondary">View All</a>
                     </div>
+
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
+                        <table class="table table-hover align-middle">
                             <thead>
                                 <tr class="r-thead">
                                     <th>Time</th>
@@ -62,24 +128,25 @@ ob_start();
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="text-muted" style="font-size:0.88rem;">10:00 AM</td>
-                                    <td><strong>John Doe</strong></td>
-                                    <td>Dr. Smith</td>
-                                    <td><span class="badge-soft-warning">Waiting</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-muted" style="font-size:0.88rem;">10:30 AM</td>
-                                    <td><strong>Sarah Khan</strong></td>
-                                    <td>Dr. Ali</td>
-                                    <td><span class="badge-soft-success">Completed</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-muted" style="font-size:0.88rem;">11:00 AM</td>
-                                    <td><strong>Michael Lee</strong></td>
-                                    <td>Dr. Smith</td>
-                                    <td><span class="badge-soft-primary">Consulting</span></td>
-                                </tr>
+
+                                <?php while ($row = mysqli_fetch_assoc($appointmentsQuery)) { ?>
+                                    <tr>
+                                        <td><?php echo date("h:i A", strtotime($row['appointment_time'])); ?></td>
+                                        <td><strong><?php echo $row['patient_name'] ?? 'N/A'; ?></strong></td>
+                                        <td><?php echo $row['doctor_name'] ?? 'N/A'; ?></td>
+                                        <td>
+                                            <?php
+                                            $status = $row['status'];
+                                            $class = "badge-soft-warning";
+
+                                            if ($status == "Completed") $class = "badge-soft-success";
+                                            elseif ($status == "Consulting") $class = "badge-soft-primary";
+                                            ?>
+                                            <span class="<?php echo $class; ?>"><?php echo $status; ?></span>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+
                             </tbody>
                         </table>
                     </div>
@@ -92,31 +159,28 @@ ob_start();
             <div class="rcard h-100">
                 <div class="rcard-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0">Live Queue</h5>
-                        <a href="live_queue.php" class="btn btn-sm btn-outline-secondary rounded-pill">Manage</a>
+                        <h5>Live Queue</h5>
+                        <a href="live_queue.php" class="btn btn-sm btn-outline-secondary">Manage</a>
                     </div>
+
                     <div class="d-flex flex-column gap-3">
-                        <div class="d-flex justify-content-between align-items-center p-3 rounded-3 bg-brand-soft">
-                            <div>
-                                <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:#6b7280;font-weight:700;">Now</div>
-                                <strong>John Doe</strong>
+
+                        <?php
+                        $labels = ["Now", "Next", "Upcoming"];
+                        $i = 0;
+
+                        while ($q = mysqli_fetch_assoc($queueListQuery)) {
+                        ?>
+                            <div class="d-flex justify-content-between align-items-center p-3 rounded-3 border">
+                                <div>
+                                    <div style="font-size:0.7rem;"><?php echo $labels[$i] ?? ''; ?></div>
+                                    <strong><?php echo $q['full_name'] ?? 'N/A'; ?></strong>
+                                </div>
+                                <span class="badge-soft-warning"><?php echo $q['status']; ?></span>
                             </div>
-                            <span class="badge-soft-primary">Consulting</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center p-3 rounded-3 border" style="border-color:rgba(0,0,0,0.06)!important;">
-                            <div>
-                                <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:#6b7280;font-weight:700;">Next</div>
-                                <strong>Michael Lee</strong>
-                            </div>
-                            <span class="badge-soft-warning">Waiting</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center p-3 rounded-3 border" style="border-color:rgba(0,0,0,0.06)!important;">
-                            <div>
-                                <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:#6b7280;font-weight:700;">Upcoming</div>
-                                <strong>Sarah Khan</strong>
-                            </div>
-                            <span class="badge-soft-warning">Waiting</span>
-                        </div>
+                        <?php $i++;
+                        } ?>
+
                     </div>
                 </div>
             </div>
@@ -127,12 +191,12 @@ ob_start();
     <!-- Quick Actions -->
     <div class="rcard">
         <div class="rcard-body">
-            <h5 class="mb-3">Quick Actions</h5>
+            <h5>Quick Actions</h5>
             <div class="d-flex flex-column gap-2">
-                <a href="register_patient.php" class="quick-action-btn"><span class="qa-icon"><i class="bi bi-person-plus"></i></span>Register Walk-in Patient</a>
-                <a href="manage_appointment.php" class="quick-action-btn"><span class="qa-icon"><i class="bi bi-calendar-check"></i></span>Manage Appointments</a>
-                <a href="live_queue.php" class="quick-action-btn"><span class="qa-icon"><i class="bi bi-broadcast"></i></span>View Live Queue</a>
-                <a href="patient_list.php" class="quick-action-btn"><span class="qa-icon"><i class="bi bi-people"></i></span>Patient Directory</a>
+                <a href="register_patient.php" class="quick-action-btn">Register Walk-in Patient</a>
+                <a href="manage_appointment.php" class="quick-action-btn">Manage Appointments</a>
+                <a href="live_queue.php" class="quick-action-btn">View Live Queue</a>
+                <a href="patient_list.php" class="quick-action-btn">Patient Directory</a>
             </div>
         </div>
     </div>
