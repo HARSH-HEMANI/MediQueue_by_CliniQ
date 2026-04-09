@@ -64,10 +64,7 @@ while ($row = mysqli_fetch_assoc($patients_result)) {
         <div class="alert alert-success alert-dismissible fade show"><?= $_SESSION['success'];
                                                                         unset($_SESSION['success']); ?><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
     <?php endif; ?>
-    <?php if (isset($_SESSION['error'])): ?>
-        <div class="alert alert-danger alert-dismissible fade show"><?= $_SESSION['error'];
-                                                                    unset($_SESSION['error']); ?><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
-    <?php endif; ?>
+
 
     <div class="rcard mb-4 shadow-sm border-0">
         <div class="rcard-body p-4">
@@ -203,5 +200,32 @@ while ($row = mysqli_fetch_assoc($patients_result)) {
     </div>
 <?php endforeach; ?>
 
-<?php $content = ob_get_clean();
-include './reception-layout.php'; ?>
+<?php $content = ob_get_clean(); ?>
+
+<!-- ERROR MODAL -->
+<div class="modal fade" id="errorModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Booking Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage" class="mb-0"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if (isset($_SESSION['error'])): ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("errorMessage").innerText = "<?= $_SESSION['error']; ?>";
+            var modal = new bootstrap.Modal(document.getElementById('errorModal'));
+            modal.show();
+        });
+    </script>
+<?php unset($_SESSION['error']);
+endif; ?>
+
+<?php include './reception-layout.php'; ?>
