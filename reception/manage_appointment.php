@@ -53,7 +53,7 @@ function getAge($dob)
         </a>
     </div>
 
-    <div class="stats-row mb-4">
+    <!-- <div class="stats-row mb-4">
         <div class="rstat-card">
             <h6>Total Today</h6>
             <h2><?= $stats['total'] ?? 0 ?></h2>
@@ -70,10 +70,10 @@ function getAge($dob)
             <h6>Completed</h6>
             <h2><?= $stats['completed'] ?? 0 ?></h2>
         </div>
-    </div>
+    </div> -->
 
     <?php if ($current): ?>
-        <div class="dcard current-token-card p-4 mb-4" style="border-left: 5px solid #28a745;">
+        <!-- <div class="dcard current-token-card p-4 mb-4" style="border-left: 5px solid #28a745;">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
                     <div class="d-flex gap-2 mb-2">
@@ -95,7 +95,7 @@ function getAge($dob)
                     </form>
                 </div>
             </div>
-        </div>
+        </div> -->
     <?php else: ?>
         <div class="alert alert-light border text-center p-4 mb-4">No patient is currently in consultation.</div>
     <?php endif; ?>
