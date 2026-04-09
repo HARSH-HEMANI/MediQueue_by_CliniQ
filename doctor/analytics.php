@@ -196,10 +196,25 @@ $maxDelay = 0;
 
 $res = mysqli_query($con, "
 SELECT 
-AVG(TIMESTAMPDIFF(MINUTE, a.appointment_time, t.called_at)) as avg_delay,
-MAX(TIMESTAMPDIFF(MINUTE, a.appointment_time, t.called_at)) as max_delay
+AVG(
+    TIMESTAMPDIFF(
+        MINUTE, 
+        CONCAT(a.appointment_date, ' ', a.appointment_time), 
+        t.called_at
+    )
+) as avg_delay,
+
+MAX(
+    TIMESTAMPDIFF(
+        MINUTE, 
+        CONCAT(a.appointment_date, ' ', a.appointment_time), 
+        t.called_at
+    )
+) as max_delay
+
 FROM tokens t
 JOIN appointments a ON t.appointment_id = a.appointment_id
+
 WHERE a.doctor_id = $doctor_id
 AND a.appointment_date = '$filter_date'
 AND t.called_at IS NOT NULL
@@ -219,69 +234,23 @@ $week_days = 0;
 $week_avg = 0;
 $res = mysqli_query($con, "
 SELECT 
+COUNT(DISTINCT a.appointment_id) as total,
+COUNT(DISTINCT a.appointment_date) as days,
+
 AVG(
-    GREATEST(
-        0,
-        TIMESTAMPDIFF(MINUTE, 
-            CONCAT(a.appointment_date, ' ', a.appointment_time), 
-            t.called_at
-        )
-        -
-        IF(
-            t.called_at > CONCAT(a.appointment_date, ' ', d.break_start_time)
-            AND CONCAT(a.appointment_date, ' ', a.appointment_time) < CONCAT(a.appointment_date, ' ', d.break_end_time),
-
-            TIMESTAMPDIFF(
-                MINUTE,
-                GREATEST(
-                    CONCAT(a.appointment_date, ' ', a.appointment_time),
-                    CONCAT(a.appointment_date, ' ', d.break_start_time)
-                ),
-                LEAST(
-                    t.called_at,
-                    CONCAT(a.appointment_date, ' ', d.break_end_time)
-                )
-            ),
-            0
-        )
+    TIMESTAMPDIFF(
+        MINUTE,
+        t.called_at,
+        t.completed_at
     )
-) as avg_delay,
-
-MAX(
-    GREATEST(
-        0,
-        TIMESTAMPDIFF(MINUTE, 
-            CONCAT(a.appointment_date, ' ', a.appointment_time), 
-            t.called_at
-        )
-        -
-        IF(
-            t.called_at > CONCAT(a.appointment_date, ' ', d.break_start_time)
-            AND CONCAT(a.appointment_date, ' ', a.appointment_time) < CONCAT(a.appointment_date, ' ', d.break_end_time),
-
-            TIMESTAMPDIFF(
-                MINUTE,
-                GREATEST(
-                    CONCAT(a.appointment_date, ' ', a.appointment_time),
-                    CONCAT(a.appointment_date, ' ', d.break_start_time)
-                ),
-                LEAST(
-                    t.called_at,
-                    CONCAT(a.appointment_date, ' ', d.break_end_time)
-                )
-            ),
-            0
-        )
-    )
-) as max_delay
+) as avg_time
 
 FROM tokens t
 JOIN appointments a ON t.appointment_id = a.appointment_id
-JOIN doctors d ON a.doctor_id = d.doctor_id
 
 WHERE a.doctor_id = $doctor_id
-AND a.appointment_date = '$filter_date'
-AND t.called_at IS NOT NULL
+AND a.appointment_date BETWEEN '$week_start' AND '$ref_date'
+AND t.status = 'Completed'
 ");
 
 if ($res && mysqli_num_rows($res)) {
@@ -321,7 +290,7 @@ if ($res && mysqli_num_rows($res)) {
                 <p class="text-muted mb-0">Based on completed consultations (<?php echo date('d M', strtotime($week_start)); ?> → <?php echo date('d M', strtotime($ref_date)); ?> for charts)</p>
             </div>
             <div class="d-flex gap-2 flex-wrap align-items-center">
-                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="window.print()">
+                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="printReport()">
                     <i class="bi bi-file-earmark-pdf"></i> Export PDF
                 </button>
                 <form class="d-flex gap-2" method="GET" action="analytics.php">
@@ -423,6 +392,34 @@ if ($res && mysqli_num_rows($res)) {
     </main>
 
     <?php include './doctor-footer.php'; ?>
+
+    <script>
+        function convertChartsToImages() {
+            document.querySelectorAll("canvas").forEach(canvas => {
+                try {
+                    const img = document.createElement("img");
+                    img.src = canvas.toDataURL("image/png");
+                    img.style.width = "100%";
+                    img.style.height = "300px";
+
+                    canvas.parentNode.replaceChild(img, canvas);
+                } catch (e) {
+                    console.log("Chart conversion failed:", e);
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function printReport() {
+            console.log("Print clicked"); // debug
+
+            setTimeout(() => {
+                convertChartsToImages(); // convert charts
+                window.print(); // print
+            }, 800);
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
