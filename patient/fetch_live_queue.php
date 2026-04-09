@@ -41,30 +41,37 @@ $q_queue = mysqli_query($con, "SELECT t.*, p.full_name as patient_name, a.patien
 
 $queue = [];
 $current_serving = null;
-$index = 0;
 $my_position = 0;
 
 while ($row = mysqli_fetch_assoc($q_queue)) {
     $queue[] = $row;
 
+    // detect current serving
     if ($row['status'] == 'In Progress' || $row['status'] == 'Consulting') {
         $current_serving = $row;
     }
-
-    if ($row['patient_id'] == $patient_id) {
-        $my_position = $index;
-    }
-
-    $index++;
 }
 
-if (!$current_serving && count($queue) > 0) {
-    $current_serving = $queue[0];
+// FIXED POSITION LOGIC
+foreach ($queue as $row) {
+
+    // stop when we reach current user
+    if ($row['patient_id'] == $patient_id) break;
+
+    // count only waiting patients
+    if ($row['status'] == 'Waiting') {
+        $my_position++;
+    }
 }
 
 // Wait time
 $avg_time = 7;
-$wait_time = $my_position * $avg_time;
+if ($current_serving && $current_serving['patient_id'] == $patient_id) {
+    $my_position = 0;
+    $wait_time = 0;
+} else {
+    $wait_time = $my_position * $avg_time;
+}
 
 // Progress
 $progress = count($queue) > 1 ? max(10, 100 - ($my_position * (100 / count($queue)))) : 100;
