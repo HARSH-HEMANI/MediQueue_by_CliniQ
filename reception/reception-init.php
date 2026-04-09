@@ -1,28 +1,25 @@
 <?php
 
-/**
- * reception-init.php
- * Included at the top of all dashboard files.
- */
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Adjusted path to look one directory up for db.php
 require_once __DIR__ . "/../db.php";
 
-/**
- * AUTHENTICATION GUARD
- * Checks if a receptionist is logged in.
- */
+// Auth check
 if (!isset($_SESSION['receptionist_id'])) {
     header("Location: hospital_login.php?error=not_logged_in");
     exit();
 }
 
-// Common variables
+// Safe variables
 $reception_id = $_SESSION['receptionist_id'];
 $reception_name = $_SESSION['receptionist_name'] ?? 'Receptionist';
+$clinic_id = $_SESSION['clinic_id'] ?? 0;
+
+// Safety check
+if ($clinic_id == 0) {
+    die("Clinic not assigned. Please login again.");
+}
 
 date_default_timezone_set('Asia/Kolkata');
