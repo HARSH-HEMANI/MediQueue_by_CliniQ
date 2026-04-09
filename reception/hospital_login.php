@@ -67,6 +67,10 @@ unset($_SESSION['login_error']);
                             <p class="text-center mb-0 text-muted" style="font-size:0.9rem;">
                                 Contact your doctor to get your account credentials.
                             </p>
+                            <p class="text-center mb-0">
+                                Want to go home?
+                                <a href="../index.php" class="text-brand fw-semibold">Go to home</a>
+                            </p>
                         </form>
                     </div>
                 </div>
