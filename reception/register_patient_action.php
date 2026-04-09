@@ -1,6 +1,6 @@
 <?php
 require_once "reception-init.php";
-
+$mode = 'offline';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $action = $_POST['action'] ?? '';
     $clinic_id = $_SESSION['clinic_id'] ?? null;
@@ -26,15 +26,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         mysqli_begin_transaction($con);
         try {
-            // Patient Insert
-            $p_sql = "INSERT INTO patients (full_name, email, phone, date_of_birth, gender, address) VALUES ('$name', '$email', '$phone', '$dob', '$gender', '$address')";
-            if (!mysqli_query($con, $p_sql)) throw new Exception("Patient Error: " . mysqli_error($con));
+            // ================= PATIENT INSERT =================
+            $p_sql = "INSERT INTO patients 
+                (full_name, email, phone, date_of_birth, gender, address) 
+                VALUES ('$name', '$email', '$phone', '$dob', '$gender', '$address')";
+
+            if (!mysqli_query($con, $p_sql)) {
+                throw new Exception("Patient Error: " . mysqli_error($con));
+            }
 
             $p_id = mysqli_insert_id($con);
 
-            // Appointment Insert (Using 'Pending' as requested by earlier DB state)
-            $a_sql = "INSERT INTO appointments (patient_id, doctor_id, clinic_id, appointment_date, appointment_time, appointment_type, status) VALUES ($p_id, $doc_id, $clinic_id, '$app_date', '$app_time', '$app_type', 'Pending')";
-            if (!mysqli_query($con, $a_sql)) throw new Exception("Appointment Error: " . mysqli_error($con));
+
+            // ================= 🔥 DOCTOR RULE CHECK =================
+
+            // Fetch doctor settings
+            $doc_query = mysqli_query($con, "SELECT max_patients_offline, allow_walkins 
+                                            FROM doctors 
+                                            WHERE doctor_id = $doc_id");
+
+            if (!$doc_query || mysqli_num_rows($doc_query) == 0) {
+                throw new Exception("Doctor not found.");
+            }
+
+            $doc_data = mysqli_fetch_assoc($doc_query);
+
+            $max_offline   = (int)$doc_data['max_patients_offline'];
+            $allow_walkins = (int)$doc_data['allow_walkins'];
+
+            // 🚫 Walk-ins disabled
+            if ($allow_walkins == 0) {
+                throw new Exception("Doctor has disabled walk-in appointments.");
+            }
+
+            // Count today's offline patients
+            $offline_q = mysqli_query($con, "SELECT COUNT(*) as total FROM appointments 
+                            WHERE doctor_id = $doc_id 
+                            AND appointment_date = '$app_date'
+                            AND appointment_mode = 'offline'");
+
+            $offline_data = mysqli_fetch_assoc($offline_q);
+            $offline_count = (int)$offline_data['total'];
+            // 🚫 Limit reached
+            if ($offline_count >= $max_offline) {
+                throw new Exception("Offline patient limit reached for this doctor.");
+            }
+
+
+            // ================= APPOINTMENT INSERT =================
+
+            $a_sql = "INSERT INTO appointments 
+                (patient_id, doctor_id, clinic_id, appointment_date, appointment_time, appointment_type, status,appointment_mode) 
+                VALUES ($p_id, $doc_id, $clinic_id, '$app_date', '$app_time', '$app_type', 'Pending', '$mode')";
+
+            if (!mysqli_query($con, $a_sql)) {
+                throw new Exception("Appointment Error: " . mysqli_error($con));
+            }
 
             mysqli_commit($con);
             $_SESSION['success'] = "Registration Successful!";
@@ -43,20 +90,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['error'] = $e->getMessage();
         }
     } elseif ($action == 'edit') {
+
         $p_id = (int)$_POST['patient_id'];
         $fields = ['full_name', 'email', 'phone', 'birthdate', 'gender', 'address'];
         $vals = [];
-        foreach ($fields as $f) $vals[$f] = mysqli_real_escape_string($con, $_POST[$f]);
 
-        $sql = "UPDATE patients SET full_name='{$vals['full_name']}', email='{$vals['email']}', phone='{$vals['phone']}', date_of_birth='{$vals['birthdate']}', gender='{$vals['gender']}', address='{$vals['address']}' WHERE patient_id=$p_id";
+        foreach ($fields as $f) {
+            $vals[$f] = mysqli_real_escape_string($con, $_POST[$f]);
+        }
 
-        if (mysqli_query($con, $sql)) $_SESSION['success'] = "Record Updated!";
-        else $_SESSION['error'] = "Update failed: " . mysqli_error($con);
+        $sql = "UPDATE patients SET 
+            full_name='{$vals['full_name']}', 
+            email='{$vals['email']}', 
+            phone='{$vals['phone']}', 
+            date_of_birth='{$vals['birthdate']}', 
+            gender='{$vals['gender']}', 
+            address='{$vals['address']}' 
+            WHERE patient_id=$p_id";
+
+        if (mysqli_query($con, $sql)) {
+            $_SESSION['success'] = "Record Updated!";
+        } else {
+            $_SESSION['error'] = "Update failed: " . mysqli_error($con);
+        }
     } elseif ($action == 'delete') {
+
         $p_id = (int)$_POST['patient_id'];
+
         mysqli_query($con, "DELETE FROM appointments WHERE patient_id=$p_id AND clinic_id=$clinic_id");
-        if (mysqli_query($con, "DELETE FROM patients WHERE patient_id=$p_id")) $_SESSION['success'] = "Deleted.";
-        else $_SESSION['error'] = "Delete failed.";
+
+        if (mysqli_query($con, "DELETE FROM patients WHERE patient_id=$p_id")) {
+            $_SESSION['success'] = "Deleted.";
+        } else {
+            $_SESSION['error'] = "Delete failed.";
+        }
     }
 
     header("Location: register-patient.php");
