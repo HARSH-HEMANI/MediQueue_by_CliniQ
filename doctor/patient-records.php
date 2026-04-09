@@ -65,7 +65,13 @@ if ($patientId > 0) {
 
     // Fetch visit history with consultation notes
     $histQ = mysqli_query($con, "
-        SELECT a.appointment_date, a.appointment_type, t.token_no, cn.note_text, cn.diagnosis 
+        SELECT  a.appointment_date, 
+                a.appointment_type, 
+                t.token_no, 
+                cn.note_text, 
+                cn.diagnosis,
+                cn.medicines,
+                cn.follow_up_date 
         FROM appointments a 
         LEFT JOIN tokens t ON a.appointment_id = t.appointment_id 
         LEFT JOIN consultation_notes cn ON a.appointment_id = cn.appointment_id 
@@ -185,15 +191,17 @@ if ($patientId > 0) {
 
                 <div class="col-lg-5">
                     <?php if ($current): ?>
-                        <div class="dcard mb-3" id="printSection">
-                            <div class="card-header">Patient Profile</div>
-                            <div class="card-body" id="patientProfile">
-                                <p class="mb-2"><strong>Name:</strong> <?php echo htmlspecialchars($current['full_name']); ?></p>
-                                <p class="mb-2"><strong>Age / Gender:</strong> <?php echo $current['age']; ?> / <?php echo htmlspecialchars($current['gender'] ?? 'N/A'); ?></p>
-                                <p class="mb-2"><strong>Phone:</strong> <?php echo htmlspecialchars($current['phone']); ?></p>
-                                <hr>
-                                <p class="mb-1 text-primary"><strong>Medical Summary</strong></p>
-                                <p class="text-muted small mb-0">Refer to visit history for specific consultation notes and prescribed treatments.</p>
+                        <div id="printSection">
+                            <div class="dcard mb-3">
+                                <div class="card-header">Patient Profile</div>
+                                <div class="card-body" id="patientProfile">
+                                    <p class="mb-2"><strong>Name:</strong> <?php echo htmlspecialchars($current['full_name']); ?></p>
+                                    <p class="mb-2"><strong>Age / Gender:</strong> <?php echo $current['age']; ?> / <?php echo htmlspecialchars($current['gender'] ?? 'N/A'); ?></p>
+                                    <p class="mb-2"><strong>Phone:</strong> <?php echo htmlspecialchars($current['phone']); ?></p>
+                                    <hr>
+                                    <p class="mb-1 text-primary"><strong>Medical Summary</strong></p>
+                                    <p class="text-muted small mb-0">Refer to visit history for specific consultation notes and prescribed treatments.</p>
+                                </div>
                             </div>
                         </div>
 
@@ -220,51 +228,66 @@ if ($patientId > 0) {
                 </div>
             </section>
 
-            <section class="mt-4" id="printSection">
-                <div class="dcard">
-                    <div class="card-header">Visit History</div>
-                    <div class="card-body" id="patientHistory">
-                        <h3 class="text-center mb-3">Patient History</h3>
+            <section class="mt-4" id="historySection">
+                <div id="printSection">
+                    <div class="dcard">
+                        <div class="card-header">Visit History</div>
+                        <div class="card-body" id="patientHistory">
+                            <h3 class="text-center mb-3">Patient History</h3>
 
-                        <p><strong>Name:</strong> <?php echo htmlspecialchars($current['full_name']); ?></p>
-                        <p><strong>Age / Gender:</strong> <?php echo $current['age']; ?> / <?php echo htmlspecialchars($current['gender']); ?></p>
-                        <p><strong>Phone:</strong> <?php echo htmlspecialchars($current['phone']); ?></p>
+                            <p><strong>Name:</strong> <?php echo htmlspecialchars($current['full_name']); ?></p>
+                            <p><strong>Age / Gender:</strong> <?php echo $current['age']; ?> / <?php echo htmlspecialchars($current['gender']); ?></p>
+                            <p><strong>Phone:</strong> <?php echo htmlspecialchars($current['phone']); ?></p>
 
-                        <hr>
-                        <?php if (!empty($historyList)): ?>
-                            <div class="visit-timeline">
-                                <?php foreach ($historyList as $visit): ?>
-                                    <div class="mb-4 pb-3 border-bottom <?php echo ($visit['appointment_type'] === 'Emergency') ? 'emergency-visit' : ''; ?>">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="fw-bold visit-date"><?php echo date('d M Y', strtotime($visit['appointment_date'])); ?></span>
-                                            <?php if ($visit['appointment_type'] === 'Emergency'): ?>
-                                                <span class="badge bg-danger">
-                                                    <i class="bi bi-exclamation-triangle-fill"></i> Emergency
-                                                </span>
-                                            <?php else: ?>
-                                                <span class="badge bg-info text-dark">
-                                                    <?php echo htmlspecialchars($visit['appointment_type']); ?>
-                                                </span>
+                            <hr>
+                            <?php if (!empty($historyList)): ?>
+                                <div class="visit-timeline">
+                                    <?php foreach ($historyList as $visit): ?>
+                                        <div class="mb-4 pb-3 border-bottom <?php echo ($visit['appointment_type'] === 'Emergency') ? 'emergency-visit' : ''; ?>">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="fw-bold visit-date"><?php echo date('d M Y', strtotime($visit['appointment_date'])); ?></span>
+                                                <?php if ($visit['appointment_type'] === 'Emergency'): ?>
+                                                    <span class="badge bg-danger">
+                                                        <i class="bi bi-exclamation-triangle-fill"></i> Emergency
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span class="badge bg-info text-dark">
+                                                        <?php echo htmlspecialchars($visit['appointment_type']); ?>
+                                                    </span>
+                                                <?php endif; ?>
+                                            </div>
+
+                                            <?php if ($visit['diagnosis']): ?>
+                                                <h6 class="mb-1 text-primary">Diagnosis: <?php echo htmlspecialchars($visit['diagnosis']); ?></h6>
                                             <?php endif; ?>
+
+                                            <?php if ($visit['note_text']): ?>
+                                                <p class="mb-0 text-muted small">Notes: <?php echo nl2br(htmlspecialchars($visit['note_text'])); ?></p>
+                                            <?php endif; ?>
+
+                                            <?php if (!$visit['diagnosis'] && !$visit['note_text']): ?>
+                                                <p class="mb-0 text-muted fst-italic small">No consultation notes recorded for this visit.</p>
+                                            <?php endif; ?>
+
+                                            <?php if ($visit['medicines']): ?>
+                                                <p class="mb-0 text-success small">
+                                                    Medicines: <?php echo nl2br(htmlspecialchars($visit['medicines'])); ?>
+                                                </p>
+                                            <?php endif; ?>
+
+                                            <?php if ($visit['follow_up_date']): ?>
+                                                <p class="mb-0 text-danger small">
+                                                    Follow-up: <?php echo date('d M Y', strtotime($visit['follow_up_date'])); ?>
+                                                </p>
+                                            <?php endif; ?>
+
                                         </div>
-
-                                        <?php if ($visit['diagnosis']): ?>
-                                            <h6 class="mb-1 text-primary">Diagnosis: <?php echo htmlspecialchars($visit['diagnosis']); ?></h6>
-                                        <?php endif; ?>
-
-                                        <?php if ($visit['note_text']): ?>
-                                            <p class="mb-0 text-muted small">Notes: <?php echo nl2br(htmlspecialchars($visit['note_text'])); ?></p>
-                                        <?php endif; ?>
-
-                                        <?php if (!$visit['diagnosis'] && !$visit['note_text']): ?>
-                                            <p class="mb-0 text-muted fst-italic small">No consultation notes recorded for this visit.</p>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php else: ?>
-                            <p class="text-muted text-center py-3 mb-0">No past completed visits recorded for this patient.</p>
-                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <p class="text-muted text-center py-3 mb-0">No past completed visits recorded for this patient.</p>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -294,17 +317,32 @@ if ($patientId > 0) {
 
                     if (data.history.length > 0) {
                         data.history.forEach(v => {
+
                             html += `
-                        <div class="mb-3 border-bottom pb-2">
-                            <strong>${v.appointment_date}</strong>
-                            <span class="badge bg-info">${v.appointment_type}</span>
-                            ${v.diagnosis ? `<p>Diagnosis: ${v.diagnosis}</p>` : ""}
-                            ${v.note_text ? `<p>Notes: ${v.note_text}</p>` : ""}
-                        </div>
-                    `;
+        <div class="mb-4 pb-3 border-bottom ${v.appointment_type === 'Emergency' ? 'emergency-visit' : ''}">
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold">${v.appointment_date}</span>
+                <span class="badge ${v.appointment_type === 'Emergency' ? 'bg-danger' : 'bg-info text-dark'}">
+                    ${v.appointment_type}
+                </span>
+            </div>
+
+            ${v.diagnosis ? `<h6 class="text-primary">Diagnosis: ${v.diagnosis}</h6>` : ""}
+
+            ${v.note_text ? `<p class="text-muted small">Notes: ${v.note_text}</p>` : ""}
+
+            ${v.medicines ? `<p class="text-success small">Medicines: ${v.medicines}</p>` : ""}
+
+            ${v.follow_up_date ? `<p class="text-warning small">Follow-up: ${v.follow_up_date}</p>` : ""}
+
+            ${(!v.diagnosis && !v.note_text && !v.medicines) ? `<p class="text-muted fst-italic small">No notes recorded</p>` : ""}
+        </div>
+        `;
                         });
+
                     } else {
-                        html = `<p class="text-muted">No history found</p>`;
+                        html = `<p class="text-muted text-center">No history found</p>`;
                     }
 
                     document.getElementById("patientHistory").innerHTML = html;
