@@ -578,6 +578,64 @@ input[readonly] {
     color: #374151;
 }
 
+@media print {
+    main {
+        page-break-before: auto;
+    }
+}
+
+@media print {
+
+    /* Remove sidebar completely */
+    .sidebar,
+    .doctor-sidebar {
+        display: none !important;
+    }
+
+    /* Use full width */
+    .doctor-dashboard {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Remove top spacing */
+    .pt-5,
+    .mt-5 {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    /* Fix container */
+    .container-fluid {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Prevent big blocks from jumping page */
+    .dcard {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* Reduce spacing */
+    .row {
+        margin: 0 !important;
+    }
+
+    /* Fix canvas/image spacing */
+    canvas,
+    img {
+        page-break-inside: avoid;
+        max-width: 100% !important;
+    }
+
+    /* REMOVE unnecessary gaps */
+    body {
+        margin: 0;
+    }
+}
+
 @media (min-height: 600px) {
     .dashboard-footer {
         bottom: 0;
