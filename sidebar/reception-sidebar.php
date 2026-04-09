@@ -52,11 +52,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <i class="bi bi-calendar-event-fill"></i><span>Manage Appointments</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="../reception/patient_list.php" class="nav-link <?= ($current_page == 'patient_list.php') ? 'active' : '' ?>">
                         <i class="bi bi-card-list"></i><span>Patient Directory</span>
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <a href="../reception/live_queue.php" class="nav-link <?= ($current_page == 'live_queue.php') ? 'active' : '' ?>">
                         <i class="bi bi-people-fill"></i><span>Live Queue</span>
