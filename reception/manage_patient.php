@@ -25,7 +25,7 @@ $current_query = mysqli_query($con, "SELECT a.*, p.full_name, p.gender, p.date_o
     FROM appointments a 
     JOIN patients p ON a.patient_id = p.patient_id 
     JOIN doctors d ON a.doctor_id = d.doctor_id 
-    WHERE a.status = 'Confirmed' AND a.appointment_date = '$today' AND a.clinic_id = $clinic_id 
+    WHERE a.status = 'Confirmed' AND DATE(a.appointment_date) = '$today' AND a.clinic_id = $clinic_id 
     ORDER BY a.appointment_time ASC LIMIT 1");
 $current = mysqli_fetch_assoc($current_query);
 
@@ -143,10 +143,9 @@ function getAge($dob)
                     <tbody>
                         <?php
                         $list_query = "SELECT a.*, p.full_name, p.phone, d.full_name as doctor_name 
-                                       FROM appointments a 
-                                       JOIN patients p ON a.patient_id = p.patient_id 
-                                       JOIN doctors d ON a.doctor_id = d.doctor_id 
-                                       WHERE a.clinic_id = $clinic_id AND a.appointment_date = '$filter_date'";
+                                        FROM appointments a JOIN patients p ON a.patient_id = p.patient_id 
+                                        JOIN doctors d ON a.doctor_id = d.doctor_id WHERE a.clinic_id = $clinic_id 
+                                        AND DATE(a.appointment_date) = '$filter_date'";
 
                         if (!empty($search)) $list_query .= " AND (p.full_name LIKE '%$search%' OR p.phone LIKE '%$search%')";
                         if ($filter_doctor) $list_query .= " AND a.doctor_id = $filter_doctor";
