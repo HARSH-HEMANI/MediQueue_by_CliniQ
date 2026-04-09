@@ -1,48 +1,55 @@
 <?php
 require_once "reception-init.php";
 
+// ✅ IMPORTANT: Fix timezone
+date_default_timezone_set('Asia/Kolkata');
+
 $content_page = 'Live Queue | Reception';
 ob_start();
 
+/* ========================
+   SET TODAY DATE
+======================== */
 $today = date('Y-m-d');
 
 /* ========================
-   FETCH DATA (FIXED)
+   FETCH TODAY'S QUEUE ONLY
 ======================== */
-
-// Fetch ALL today's tokens (more reliable)
 $query = mysqli_query($con, "
     SELECT 
-        t.*, 
+        t.token_id,
+        t.token_no,
+        t.queue_position,
+        t.status,
+        t.called_at,
+        t.completed_at,
+
         p.full_name AS patient_name,
         d.full_name AS doctor_name,
+
         a.appointment_time,
         a.appointment_date
+
     FROM tokens t
-    JOIN appointments a ON t.appointment_id = a.appointment_id
-    JOIN patients p ON a.patient_id = p.patient_id
-    JOIN doctors d ON a.doctor_id = d.doctor_id
-    WHERE DATE(a.appointment_date) = CURDATE()
+    INNER JOIN appointments a ON t.appointment_id = a.appointment_id
+    INNER JOIN patients p ON a.patient_id = p.patient_id
+    INNER JOIN doctors d ON a.doctor_id = d.doctor_id
+
+    WHERE DATE(a.appointment_date) = '$today'
+
     ORDER BY t.token_no ASC
 ");
 
-// Fallback (IMPORTANT for testing)
-if (!$query || mysqli_num_rows($query) == 0) {
-    $query = mysqli_query($con, "
-        SELECT 
-            t.*, 
-            p.full_name AS patient_name,
-            d.full_name AS doctor_name,
-            a.appointment_time,
-            a.appointment_date
-        FROM tokens t
-        JOIN appointments a ON t.appointment_id = a.appointment_id
-        JOIN patients p ON a.patient_id = p.patient_id
-        JOIN doctors d ON a.doctor_id = d.doctor_id
-        ORDER BY t.token_no ASC
-    ");
+/* ========================
+   HANDLE QUERY FAILURE
+======================== */
+if (!$query) {
+    die("Query Error: " . mysqli_error($con));
 }
 
+/* ========================
+   PROCESS QUEUE
+======================== */
 $queue = [];
 $current = null;
 
@@ -51,34 +58,56 @@ $in_progress = 0;
 $completed = 0;
 
 while ($row = mysqli_fetch_assoc($query)) {
+
     $queue[] = $row;
 
     switch ($row['status']) {
+
         case 'Waiting':
             $waiting++;
             break;
+
         case 'In Progress':
         case 'Consulting': // support both
             $in_progress++;
-            if (!$current) $current = $row;
+
+            // First active patient becomes current
+            if (!$current) {
+                $current = $row;
+            }
             break;
+
         case 'Completed':
             $completed++;
             break;
     }
 }
 
+/* ========================
+   TOTAL COUNT
+======================== */
 $total = count($queue);
 
-// If no "In Progress", fallback to first waiting
+/* ========================
+   FALLBACK LOGIC
+   (if no one is in progress)
+======================== */
 if (!$current && $total > 0) {
     foreach ($queue as $row) {
-        if ($row['status'] == 'Waiting') {
+        if ($row['status'] === 'Waiting') {
             $current = $row;
             break;
         }
     }
 }
+
+/* ========================
+   OPTIONAL: DEBUG (REMOVE LATER)
+======================== */
+// echo "<pre>";
+// print_r($queue);
+// exit;
+
 ?>
 <div class="reception-dashboard">
 
