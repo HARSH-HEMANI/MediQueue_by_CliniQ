@@ -8,7 +8,9 @@ $today = date('Y-m-d');
 
 // --- 1. HANDLE FILTERS ---
 $search = isset($_GET['search']) ? mysqli_real_escape_string($con, $_GET['search']) : '';
-$filter_date = isset($_GET['date']) ? mysqli_real_escape_string($con, $_GET['date']) : $today;
+$filter_date = isset($_GET['date']) 
+    ? date('Y-m-d', strtotime($_GET['date'])) 
+    : $today;
 $filter_doctor = isset($_GET['doctor_id']) ? (int)$_GET['doctor_id'] : 0;
 
 // --- 2. STAT CARD COUNTERS ---
@@ -31,8 +33,9 @@ $current_query = mysqli_query($con, "SELECT a.*, p.full_name, p.gender, p.date_o
 $current = mysqli_fetch_assoc($current_query);
 
 // Helper function for Age
-function getAge($dob) {
-    if(!$dob) return "—";
+function getAge($dob)
+{
+    if (!$dob) return "—";
     return date_diff(date_create($dob), date_create('today'))->y;
 }
 ?>
@@ -51,43 +54,55 @@ function getAge($dob) {
     </div>
 
     <div class="stats-row mb-4">
-        <div class="rstat-card"><h6>Total Today</h6><h2><?= $stats['total'] ?? 0 ?></h2></div>
-        <div class="rstat-card"><h6>Pending</h6><h2><?= $stats['waiting'] ?? 0 ?></h2></div>
-        <div class="rstat-card"><h6>Confirmed</h6><h2><?= $stats['progress'] ?? 0 ?></h2></div>
-        <div class="rstat-card"><h6>Completed</h6><h2><?= $stats['completed'] ?? 0 ?></h2></div>
+        <div class="rstat-card">
+            <h6>Total Today</h6>
+            <h2><?= $stats['total'] ?? 0 ?></h2>
+        </div>
+        <div class="rstat-card">
+            <h6>Pending</h6>
+            <h2><?= $stats['waiting'] ?? 0 ?></h2>
+        </div>
+        <div class="rstat-card">
+            <h6>Confirmed</h6>
+            <h2><?= $stats['progress'] ?? 0 ?></h2>
+        </div>
+        <div class="rstat-card">
+            <h6>Completed</h6>
+            <h2><?= $stats['completed'] ?? 0 ?></h2>
+        </div>
     </div>
 
     <?php if ($current): ?>
-    <div class="dcard current-token-card p-4 mb-4" style="border-left: 5px solid #28a745;">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div>
-                <div class="d-flex gap-2 mb-2">
-                    <span class="badge bg-success">Currently Consulting</span>
-                    <span class="badge-soft-primary"><?= $current['appointment_type'] ?></span>
+        <div class="dcard current-token-card p-4 mb-4" style="border-left: 5px solid #28a745;">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <div class="d-flex gap-2 mb-2">
+                        <span class="badge bg-success">Currently Consulting</span>
+                        <span class="badge-soft-primary"><?= $current['appointment_type'] ?></span>
+                    </div>
+                    <div class="current-token-number mt-1">Token <span>#<?= $current['appointment_id'] ?></span></div>
+                    <div class="r-patient-name mt-1">
+                        <?= htmlspecialchars($current['full_name']) ?>
+                        <span class="text-muted fw-normal" style="font-size:0.9rem;">(<?= getAge($current['date_of_birth']) ?> / <?= $current['gender'] ?>)</span>
+                    </div>
+                    <small class="text-muted d-block mt-1"><i class="bi bi-person-badge me-1"></i>Dr. <?= htmlspecialchars($current['doctor_name']) ?></small>
                 </div>
-                <div class="current-token-number mt-1">Token <span>#<?= $current['appointment_id'] ?></span></div>
-                <div class="r-patient-name mt-1">
-                    <?= htmlspecialchars($current['full_name']) ?>
-                    <span class="text-muted fw-normal" style="font-size:0.9rem;">(<?= getAge($current['date_of_birth']) ?> / <?= $current['gender'] ?>)</span>
+                <div class="d-flex flex-column gap-2">
+                    <form action="appointment_status_action.php" method="POST">
+                        <input type="hidden" name="appointment_id" value="<?= $current['appointment_id'] ?>">
+                        <button name="status" value="Completed" class="btn btn-brand rounded-pill w-100 mb-2"><i class="bi bi-check-circle me-1"></i>Complete Visit</button>
+                        <button name="status" value="Pending" class="btn btn-outline-warning rounded-pill w-100"><i class="bi bi-pause-circle me-1"></i>Put on Hold</button>
+                    </form>
                 </div>
-                <small class="text-muted d-block mt-1"><i class="bi bi-person-badge me-1"></i>Dr. <?= htmlspecialchars($current['doctor_name']) ?></small>
-            </div>
-            <div class="d-flex flex-column gap-2">
-                <form action="appointment_status_action.php" method="POST">
-                    <input type="hidden" name="appointment_id" value="<?= $current['appointment_id'] ?>">
-                    <button name="status" value="Completed" class="btn btn-brand rounded-pill w-100 mb-2"><i class="bi bi-check-circle me-1"></i>Complete Visit</button>
-                    <button name="status" value="Pending" class="btn btn-outline-warning rounded-pill w-100"><i class="bi bi-pause-circle me-1"></i>Put on Hold</button>
-                </form>
             </div>
         </div>
-    </div>
     <?php else: ?>
         <div class="alert alert-light border text-center p-4 mb-4">No patient is currently in consultation.</div>
     <?php endif; ?>
 
     <div class="rcard mb-4">
         <div class="rcard-body">
-            <form method="GET" action="manage_patient.php" class="row g-3 align-items-end">
+            <form method="GET" action="manage_appointment.php" class="row g-3 align-items-end">
                 <div class="col-md-4">
                     <label class="form-label fw-semibold" style="font-size:0.82rem;">Search</label>
                     <input type="text" name="search" class="form-control rounded-pill" placeholder="Name or phone..." value="<?= htmlspecialchars($search) ?>">
@@ -100,9 +115,9 @@ function getAge($dob) {
                     <label class="form-label fw-semibold" style="font-size:0.82rem;">Doctor</label>
                     <select name="doctor_id" class="form-select rounded-3">
                         <option value="0">All Doctors</option>
-                        <?php 
+                        <?php
                         $docs = mysqli_query($con, "SELECT doctor_id, full_name FROM doctors WHERE clinic_id = $clinic_id");
-                        while($d = mysqli_fetch_assoc($docs)): ?>
+                        while ($d = mysqli_fetch_assoc($docs)): ?>
                             <option value="<?= $d['doctor_id'] ?>" <?= $filter_doctor == $d['doctor_id'] ? 'selected' : '' ?>>Dr. <?= $d['full_name'] ?></option>
                         <?php endwhile; ?>
                     </select>
@@ -173,7 +188,9 @@ function getAge($dob) {
                                 </tr>
                             <?php endwhile;
                         else: ?>
-                            <tr><td colspan="7" class="text-center py-4 text-muted">No appointments found.</td></tr>
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">No appointments found.</td>
+                            </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
