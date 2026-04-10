@@ -32,12 +32,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="w-100 p-3">
             <div class="menu-label">NAVIGATION</div>
             <ul class="nav flex-column">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="./admin.php" class="nav-link <?= ($current_page == 'admin.php') ? 'active' : '' ?>">
                         <i class="bi bi-grid-1x2-fill"></i>
                         <span>Dashboard</span>
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <a href="./doctor.php" class="nav-link <?= ($current_page == 'doctor.php') ? 'active' : '' ?>">
                         <i class="bi bi-heart-pulse-fill"></i>
@@ -72,12 +72,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <span>Appointments</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="./queues.php" class="nav-link <?= ($current_page == 'queues.php') ? 'active' : '' ?>">
                         <i class="bi bi-sort-numeric-down"></i>
                         <span>Live Queues</span>
                     </a>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
                     <a href="./admin-messages.php" class="nav-link <?= ($content_page == 'admin-messages') ? 'active' : '' ?>">
@@ -89,12 +89,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
             <div class="menu-label mt-3">SYSTEM</div>
             <ul class="nav flex-column">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="./analytics.php" class="nav-link <?= ($current_page == 'analytics.php') ? 'active' : '' ?>">
                         <i class="bi bi-bar-chart-fill"></i>
                         <span>Analytics</span>
                     </a>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
                     <a href="./manage-site-content.php" class="nav-link <?= ($current_page == 'manage-site-content.php') ? 'active' : '' ?>">
