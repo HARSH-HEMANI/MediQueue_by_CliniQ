@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +15,14 @@
 </head>
 
 <body class="auth-body">
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert alert-danger text-center" style="margin:20px;">
+            <?php
+            echo $_SESSION['error'];
+            unset($_SESSION['error']);
+            ?>
+        </div>
+    <?php endif; ?>
     <div class="auth-container">
         <div class="auth-card">
 
@@ -55,8 +64,8 @@
 
         </div>
     </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="./js/validation.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./js/validation.js"></script>
 
 </body>
 
