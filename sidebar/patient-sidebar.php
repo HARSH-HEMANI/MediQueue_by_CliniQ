@@ -77,11 +77,11 @@ $sidebar_display_id = str_pad($patient_id, 4, '0', STR_PAD_LEFT);
                         <i class="bi bi-file-medical-fill"></i><span>Prescriptions</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="../patient/visit_history.php" class="nav-link <?= ($current_page == 'visit_history.php') ? 'active' : '' ?>">
                         <i class="bi bi-clock-history"></i><span>Visit History</span>
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <a href="../patient/profile_setting.php" class="nav-link <?= ($current_page == 'profile_setting.php') ? 'active' : '' ?>">
                         <i class="bi bi-person-fill-gear"></i><span>Profile Settings</span>
