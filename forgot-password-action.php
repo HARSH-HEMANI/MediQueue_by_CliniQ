@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // ✅ Validate email
     if (empty($email)) {
-        $_SESSION['login_error'] = "Email is required!";
+        $_SESSION['error'] = "Email is required!";
         header("Location: forgot_password.php");
         exit();
     }
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $check = mysqli_query($con, "SELECT * FROM patients WHERE email = '$email'");
 
     if (mysqli_num_rows($check) == 0) {
-        $_SESSION['login_error'] = "Email not registered!";
+        $_SESSION['error'] = "Email not registered!";
         header("Location: forgot_password.php");
         exit();
     }
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         WHERE email = '$email'");
 
     if (!$update) {
-        $_SESSION['login_error'] = "Something went wrong. Please try again!";
+        $_SESSION['error'] = "Something went wrong. Please try again!";
         header("Location: forgot_password.php");
         exit();
     }
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = sendEmail($email, $subject, $body);
 
     if ($result !== true) {
-        $_SESSION['login_error'] = $result;
+        $_SESSION['error'] = $result;
         header("Location: forgot_password.php");
         exit();
     }
