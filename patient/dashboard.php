@@ -74,10 +74,10 @@ ob_start();
 
             <div class="dropdown">
                 <div class="user-chip" data-bs-toggle="dropdown">
-                    <img src="https://i.pravatar.cc/40?u=patient<?php echo $patient_id; ?>" alt="Profile">
+                    <!-- <img src="https://i.pravatar.cc/40?u=patient<?php echo $patient_id; ?>" alt="Profile">
                     <span class="fw-semibold" style="font-size:0.87rem;"><?php echo htmlspecialchars($patient_name); ?></span>
                     <i class="bi bi-chevron-down text-muted" style="font-size:0.7rem;"></i>
-                </div>
+                </div> -->
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2">
                     <li><a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="profile_setting.php"><i class="bi bi-person"></i>My Profile</a></li>
                     <li><a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="profile_setting.php"><i class="bi bi-gear"></i>Settings</a></li>
