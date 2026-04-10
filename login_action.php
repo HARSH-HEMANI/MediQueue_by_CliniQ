@@ -41,7 +41,7 @@ if (isset($_POST['submit'])) {
             exit();
         }
     } else {
-        $_SESSION['error'] = "No account found with this email.";
+        $_SESSION['error'] = "Email not registered. Please sign up first.";
         header("Location: ./login.php");
         exit();
     }
