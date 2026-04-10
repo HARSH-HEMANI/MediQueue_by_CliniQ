@@ -9,6 +9,9 @@ unset($_SESSION['rec_success'], $_SESSION['rec_error']);
 
 // Fetch all receptionists for this doctor
 $doctor_id = $_SESSION['doctor_id'];
+$docQ = mysqli_query($con, "SELECT full_name FROM doctors WHERE doctor_id = $doctor_id");
+$docData = mysqli_fetch_assoc($docQ);
+$doctorName = $docData['full_name'] ?? 'Doctor';
 $query = "SELECT r.*, c.clinic_name FROM receptionists r 
           LEFT JOIN clinics c ON r.clinic_id = c.clinic_id 
           WHERE r.doctor_id = $doctor_id 
@@ -53,7 +56,7 @@ if (isset($_GET['edit_id'])) {
 
         <!-- Header -->
         <section class="features-header my-1">
-            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($_SESSION['doctor_name']); ?></span></h2>
+            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($doctorName); ?></span></h2>
         </section>
 
         <section class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
@@ -91,7 +94,8 @@ if (isset($_GET['edit_id'])) {
                             </thead>
                             <tbody>
                                 <?php if (mysqli_num_rows($result) > 0): ?>
-                                    <?php $i = 1; while ($row = mysqli_fetch_assoc($result)): ?>
+                                    <?php $i = 1;
+                                    while ($row = mysqli_fetch_assoc($result)): ?>
                                         <tr>
                                             <td><?php echo $i++; ?></td>
                                             <td><?php echo htmlspecialchars($row['full_name']); ?></td>

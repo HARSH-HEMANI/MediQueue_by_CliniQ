@@ -1,8 +1,11 @@
-<?php 
-include "doctor-auth.php"; 
+<?php
+include "doctor-auth.php";
 include "../db.php";
 
 $doctor_id = (int)$_SESSION['doctor_id'];
+$docQ = mysqli_query($con, "SELECT full_name FROM doctors WHERE doctor_id = $doctor_id");
+$docData = mysqli_fetch_assoc($docQ);
+$doctorName = $docData['full_name'] ?? 'Doctor';
 $filter_date = $_GET['date'] ?? date('Y-m-d');
 $filter_type = $_GET['type'] ?? '';
 $filter_status = $_GET['status'] ?? '';
@@ -54,7 +57,7 @@ $appointmentsQ = mysqli_query($con, $queryStr);
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
 
         <section class="features-header my-1">
-            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($_SESSION['doctor_name']); ?></span></h2>
+            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($doctorName); ?></span></h2>
         </section>
 
         <section class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
@@ -63,8 +66,8 @@ $appointmentsQ = mysqli_query($con, $queryStr);
                 <p class="text-muted mb-0">Day-wise schedule and queue status</p>
             </div>
             <form class="d-flex gap-2" method="GET" action="appointment.php">
-                <?php if($filter_type): ?><input type="hidden" name="type" value="<?php echo htmlspecialchars($filter_type); ?>"><?php endif; ?>
-                <?php if($filter_status): ?><input type="hidden" name="status" value="<?php echo htmlspecialchars($filter_status); ?>"><?php endif; ?>
+                <?php if ($filter_type): ?><input type="hidden" name="type" value="<?php echo htmlspecialchars($filter_type); ?>"><?php endif; ?>
+                <?php if ($filter_status): ?><input type="hidden" name="status" value="<?php echo htmlspecialchars($filter_status); ?>"><?php endif; ?>
                 <select class="form-select form-select-sm" onchange="this.form.date.value=this.value; this.form.submit();">
                     <option value="<?php echo date('Y-m-d'); ?>" <?php echo $filter_date === date('Y-m-d') ? 'selected' : ''; ?>>Today</option>
                     <option value="<?php echo date('Y-m-d', strtotime('-1 day')); ?>" <?php echo $filter_date === date('Y-m-d', strtotime('-1 day')) ? 'selected' : ''; ?>>Yesterday</option>
@@ -118,8 +121,8 @@ $appointmentsQ = mysqli_query($con, $queryStr);
                         <tbody>
 
                             <!-- Dynamic Rows -->
-                            <?php if(mysqli_num_rows($appointmentsQ) > 0): ?>
-                                <?php while($appt = mysqli_fetch_assoc($appointmentsQ)): 
+                            <?php if (mysqli_num_rows($appointmentsQ) > 0): ?>
+                                <?php while ($appt = mysqli_fetch_assoc($appointmentsQ)):
                                     $age = "N/A";
                                     if ($appt['date_of_birth']) {
                                         $dob = new DateTime($appt['date_of_birth']);
@@ -128,52 +131,52 @@ $appointmentsQ = mysqli_query($con, $queryStr);
                                     }
                                     $isEmergency = ($appt['appointment_type'] === 'Emergency');
                                 ?>
-                                <tr class="<?php echo $isEmergency ? 'emergency-row' : ''; ?>">
-                                    <td><?php echo $appt['token_no'] ? "#" . $appt['token_no'] : "--"; ?></td>
-                                    <td>
-                                        <?php echo htmlspecialchars($appt['full_name']); ?><br>
-                                        <small class="text-muted"><?php echo $age; ?> yrs / <?php echo htmlspecialchars($appt['gender']); ?></small>
-                                    </td>
-                                    <td>
-                                        <?php if($isEmergency): ?>
-                                            <span class="badge type-emergency">
-                                                <i class="bi bi-exclamation-triangle-fill"></i> Emergency
-                                            </span>
-                                        <?php else: ?>
-                                            <span class="badge type-<?php echo strtolower(str_replace(' ', '-', $appt['appointment_type'])); ?>">
-                                                <?php echo htmlspecialchars($appt['appointment_type']); ?>
-                                            </span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><?php echo $appt['appointment_time'] ? date('h:i A', strtotime($appt['appointment_time'])) : 'Immediate'; ?></td>
-                                    <td>
-                                        <?php 
+                                    <tr class="<?php echo $isEmergency ? 'emergency-row' : ''; ?>">
+                                        <td><?php echo $appt['token_no'] ? "#" . $appt['token_no'] : "--"; ?></td>
+                                        <td>
+                                            <?php echo htmlspecialchars($appt['full_name']); ?><br>
+                                            <small class="text-muted"><?php echo $age; ?> yrs / <?php echo htmlspecialchars($appt['gender']); ?></small>
+                                        </td>
+                                        <td>
+                                            <?php if ($isEmergency): ?>
+                                                <span class="badge type-emergency">
+                                                    <i class="bi bi-exclamation-triangle-fill"></i> Emergency
+                                                </span>
+                                            <?php else: ?>
+                                                <span class="badge type-<?php echo strtolower(str_replace(' ', '-', $appt['appointment_type'])); ?>">
+                                                    <?php echo htmlspecialchars($appt['appointment_type']); ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?php echo $appt['appointment_time'] ? date('h:i A', strtotime($appt['appointment_time'])) : 'Immediate'; ?></td>
+                                        <td>
+                                            <?php
                                             $badgeClass = 'secondary';
                                             $statusTxt = $appt['token_status'] ?? 'Pending';
                                             if ($statusTxt === 'Waiting') $badgeClass = 'warning';
                                             if ($statusTxt === 'In Progress') $badgeClass = 'primary';
                                             if ($statusTxt === 'Completed') $badgeClass = 'success';
                                             if ($statusTxt === 'Pending') $badgeClass = 'secondary';
-                                        ?>
-                                        <span class="badge status-<?php echo strtolower(str_replace(' ', '-', $statusTxt)); ?> bg-<?php echo $badgeClass; ?>">
-                                            <?php echo htmlspecialchars($statusTxt); ?>
-                                        </span>
-                                    </td>
-                                    <td class="action-cell">
-                                        <a href="patient-records.php?patient=<?php echo $appt['patient_id']; ?>" class="btn btn-sm btn-light" title="View Patient Details">
-                                            <i class="bi bi-person"></i>
-                                        </a>
-                                        <?php if(in_array($appt['token_status'], ['Waiting', 'In Progress', 'Skipped'])): ?>
-                                        <a href="./live-queue.php" class="btn btn-sm btn-light" title="Go to Live Queue">
-                                            <i class="bi bi-arrow-right-circle"></i>
-                                        </a>
-                                        <?php endif; ?>
-                                        <button class="btn btn-sm btn-light" title="Consultation Notes"
-                                            onclick="openNotesModal(<?php echo $appt['appointment_id']; ?>, '<?php echo addslashes(htmlspecialchars($appt['full_name'])); ?>')">
-                                            <i class="bi bi-journal-text"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                            ?>
+                                            <span class="badge status-<?php echo strtolower(str_replace(' ', '-', $statusTxt)); ?> bg-<?php echo $badgeClass; ?>">
+                                                <?php echo htmlspecialchars($statusTxt); ?>
+                                            </span>
+                                        </td>
+                                        <td class="action-cell">
+                                            <a href="patient-records.php?patient=<?php echo $appt['patient_id']; ?>" class="btn btn-sm btn-light" title="View Patient Details">
+                                                <i class="bi bi-person"></i>
+                                            </a>
+                                            <?php if (in_array($appt['token_status'], ['Waiting', 'In Progress', 'Skipped'])): ?>
+                                                <a href="./live-queue.php" class="btn btn-sm btn-light" title="Go to Live Queue">
+                                                    <i class="bi bi-arrow-right-circle"></i>
+                                                </a>
+                                            <?php endif; ?>
+                                            <button class="btn btn-sm btn-light" title="Consultation Notes"
+                                                onclick="openNotesModal(<?php echo $appt['appointment_id']; ?>, '<?php echo addslashes(htmlspecialchars($appt['full_name'])); ?>')">
+                                                <i class="bi bi-journal-text"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
                                 <?php endwhile; ?>
                             <?php else: ?>
                                 <tr>
@@ -201,24 +204,24 @@ $appointmentsQ = mysqli_query($con, $queryStr);
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="appointment_id" id="notesApptId">
-                        
+
                         <div class="mb-3">
                             <label class="form-label">Diagnosis</label>
                             <input type="text" name="diagnosis" class="form-control" placeholder="Primary diagnosis...">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label">Detailed Notes</label>
                             <textarea class="form-control" name="note_text" rows="3"
                                 placeholder="Enter symptoms, observations..."></textarea>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label">Medicines Prescribed</label>
                             <textarea class="form-control" name="medicines" rows="2"
                                 placeholder="Paracetamol 500mg - 1x3..."></textarea>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label">Follow-up Date</label>
                             <input type="date" name="follow_up_date" class="form-control">
@@ -232,23 +235,23 @@ $appointmentsQ = mysqli_query($con, $queryStr);
             </div>
         </div>
 
-    <?php include './doctor-footer.php'; ?>
+        <?php include './doctor-footer.php'; ?>
 
-    <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
-    <script>
-    function openNotesModal(apptId, patientName) {
-        document.getElementById('notesApptId').value = apptId;
-        document.getElementById('notesPatientName').innerText = patientName;
-        // Optional: clear the previous form inputs
-        document.querySelector('input[name="diagnosis"]').value = '';
-        document.querySelector('textarea[name="note_text"]').value = '';
-        document.querySelector('textarea[name="medicines"]').value = '';
-        document.querySelector('input[name="follow_up_date"]').value = '';
-        
-        var myModal = new bootstrap.Modal(document.getElementById('notesModal'));
-        myModal.show();
-    }
-    </script>
+        <script src="../css/bootstrap/js/bootstrap.bundle.js"></script>
+        <script>
+            function openNotesModal(apptId, patientName) {
+                document.getElementById('notesApptId').value = apptId;
+                document.getElementById('notesPatientName').innerText = patientName;
+                // Optional: clear the previous form inputs
+                document.querySelector('input[name="diagnosis"]').value = '';
+                document.querySelector('textarea[name="note_text"]').value = '';
+                document.querySelector('textarea[name="medicines"]').value = '';
+                document.querySelector('input[name="follow_up_date"]').value = '';
+
+                var myModal = new bootstrap.Modal(document.getElementById('notesModal'));
+                myModal.show();
+            }
+        </script>
 
 </body>
 

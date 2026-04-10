@@ -3,7 +3,9 @@ include "doctor-auth.php";
 include "../db.php";
 
 $doctor_id = (int)$_SESSION['doctor_id'];
-$doctor_name = $_SESSION['doctor_name'] ?? "Doctor";
+$docQ = mysqli_query($con, "SELECT full_name FROM doctors WHERE doctor_id = $doctor_id");
+$docData = mysqli_fetch_assoc($docQ);
+$doctorName = $docData['full_name'] ?? 'Doctor';
 
 /* ================================
    📅 DATE HANDLING
@@ -281,7 +283,7 @@ if ($res && mysqli_num_rows($res)) {
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
 
         <section class="features-header my-1">
-            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($doctor_name); ?></span></h2>
+            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($doctorName); ?></span></h2>
         </section>
 
         <section class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">

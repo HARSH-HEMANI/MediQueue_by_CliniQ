@@ -43,7 +43,7 @@ unset($_SESSION['profile_success'], $_SESSION['profile_error']);
     <main class="doctor-dashboard container-fluid pt-5 mt-5">
 
         <section class="features-header my-1">
-            <h2>Welcome, <span><?php echo htmlspecialchars($doc['full_name']); ?></span></h2>
+            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($doc['full_name']); ?></span></h2>
         </section>
 
         <section class="mb-4">

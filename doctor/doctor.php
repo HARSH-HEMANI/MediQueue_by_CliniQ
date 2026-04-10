@@ -3,6 +3,9 @@ include "doctor-auth.php";
 include "../db.php";
 
 $doctor_id = (int)$_SESSION['doctor_id'];
+$docQ = mysqli_query($con, "SELECT full_name FROM doctors WHERE doctor_id = $doctor_id");
+$docData = mysqli_fetch_assoc($docQ);
+$doctorName = $docData['full_name'] ?? 'Doctor';
 $today = date('Y-m-d');
 
 // ✅ Total Patients
@@ -150,7 +153,7 @@ $emerAlertQ = mysqli_query($con, "
 
         <!-- HEADER -->
         <section class="features-header">
-            <h2>Welcome, <span><?php echo htmlspecialchars($_SESSION['doctor_name']); ?></span></h2>
+            <h2>Welcome, <span>Dr. <?php echo htmlspecialchars($doctorName); ?></span></h2>
         </section>
 
         <!-- STATS -->
