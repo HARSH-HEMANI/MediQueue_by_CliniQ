@@ -28,19 +28,26 @@ if (isset($_POST['submit'])) {
         exit();
     }
 
-    // Check if email already exists
-    $check = mysqli_query($con, "SELECT patient_id FROM patients WHERE email = '$email'");
-    if (mysqli_num_rows($check) > 0) {
-        $_SESSION['reg_error'] = "Email already registered. Please login.";
-        header("Location: ./login.php");
-        exit();
-    }
-
     // Hash password
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
     // Generate 6-digit OTP
     $otp = rand(100000, 999999);
+
+    // Validate email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['reg_error'] = "Invalid email format.";
+        header("Location: ./login.php#register");
+        exit();
+    }
+
+    // Check duplicate email
+    $check = mysqli_query($con, "SELECT patient_id FROM patients WHERE email = '$email'");
+    if (mysqli_num_rows($check) > 0) {
+        $_SESSION['reg_error'] = "Email already registered. Please login or use another email.";
+        header("Location: ./login.php#register");
+        exit();
+    }
 
     // Insert patient as inactive (is_active = 0), store OTP in token column
     $query = "INSERT INTO patients (full_name, email, password, phone, gender, date_of_birth, address, pincode, is_active, token)
