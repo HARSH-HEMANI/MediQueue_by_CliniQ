@@ -76,12 +76,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // ================= APPOINTMENT INSERT =================
 
             $a_sql = "INSERT INTO appointments 
-                (patient_id, doctor_id, clinic_id, appointment_date, appointment_time, appointment_type, status,appointment_mode) 
-                VALUES ($p_id, $doc_id, $clinic_id, '$app_date', '$app_time', '$app_type', 'Pending', '$mode')";
+    (patient_id, doctor_id, clinic_id, appointment_date, appointment_time, appointment_type, status, appointment_mode) 
+    VALUES ($p_id, $doc_id, $clinic_id, '$app_date', '$app_time', '$app_type', 'Pending', '$mode')";
 
             if (!mysqli_query($con, $a_sql)) {
                 throw new Exception("Appointment Error: " . mysqli_error($con));
             }
+
+            // ✅ NOW get correct appointment id
+            $appointment_id = mysqli_insert_id($con);
+
+            $today = $app_date; // use selected date, not current date
+
+            $tokenQ = mysqli_query($con, "
+SELECT MAX(t.token_no) as max_token
+FROM tokens t
+JOIN appointments a ON t.appointment_id = a.appointment_id
+WHERE a.doctor_id = $doc_id
+AND a.appointment_date = '$today'
+");
+
+            $data = mysqli_fetch_assoc($tokenQ);
+            $nextToken = ($data['max_token'] ?? 0) + 1;
+
+            // ✅ Insert token
+            mysqli_query($con, "
+INSERT INTO tokens (appointment_id, token_no, queue_position, status)
+VALUES ($appointment_id, $nextToken, $nextToken, 'Waiting')
+");
 
             mysqli_commit($con);
             $_SESSION['success'] = "Registration Successful!";
