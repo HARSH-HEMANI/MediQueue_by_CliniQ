@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['admin_email'] = $admin['email'];
 
             // Redirect to the main admin dashboard (change 'index.php' if your dashboard has a different name)
-            header("Location: admin.php");
+            header("Location: doctor.php");
             exit();
         }
     }
